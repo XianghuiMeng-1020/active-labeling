@@ -1,0 +1,24 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Sentence-level labeling API on Cloudflare Workers",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev --config ../../wrangler.toml",
+    "deploy": "wrangler deploy --config ../../wrangler.toml",
+    "d1:migrate:local": "wrangler d1 migrations apply labeling_db --config ../../wrangler.toml --local",
+    "d1:migrate:remote": "wrangler d1 migrations apply labeling_db --config ../../wrangler.toml --remote"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "hono": "^4.12.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260305.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.69.0"
+  }
+}

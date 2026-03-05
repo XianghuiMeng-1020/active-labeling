@@ -1,0 +1,18 @@
+# Secrets and environment
+.dev.vars
+.env
+.env.production
+*.env.local
+
+# Build outputs
+.wrangler/
+dist/
+node_modules/
+
+# OS
+.DS_Store
+*.log
+
+# IDE
+.vscode/
+.idea/

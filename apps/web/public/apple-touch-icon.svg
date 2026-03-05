@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Sentence Labeling">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="160" height="160" rx="38" fill="url(#g)" />
+  <rect x="42" y="56" width="96" height="14" rx="7" fill="white" opacity="0.92" />
+  <rect x="42" y="84" width="76" height="14" rx="7" fill="white" opacity="0.92" />
+  <circle cx="124" cy="122" r="14" fill="white" />
+</svg>

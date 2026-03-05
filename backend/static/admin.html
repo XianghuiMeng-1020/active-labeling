@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>标注管理 - 实时监控</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; margin: 1rem; background: #1a1a2e; color: #eee; }
+    h1 { margin-bottom: 0.5rem; }
+    .sub { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    section { margin-bottom: 2rem; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 200px; padding: 8px 0; }
+    .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; }
+    .bar { width: 100%; max-width: 60px; background: linear-gradient(180deg, #4a9eff, #2563eb); border-radius: 6px 6px 0 0; min-height: 4px; transition: height 0.3s; }
+    .bar.qwen { background: linear-gradient(180deg, #34d399, #059669); }
+    .bar-label { margin-top: 6px; font-size: 0.85rem; color: #aaa; }
+    .bar-value { font-size: 0.75rem; color: #888; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #333; }
+    th { color: #888; font-weight: 600; }
+    .source-hku { color: #4a9eff; }
+    .source-qwen { color: #34d399; }
+    .status { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #34d399; animation: pulse 2s infinite; }
+    .status.off { background: #ef4444; animation: none; }
+    @keyframes pulse { 50% { opacity: 0.6; } }
+  </style>
+</head>
+<body>
+  <h1>标注管理</h1>
+  <p class="sub">SSE 实时同步 · <span id="status" class="status"></span> <span id="statusText">连接中…</span></p>
+
+  <section>
+    <h2>按来源统计 (Bar Chart)</h2>
+    <div class="bar-chart" id="barChart">
+      <div class="bar-wrap">
+        <div class="bar" id="barHku" style="height: 0;"></div>
+        <span class="bar-value" id="valHku">0</span>
+        <span class="bar-label">HKU</span>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar qwen" id="barQwen" style="height: 0;"></div>
+        <span class="bar-value" id="valQwen">0</span>
+        <span class="bar-label">Qwen</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>最近标注结果</h2>
+    <table>
+      <thead>
+        <tr><th>时间</th><th>来源</th><th>模型</th><th>Prompt</th><th>结果</th></tr>
+      </thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+  </section>
+
+  <script>
+    const API_BASE = ''; // 与后端同源可留空
+    const maxBarHeight = 180;
+
+    function setStatus(ok, text) {
+      const el = document.getElementById('status');
+      const textEl = document.getElementById('statusText');
+      el.classList.toggle('off', !ok);
+      textEl.textContent = text;
+    }
+
+    function renderBars(results) {
+      const hku = results.filter(r => r.source === 'hku').length;
+      const qwen = results.filter(r => r.source === 'qwen').length;
+      const max = Math.max(hku, qwen, 1);
+      document.getElementById('barHku').style.height = (hku / max) * maxBarHeight + 'px';
+      document.getElementById('barQwen').style.height = (qwen / max) * maxBarHeight + 'px';
+      document.getElementById('valHku').textContent = hku;
+      document.getElementById('valQwen').textContent = qwen;
+    }
+
+    function renderTable(results) {
+      const tbody = document.getElementById('resultsBody');
+      const rows = results.slice().reverse().slice(0, 50).map(r => `
+        <tr>
+          <td>${new Date(r.created_at).toLocaleString()}</td>
+          <td class="source-${r.source}">${r.source}</td>
+          <td>${r.model}</td>
+          <td>${r.prompt ? r.prompt.slice(0, 40) + (r.prompt.length > 40 ? '…' : '') : '-'}</td>
+          <td>${r.result ? r.result.slice(0, 80) + (r.result.length > 80 ? '…' : '') : '-'}</td>
+        </tr>
+      `).join('');
+      tbody.innerHTML = rows;
+    }
+
+    function update(results) {
+      renderBars(results);
+      renderTable(results);
+    }
+
+    // 初始拉取
+    fetch(API_BASE + '/api/admin/results')
+      .then(res => res.json())
+      .then(data => { update(data.results || []); })
+      .catch(() => setStatus(false, '获取数据失败'));
+
+    // SSE 实时推送
+    const evtSource = new EventSource(API_BASE + '/api/admin/stream');
+    let results = [];
+    evtSource.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'snapshot') {
+          results = msg.results || [];
+        } else if (msg.type === 'append' && msg.result) {
+          results.push(msg.result);
+        }
+        update(results);
+        setStatus(true, '已连接');
+      } catch (err) {}
+    };
+    evtSource.onerror = () => setStatus(false, 'SSE 断开');
+    evtSource.onopen = () => setStatus(true, '已连接');
+  </script>
+</body>
+</html>

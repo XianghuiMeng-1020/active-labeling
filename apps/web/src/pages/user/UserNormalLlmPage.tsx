@@ -1,0 +1,396 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAttemptTracker } from "../../hooks/useAttemptTracker";
+import { api, type LlmMode } from "../../lib/api";
+import { useI18n } from "../../lib/i18n";
+import { DeadLetterBanner } from "../../components/DeadLetterBanner";
+import { EssayDisplay } from "../../components/EssayDisplay";
+import { ProgressRing } from "../../components/ProgressRing";
+import { ToastContainer, useToast } from "../../components/Toast";
+import { enqueueLlmAccept, flushOfflineQueue } from "../../lib/offlineQueue";
+import { getSessionId } from "../../lib/storage";
+import { getEssaySentenceMeta } from "../../lib/unitUtils";
+import { getEssayByUnitId } from "../../lib/essayData";
+
+const CUSTOM_MAX = 5;
+
+function OverrideSheet({
+  labels,
+  onSelect,
+  onClose,
+  title
+}: {
+  labels: Array<{ label: string }>;
+  onSelect: (l: string) => void;
+  onClose: () => void;
+  title: string;
+}) {
+  const { labelText } = useI18n();
+  return (
+    <>
+      <div className="bottom-sheet-overlay" onClick={onClose} />
+      <div className="bottom-sheet">
+        <div className="bottom-sheet-handle" />
+        <div className="bottom-sheet-title">{title}</div>
+        <div className="label-grid">
+          {labels.map((l) => (
+            <button key={l.label} className="label-btn" onClick={() => onSelect(l.label)}>
+              {labelText(l.label)}
+            </button>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function LlmSkeleton({ elapsed, label }: { elapsed: number; label: string }) {
+  return (
+    <div style={{ padding: "4px 0" }}>
+      <div className="skeleton skeleton-text wide" />
+      <div className="skeleton skeleton-text medium" style={{ marginTop: 8 }} />
+      <div className="skeleton skeleton-badge" style={{ marginTop: 12 }} />
+      <div style={{ marginTop: 8, fontSize: 12, color: "var(--color-text-muted)" }}>
+        {label} {elapsed}s
+      </div>
+    </div>
+  );
+}
+
+export function UserNormalLlmPage() {
+  const nav = useNavigate();
+  const { t, labelText } = useI18n();
+  const sessionId = getSessionId();
+
+  const [labels, setLabels] = useState<Array<{ label: string }>>([]);
+  const [prompt1Text, setPrompt1Text] = useState("");
+  const [prompt2Text, setPrompt2Text] = useState("");
+  const [customPrompt, setCustomPrompt] = useState(t("flow.customPromptDefault"));
+  const [unit, setUnit] = useState<{ unit_id: string; text: string } | null>(null);
+  const [progress, setProgress] = useState({ done: 0, total: 0 });
+  const [predicted, setPredicted] = useState("");
+  const [activeMode, setActiveMode] = useState<LlmMode>("prompt1");
+  const [llmLoading, setLlmLoading] = useState(false);
+  const [llmElapsed, setLlmElapsed] = useState(0);
+  const [done, setDone] = useState(false);
+  const [customAttemptsUsed, setCustomAttemptsUsed] = useState(0);
+  const [llmError, setLlmError] = useState<string | null>(null);
+  const [showOverride, setShowOverride] = useState(false);
+  const [showPromptPreview, setShowPromptPreview] = useState<null | "prompt1" | "prompt2">(null);
+  const [accepting, setAccepting] = useState(false);
+
+  const { toasts, showToast } = useToast();
+  const tracker = useAttemptTracker(unit?.unit_id ?? "empty");
+  const elapsedTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const acceptingRef = useRef(false);
+
+  const unitMeta = useMemo(() => (unit ? getEssaySentenceMeta(unit.unit_id) : null), [unit]);
+  const currentEssay = useMemo(() => (unit ? getEssayByUnitId(unit.unit_id) : null), [unit]);
+
+  useEffect(() => {
+    return () => {
+      if (elapsedTimer.current) clearInterval(elapsedTimer.current);
+    };
+  }, []);
+
+  const customExhausted = customAttemptsUsed >= CUSTOM_MAX;
+
+  const load = useCallback(async () => {
+    if (!sessionId) { nav("/user/start"); return; }
+    const status = await api.getSessionStatus(sessionId);
+    if (!status.gates.can_enter_normal_llm) { nav("/user/normal/manual"); return; }
+    const prog = status.normal_llm;
+    setProgress({ done: prog?.done ?? 0, total: prog?.total ?? 0 });
+
+    const [tax, prompts, next] = await Promise.all([
+      api.getTaxonomy(),
+      api.getPrompts(),
+      api.getNextUnit(sessionId, "normal", "llm")
+    ]);
+    setLabels(tax.labels);
+    setPrompt1Text(prompts.prompt1 ?? "");
+    setPrompt2Text(prompts.prompt2 ?? "");
+    setUnit(next.unit);
+    setPredicted("");
+    setLlmError(null);
+    setCustomAttemptsUsed(0);
+    setShowOverride(false);
+
+    if (next.unit) {
+      try {
+        const cnt = await api.getCustomCount(sessionId, next.unit.unit_id, "normal");
+        setCustomAttemptsUsed(cnt.count);
+      } catch { /* ignore */ }
+    }
+    if (!next.unit) setDone(true);
+  }, [sessionId, nav]);
+
+  useEffect(() => {
+    flushOfflineQueue().catch(() => undefined);
+    load();
+  }, [load]);
+  useEffect(() => {
+    const onOnline = () => { flushOfflineQueue().catch(() => undefined); };
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
+  }, []);
+
+  const startLlmTimer = () => {
+    setLlmElapsed(0);
+    elapsedTimer.current = setInterval(() => setLlmElapsed((e) => e + 1), 1000);
+  };
+  const stopLlmTimer = () => {
+    if (elapsedTimer.current) { clearInterval(elapsedTimer.current); elapsedTimer.current = null; }
+  };
+
+  const runLlm = async (m: LlmMode) => {
+    if (!unit) return;
+    if (m === "custom" && customExhausted) return;
+    setActiveMode(m);
+    setLlmLoading(true);
+    setLlmError(null);
+    setPredicted("");
+    startLlmTimer();
+    try {
+      const data: any = await api.runLlm({
+        session_id: sessionId,
+        unit_id: unit.unit_id,
+        phase: "normal",
+        mode: m,
+        custom_prompt_text: m === "custom" ? customPrompt : undefined
+      });
+      setPredicted(data.predicted_label ?? "");
+      if (m === "custom" && data.custom_attempts_used !== undefined) {
+        setCustomAttemptsUsed(data.custom_attempts_used);
+      }
+      showToast(`✓ ${t("flow.modelReturned")}: ${data.predicted_label}`, "success");
+    } catch (err: any) {
+      if (err?.status === 429) {
+        setCustomAttemptsUsed(CUSTOM_MAX);
+        setLlmError(t("flow.customLimitReached", { max: CUSTOM_MAX }));
+      } else {
+        setLlmError(err?.message ?? t("flow.llmError"));
+        showToast(t("flow.llmError"), "error");
+      }
+    } finally {
+      setLlmLoading(false);
+      stopLlmTimer();
+    }
+  };
+
+  const accept = async (label: string) => {
+    if (!unit || acceptingRef.current) return;
+    acceptingRef.current = true;
+    setAccepting(true);
+    const attemptPayload = tracker.finalize();
+    try {
+      await api.acceptLlm({
+        session_id: sessionId,
+        unit_id: unit.unit_id,
+        phase: "normal",
+        mode: activeMode,
+        accepted_label: label,
+        attempt: attemptPayload
+      });
+      showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
+      setShowOverride(false);
+      await load();
+    } catch (error: any) {
+      const status = error?.status;
+      const retryable =
+        error?.code === "NETWORK_OFFLINE" ||
+        error?.code === "NETWORK_ERROR" ||
+        error?.code === "REQUEST_TIMEOUT" ||
+        status === 429 ||
+        (typeof status === "number" && status >= 500 && status < 600);
+      if (retryable) {
+        enqueueLlmAccept({
+          session_id: sessionId,
+          unit_id: unit.unit_id,
+          phase: "normal",
+          mode: activeMode,
+          accepted_label: label,
+          attempt: attemptPayload
+        });
+        showToast(t("flow.queuedForRetry"), "warn");
+        if (error?.code === "REQUEST_TIMEOUT") showToast(t("common.requestTimeout"), "error");
+        else if (status !== 429) showToast(t("common.networkError"), "error");
+      } else {
+        showToast(t("flow.submitFailed"), "error");
+      }
+    } finally {
+      acceptingRef.current = false;
+      setAccepting(false);
+    }
+  };
+
+  if (!sessionId) return null;
+
+  if (done) {
+    return (
+      <div className="page" style={{ justifyContent: "center" }}>
+        <div className="card" style={{ textAlign: "center", padding: "40px 24px" }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+          <h2>{t("flow.doneNormal")}</h2>
+          <p style={{ margin: "12px 0 24px" }}>{t("flow.canContinueActive")}</p>
+          <button className="btn primary lg full-width" onClick={() => nav("/user/visualization")}>
+            {t("viz.title")} →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const currentPromptText = activeMode === "prompt1" ? prompt1Text : activeMode === "prompt2" ? prompt2Text : customPrompt;
+
+  const modeLabels: Record<LlmMode, string> = {
+    prompt1: t("flow.modePrompt1"),
+    prompt2: t("flow.modePrompt2"),
+    custom: t("flow.modeCustom")
+  };
+
+  return (
+    <div className="page">
+      <div className="progress-header">
+        <ProgressRing done={progress.done} total={progress.total} />
+        <div className="progress-info">
+          <div className="progress-title">{t("flow.u2Title")}</div>
+          <div className="progress-subtitle">{t("flow.runModelHint")}</div>
+        </div>
+      </div>
+
+      <DeadLetterBanner />
+
+      {unit && (
+        <>
+          {currentEssay && (
+            <EssayDisplay essay={currentEssay} currentUnitId={unit.unit_id} />
+          )}
+
+          <div className="card unit-card-enter">
+            {unitMeta ? (
+              <span className="unit-chip">{t("flow.essay")} {unitMeta.essay} · S{unitMeta.sentence}</span>
+            ) : null}
+
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: 10, marginTop: 8 }}>
+              {t("flow.selectPromptMode")}
+            </div>
+            <div className="segmented" style={{ marginBottom: 12 }}>
+              {(["prompt1", "prompt2", "custom"] as LlmMode[]).map((m) => (
+                <button
+                  key={m}
+                  className={`segmented-btn ${activeMode === m ? "active" : ""}`}
+                  onClick={() => setActiveMode(m)}
+                  disabled={m === "custom" && customExhausted}
+                >
+                  {modeLabels[m]}
+                  {m === "custom" && customAttemptsUsed > 0 && (
+                    <span className={`attempt-counter ${customExhausted ? "exhausted" : ""}`} style={{ marginLeft: 6 }}>
+                      {customAttemptsUsed}/{CUSTOM_MAX}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {(activeMode === "prompt1" || activeMode === "prompt2") && (
+              <div style={{ marginBottom: 12 }}>
+                <button
+                  style={{ background: "none", border: "none", color: "var(--color-text-secondary)", fontSize: 12, cursor: "pointer", padding: 0, fontWeight: 600 }}
+                  onClick={() => setShowPromptPreview(showPromptPreview === activeMode ? null : activeMode)}
+                >
+                  {showPromptPreview === activeMode ? `▲ ${t("flow.collapsePrompt")}` : `▼ ${t("flow.expandPrompt")}`}
+                </button>
+                {showPromptPreview === activeMode && (
+                  <div className="prompt-preview" style={{ marginTop: 8 }}>
+                    {currentPromptText || t("flow.empty")}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeMode === "custom" && (
+              <div style={{ marginBottom: 12 }}>
+                <textarea
+                  rows={4}
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  disabled={customExhausted}
+                  placeholder={t("flow.customPromptPlaceholder")}
+                />
+                <div style={{ fontSize: 11, color: "var(--color-text-muted)", marginTop: 4, fontStyle: "italic" }}>
+                  {t("flow.customHint")}
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                  <span style={{ fontSize: 11, color: "var(--color-text-muted)" }}>
+                    {customPrompt.length} {t("flow.chars")}
+                  </span>
+                  {customExhausted && (
+                    <span className="attempt-counter exhausted">{t("flow.limitReached")} {CUSTOM_MAX}/{CUSTOM_MAX}</span>
+                  )}
+                </div>
+                {customExhausted && (
+                  <div className="error-box" style={{ marginTop: 8 }}>
+                    {t("flow.customLimitReached", { max: CUSTOM_MAX })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <button
+              className="btn primary full-width"
+              onClick={() => runLlm(activeMode)}
+              disabled={llmLoading || (activeMode === "custom" && customExhausted)}
+            >
+              {llmLoading ? (
+                <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> {t("flow.runningEllipsis")}</>
+              ) : (
+                <>▶ {t("flow.runBtn")} {modeLabels[activeMode]}</>
+              )}
+            </button>
+          </div>
+
+          <div className="card">
+            {llmLoading ? (
+              <LlmSkeleton elapsed={llmElapsed} label={t("flow.modelRunning")} />
+            ) : llmError ? (
+              <div className="error-box">{llmError}</div>
+            ) : predicted ? (
+              <>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: 8 }}>
+                  {t("flow.predictionResult")}
+                </div>
+                <div className="predicted-badge">
+                  🤖 {labelText(predicted)}
+                </div>
+                <div className="btn-group" style={{ marginTop: 16 }}>
+                  <button className="btn primary" style={{ flex: 1 }} disabled={accepting} onClick={() => accept(predicted)}>
+                    {accepting ? <span className="spinner" /> : <>✓ {t("flow.accept")}</>}
+                  </button>
+                  <button className="btn" style={{ flex: 1 }} disabled={accepting} onClick={() => setShowOverride(true)}>
+                    ✎ {t("flow.override")}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div style={{ color: "var(--color-text-muted)", fontSize: 14, textAlign: "center", padding: "16px 0" }}>
+                {t("flow.clickRunHint")}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {showOverride && (
+        <OverrideSheet
+          labels={labels}
+          onSelect={accept}
+          onClose={() => setShowOverride(false)}
+          title={t("flow.overrideTitle")}
+        />
+      )}
+
+      <ToastContainer toasts={toasts} />
+    </div>
+  );
+}

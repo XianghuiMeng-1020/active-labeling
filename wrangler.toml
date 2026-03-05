@@ -1,0 +1,33 @@
+name = "sentence-labeling-api"
+main = "workers/api/src/index.ts"
+compatibility_date = "2025-01-01"
+
+# workers.dev 无需配置 routes，自动绑定到 https://sentence-labeling-api.<account>.workers.dev
+# 自定义域名时再添加，例如：[[routes]] pattern = "api.example.com/*" zone_name = "example.com"
+
+[vars]
+IDLE_THRESHOLD_MS = "10000"
+MIN_ACTIVE_MS = "800"
+# 30 人同时访问时 LLM 并发数，建议 5–10（过大会易触发 DashScope 429）
+QWEN_MAX_CONCURRENT = "6"
+ADMIN_SESSION_TTL_SEC = "28800"
+
+[durable_objects]
+bindings = [
+  { name = "STATS_HUB", class_name = "StatsHub" },
+  { name = "QWEN_LIMITER", class_name = "QwenRateLimiter" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["StatsHub"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["QwenRateLimiter"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "labeling_db"
+database_id = "d1c1417b-c644-4ed4-af16-c89e4d193602"
+migrations_dir = "db/migrations"

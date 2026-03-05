@@ -1,0 +1,122 @@
+import { useEffect } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { AdminGuard } from "./components/AdminGuard";
+import { LanguageSwitcher } from "./components/LanguageSwitcher";
+import { api } from "./lib/api";
+import { AdminConfigPage } from "./pages/admin/AdminConfigPage";
+import { AdminDashboardNormalPage } from "./pages/admin/AdminDashboardNormalPage";
+import { AdminDashboardOverallPage } from "./pages/admin/AdminDashboardOverallPage";
+import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
+import { AdminUnitsPage } from "./pages/admin/AdminUnitsPage";
+import { AdminOpsPage } from "./pages/admin/AdminOpsPage";
+import { WelcomePage } from "./pages/user/WelcomePage";
+import { UserActiveManualPage } from "./pages/user/UserActiveManualPage";
+import { UserActiveLlmPage } from "./pages/user/UserActiveLlmPage";
+import { UserNormalLlmPage } from "./pages/user/UserNormalLlmPage";
+import { UserPhaseManualPage } from "./pages/user/UserPhaseManualPage";
+import { UserVisualizationPage } from "./pages/user/UserVisualizationPage";
+import { SharePage } from "./pages/share/SharePage";
+import { UserStartPage } from "./pages/user/UserStartPage";
+
+function App() {
+  useEffect(() => {
+    const onError = (event: ErrorEvent) => {
+      api.reportClientError({
+        message: event.message || "window_error",
+        stack: event.error?.stack,
+        page: window.location.href
+      }).catch(() => undefined);
+    };
+    const onRejection = (event: PromiseRejectionEvent) => {
+      const reason = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
+      api.reportClientError({
+        message: `unhandled_rejection: ${reason.message}`,
+        stack: reason.stack,
+        page: window.location.href
+      }).catch(() => undefined);
+    };
+    window.addEventListener("error", onError);
+    window.addEventListener("unhandledrejection", onRejection);
+    return () => {
+      window.removeEventListener("error", onError);
+      window.removeEventListener("unhandledrejection", onRejection);
+    };
+  }, []);
+
+  return (
+    <>
+      <LanguageSwitcher />
+      <Routes>
+        {/* User routes */}
+        <Route path="/" element={<Navigate to="/welcome" replace />} />
+        <Route path="/welcome" element={<WelcomePage />} />
+        <Route path="/user/start" element={<UserStartPage />} />
+        <Route path="/user/normal/manual" element={<UserPhaseManualPage phase="normal" />} />
+        <Route path="/user/normal/llm" element={<UserNormalLlmPage />} />
+        <Route path="/user/visualization" element={<UserVisualizationPage />} />
+        <Route path="/user/active/manual" element={<UserActiveManualPage />} />
+        <Route path="/user/active/llm" element={<UserActiveLlmPage />} />
+
+        {/* Admin routes — all protected by AdminGuard */}
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminGuard>
+              <AdminDashboardNormalPage />
+            </AdminGuard>
+          }
+        />
+        <Route
+          path="/admin/dashboard/normal"
+          element={
+            <AdminGuard>
+              <AdminDashboardNormalPage />
+            </AdminGuard>
+          }
+        />
+        <Route
+          path="/admin/dashboard/overall"
+          element={
+            <AdminGuard>
+              <AdminDashboardOverallPage />
+            </AdminGuard>
+          }
+        />
+        <Route
+          path="/admin/config"
+          element={
+            <AdminGuard>
+              <AdminConfigPage />
+            </AdminGuard>
+          }
+        />
+        <Route
+          path="/admin/units"
+          element={
+            <AdminGuard>
+              <AdminUnitsPage />
+            </AdminGuard>
+          }
+        />
+        <Route
+          path="/admin/ops"
+          element={
+            <AdminGuard>
+              <AdminOpsPage />
+            </AdminGuard>
+          }
+        />
+
+        {/* Share route — public, read-only */}
+        <Route path="/share/:token" element={<SharePage />} />
+
+        <Route path="*" element={<Navigate to="/welcome" replace />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;
