@@ -14,6 +14,7 @@ export function UserStartPage() {
   const [message, setMessage] = useState("");
   const [messageKind, setMessageKind] = useState<"success" | "error">("success");
   const [currentSessionId, setCurrentSessionId] = useState(getSessionId());
+  const [consent, setConsent] = useState(false);
 
   const start = async () => {
     setLoading(true);
@@ -105,7 +106,17 @@ export function UserStartPage() {
             <input value={userId} onChange={(e) => setUserId(e.target.value)} placeholder={t("flow.userIdPlaceholder")} />
           </div>
 
-          <button className="btn primary full-width lg" disabled={loading} onClick={start}>
+          <label style={{ display: "flex", alignItems: "flex-start", gap: 8, margin: "12px 0 16px", cursor: "pointer", fontSize: 13, lineHeight: 1.5, color: "var(--color-text-secondary)" }}>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              style={{ marginTop: 3, accentColor: "var(--color-primary)", width: 16, height: 16, flexShrink: 0 }}
+            />
+            <span>I consent to my labels/annotations from this workshop's labeling system being collected and used for research/teaching, with results reported anonymously or in aggregate where possible.</span>
+          </label>
+
+          <button className="btn primary full-width lg" disabled={loading || !consent} onClick={start}>
             {loading ? <span className="spinner" /> : t("flow.startLabeling")}
           </button>
 
