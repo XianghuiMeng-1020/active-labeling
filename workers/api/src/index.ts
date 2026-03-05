@@ -111,6 +111,9 @@ app.use("/api/*", async (c, next) => {
   } else if (path.includes("ranking/submit")) {
     pathKey = "ranking";
     limit = 30;
+  } else if (path.includes("stats/visualization")) {
+    pathKey = "read";
+    limit = 60;
   } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays")) {
     pathKey = "read";
     limit = 300;
@@ -696,7 +699,6 @@ app.post("/api/llm/run", async (c) => {
         429
       );
     }
-    await incrementCustomRunCount(c.env, sessionId, unitId, phase);
   }
 
   try {
@@ -720,6 +722,10 @@ app.post("/api/llm/run", async (c) => {
     } catch (llmErr: any) {
       await qwenRelease(c.env, llmErr?.status ?? 500, Date.now() - startMs, llmErr?.retryCount ?? 0);
       throw llmErr;
+    }
+
+    if (mode === "custom") {
+      await incrementCustomRunCount(c.env, sessionId, unitId, phase);
     }
 
     await saveLlmPrediction(c.env, {
@@ -1298,7 +1304,7 @@ app.get("/api/admin/export", async (c) => {
      LEFT JOIN llm_labels lc ON lc.session_id = s.session_id AND lc.unit_id = a.unit_id AND lc.phase = a.phase AND lc.mode = 'custom'
      LEFT JOIN label_attempts la_m ON la_m.session_id = s.session_id AND la_m.unit_id = a.unit_id AND la_m.phase = a.phase AND la_m.task = 'manual'
      LEFT JOIN label_attempts la_l ON la_l.session_id = s.session_id AND la_l.unit_id = a.unit_id AND la_l.phase = a.phase AND la_l.task = 'llm'
-     LEFT JOIN ranking_submissions rs ON rs.session_id = s.session_id AND rs.essay_index = CAST(SUBSTR(u.unit_id, 5, 4) AS INTEGER)
+     LEFT JOIN ranking_submissions rs ON rs.session_id = s.session_id AND rs.essay_index = CAST(SUBSTR(u.unit_id, 6, 4) AS INTEGER)
      ORDER BY s.session_id, a.phase, a.ordering ASC
      LIMIT ? OFFSET ?`
   )

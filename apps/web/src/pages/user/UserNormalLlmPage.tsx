@@ -172,9 +172,12 @@ export function UserNormalLlmPage() {
       }
       showToast(`✓ ${t("flow.modelReturned")}: ${data.predicted_label}`, "success");
     } catch (err: any) {
-      if (err?.status === 429) {
-        setCustomAttemptsUsed(CUSTOM_MAX);
+      if (err?.status === 429 && err?.data?.error === "custom_attempt_limit_reached") {
+        setCustomAttemptsUsed(err.data.attempts_used ?? CUSTOM_MAX);
         setLlmError(t("flow.customLimitReached", { max: CUSTOM_MAX }));
+      } else if (err?.status === 429) {
+        showToast(t("common.networkError"), "warn");
+        setLlmError(t("common.networkError"));
       } else {
         setLlmError(err?.message ?? t("flow.llmError"));
         showToast(t("flow.llmError"), "error");
@@ -190,7 +193,6 @@ export function UserNormalLlmPage() {
     acceptingRef.current = true;
     setAccepting(true);
     const attemptPayload = tracker.finalize();
-    let acceptSucceeded = false;
     try {
       await api.acceptLlm({
         session_id: sessionId,
@@ -200,7 +202,6 @@ export function UserNormalLlmPage() {
         accepted_label: label,
         attempt: attemptPayload
       });
-      acceptSucceeded = true;
       showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
       setShowOverride(false);
     } catch (error: any) {
@@ -230,9 +231,7 @@ export function UserNormalLlmPage() {
       acceptingRef.current = false;
       setAccepting(false);
     }
-    if (acceptSucceeded) {
-      await load().catch(() => undefined);
-    }
+    await load().catch(() => undefined);
   };
 
   if (!sessionId) return null;

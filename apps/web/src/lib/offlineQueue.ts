@@ -43,7 +43,11 @@ function readQueue(): QueueEntry[] {
 
 function writeQueue(entries: QueueEntry[]) {
   if (typeof localStorage === "undefined") return;
-  localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(entries));
+  try {
+    localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(entries));
+  } catch {
+    console.error("Failed to write offline queue (storage full?)");
+  }
 }
 
 export type DeadLetterEntry = { at: string; kind: string; error?: string };
@@ -60,9 +64,11 @@ function readDeadLetter(): DeadLetterEntry[] {
 }
 function appendDeadLetter(entry: DeadLetterEntry) {
   if (typeof localStorage === "undefined") return;
-  const list = readDeadLetter();
-  list.push(entry);
-  localStorage.setItem(DEAD_LETTER_KEY, JSON.stringify(list.slice(-100)));
+  try {
+    const list = readDeadLetter();
+    list.push(entry);
+    localStorage.setItem(DEAD_LETTER_KEY, JSON.stringify(list.slice(-100)));
+  } catch { /* storage full */ }
   if (typeof window !== "undefined") window.dispatchEvent(new Event("deadLetterChange"));
 }
 export function getDeadLetterCount(): number {
@@ -77,6 +83,8 @@ function makeIdempotencyKey() {
   return `offline-${crypto.randomUUID()}`;
 }
 
+const MAX_QUEUE_SIZE = 200;
+
 export function enqueueManualSubmission(payload: {
   session_id: string;
   unit_id: string;
@@ -85,6 +93,10 @@ export function enqueueManualSubmission(payload: {
   attempt: AttemptPayload;
 }) {
   const entries = readQueue();
+  const dup = entries.some(
+    (e) => e.kind === "manual" && e.payload.unit_id === payload.unit_id && e.payload.session_id === payload.session_id && e.payload.phase === payload.phase
+  );
+  if (dup || entries.length >= MAX_QUEUE_SIZE) return;
   entries.push({
     kind: "manual",
     payload: { ...payload, idempotency_key: makeIdempotencyKey() }
@@ -101,6 +113,10 @@ export function enqueueLlmAccept(payload: {
   attempt: AttemptPayload;
 }) {
   const entries = readQueue();
+  const dup = entries.some(
+    (e) => e.kind === "llm_accept" && e.payload.unit_id === payload.unit_id && e.payload.session_id === payload.session_id
+  );
+  if (dup || entries.length >= MAX_QUEUE_SIZE) return;
   entries.push({
     kind: "llm_accept",
     payload: { ...payload, idempotency_key: makeIdempotencyKey() }

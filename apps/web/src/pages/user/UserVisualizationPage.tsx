@@ -62,6 +62,7 @@ export function UserVisualizationPage() {
 
   useEffect(() => {
     if (!sessionId) { nav("/user/start"); return; }
+    let cancelled = false;
     (async () => {
       setLoading(true);
       try {
@@ -72,13 +73,14 @@ export function UserVisualizationPage() {
           return;
         }
         const viz = await api.getVisualizationStats();
-        setData(viz);
+        if (!cancelled) setData(viz);
       } catch (e: any) {
-        setError(e?.message ?? "Failed to load");
+        if (!cancelled) setError(e?.message ?? "Failed to load");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     })();
+    return () => { cancelled = true; };
   }, [sessionId, nav]);
 
   if (!sessionId) return null;

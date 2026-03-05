@@ -72,6 +72,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     if (!sessionId) { nav("/user/start"); return; }
     setLoading(true);
     setLoadError(null);
+    navigatingRef.current = false;
     try {
       const status = await api.getSessionStatus(sessionId);
       if (phase === "active" && !status.gates.can_enter_active_manual) {
@@ -114,9 +115,10 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       }
 
       if (!next.unit) {
-        if (phase === "normal" && !navigatingRef.current) {
+        if (!navigatingRef.current) {
           navigatingRef.current = true;
-          nav("/user/normal/llm");
+          if (phase === "normal") nav("/user/normal/llm");
+          else nav("/user/active/llm");
         }
         setUnit(null);
       } else {

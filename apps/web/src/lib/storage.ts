@@ -3,6 +3,26 @@ const RESET_TOKEN_KEY = "labeling_reset_token";
 const ADMIN_SESSION_KEY = "labeling_admin_session";
 const ADMIN_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 
+function safeGetItem(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSetItem(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch { /* quota exceeded or security error */ }
+}
+
+function safeRemoveItem(key: string): void {
+  try {
+    localStorage.removeItem(key);
+  } catch { /* ignore */ }
+}
+
 type AdminSession = {
   token: string;
   expiresAtEpochMs: number;
@@ -10,25 +30,25 @@ type AdminSession = {
 };
 
 export function getSessionId() {
-  return localStorage.getItem(SESSION_KEY) ?? "";
+  return safeGetItem(SESSION_KEY) ?? "";
 }
 
 export function setSessionId(sessionId: string, resetToken?: string) {
-  localStorage.setItem(SESSION_KEY, sessionId);
-  if (resetToken !== undefined) localStorage.setItem(RESET_TOKEN_KEY, resetToken);
+  safeSetItem(SESSION_KEY, sessionId);
+  if (resetToken !== undefined) safeSetItem(RESET_TOKEN_KEY, resetToken);
 }
 
 export function getResetToken() {
-  return localStorage.getItem(RESET_TOKEN_KEY) ?? "";
+  return safeGetItem(RESET_TOKEN_KEY) ?? "";
 }
 
 export function clearSessionId() {
-  localStorage.removeItem(SESSION_KEY);
-  localStorage.removeItem(RESET_TOKEN_KEY);
+  safeRemoveItem(SESSION_KEY);
+  safeRemoveItem(RESET_TOKEN_KEY);
 }
 
 function readAdminSession(): AdminSession | null {
-  const raw = localStorage.getItem(ADMIN_SESSION_KEY);
+  const raw = safeGetItem(ADMIN_SESSION_KEY);
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw) as AdminSession;
@@ -45,17 +65,17 @@ export function setAdminSession(token: string, expiresAtEpochMs: number) {
     expiresAtEpochMs,
     lastActiveEpochMs: Date.now()
   };
-  localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(next));
+  safeSetItem(ADMIN_SESSION_KEY, JSON.stringify(next));
 }
 
 export function clearAdminSession() {
-  localStorage.removeItem(ADMIN_SESSION_KEY);
+  safeRemoveItem(ADMIN_SESSION_KEY);
 }
 
 export function touchAdminSession() {
   const current = readAdminSession();
   if (!current) return;
-  localStorage.setItem(
+  safeSetItem(
     ADMIN_SESSION_KEY,
     JSON.stringify({ ...current, lastActiveEpochMs: Date.now() })
   );
@@ -73,6 +93,7 @@ export function getAdminToken() {
     clearAdminSession();
     return "";
   }
+  touchAdminSession();
   return session.token;
 }
 

@@ -64,7 +64,8 @@ export function DifficultyRanking({ essay, onSubmit, submitting }: DifficultyRan
       if (handleTouchStart.current === null) return;
       e.preventDefault();
       const touch = e.touches[0];
-      const elements = document.querySelectorAll(".rank-item");
+      const elements = rankListRef.current?.querySelectorAll(".rank-item");
+      if (!elements) return;
       for (let i = 0; i < elements.length; i++) {
         const rect = elements[i].getBoundingClientRect();
         if (touch.clientY >= rect.top && touch.clientY <= rect.bottom) {

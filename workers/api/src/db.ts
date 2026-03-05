@@ -20,15 +20,16 @@ export async function getPrompt(env: Env, key: "prompt1" | "prompt2"): Promise<s
 
 export async function getNextUnit(env: Env, sessionId: string, phase: Phase, task: Task) {
   return env.DB.prepare(
-    `SELECT u.unit_id, u.text
+    `SELECT u.unit_id, u.text, s.score AS al_score, s.reason AS al_reason
      FROM assignments a
      JOIN units u ON u.unit_id = a.unit_id
+     LEFT JOIN al_scores s ON s.unit_id = u.unit_id
      WHERE a.session_id = ? AND a.phase = ? AND a.task = ? AND a.status = 'todo'
      ORDER BY a.ordering ASC
      LIMIT 1`
   )
     .bind(sessionId, phase, task)
-    .first<{ unit_id: string; text: string }>();
+    .first<{ unit_id: string; text: string; al_score: number | null; al_reason: string | null }>();
 }
 
 export async function countProgress(env: Env, sessionId: string, phase: Phase, task: Task) {

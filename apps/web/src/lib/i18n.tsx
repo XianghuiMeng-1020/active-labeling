@@ -892,11 +892,15 @@ type I18nContextType = {
 const I18nContext = createContext<I18nContextType | null>(null);
 
 function defaultLocale(): Locale {
-  const saved = localStorage.getItem(LOCALE_KEY) as Locale | null;
-  if (saved && messages[saved]) return saved;
-  const lang = navigator.language.toLowerCase();
-  if (lang.startsWith("zh-tw") || lang.startsWith("zh-hk") || lang.startsWith("zh-mo")) return "zh-Hant";
-  if (lang.startsWith("zh")) return "zh-Hans";
+  try {
+    const saved = localStorage.getItem(LOCALE_KEY) as Locale | null;
+    if (saved && messages[saved]) return saved;
+  } catch { /* private browsing or disabled storage */ }
+  try {
+    const lang = navigator.language.toLowerCase();
+    if (lang.startsWith("zh-tw") || lang.startsWith("zh-hk") || lang.startsWith("zh-mo")) return "zh-Hant";
+    if (lang.startsWith("zh")) return "zh-Hans";
+  } catch { /* SSR fallback */ }
   return "en";
 }
 
