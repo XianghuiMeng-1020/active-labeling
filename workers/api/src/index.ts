@@ -250,7 +250,7 @@ async function broadcastStats(env: Env) {
 
 async function assignUnits(env: Env, sessionId: string, normalN: number, activeM: number) {
   const normalRows = await env.DB.prepare(
-    "SELECT unit_id FROM units ORDER BY RANDOM() LIMIT ?"
+    "SELECT unit_id FROM units ORDER BY unit_id ASC LIMIT ?"
   )
     .bind(normalN)
     .all<{ unit_id: string }>();
@@ -269,16 +269,15 @@ async function assignUnits(env: Env, sessionId: string, normalN: number, activeM
   });
   if (stmts.length > 0) await env.DB.batch(stmts);
 
-  const placeholder = normalIds.length > 0 ? normalIds.map(() => "?").join(",") : "'__none__'";
+  // Active phase: use AL scores to reorder the same units (or fetch remaining ones)
   const activeRows = await env.DB.prepare(
     `SELECT u.unit_id
      FROM units u
      LEFT JOIN al_scores s ON s.unit_id = u.unit_id
-     WHERE u.unit_id NOT IN (${placeholder})
-     ORDER BY COALESCE(s.score, 0) DESC, RANDOM()
+     ORDER BY COALESCE(s.score, 0) DESC, u.unit_id ASC
      LIMIT ?`
   )
-    .bind(...normalIds, activeM)
+    .bind(activeM)
     .all<{ unit_id: string }>();
 
   const activeStmts = (activeRows.results ?? []).map((row, idx) =>
