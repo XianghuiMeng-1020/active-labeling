@@ -105,14 +105,15 @@ export function UserNormalLlmPage() {
       const prog = status.normal_llm;
       setProgress({ done: prog?.done ?? 0, total: prog?.total ?? 0 });
 
+      const needsStaticData = labels.length === 0;
       const [tax, prompts, next] = await Promise.all([
-        api.getTaxonomy(),
-        api.getPrompts(),
+        needsStaticData ? api.getTaxonomy() : { labels },
+        needsStaticData ? api.getPrompts() : { prompt1: prompt1Text, prompt2: prompt2Text },
         api.getNextUnit(sessionId, "normal", "llm")
       ]);
-      setLabels(tax.labels);
-      setPrompt1Text(prompts.prompt1 ?? "");
-      setPrompt2Text(prompts.prompt2 ?? "");
+      if (tax.labels.length > 0) setLabels(tax.labels);
+      if (prompts.prompt1) setPrompt1Text(prompts.prompt1);
+      if (prompts.prompt2) setPrompt2Text(prompts.prompt2);
       setUnit(next.unit);
       setPredicted("");
       setLlmError(null);
@@ -188,13 +189,27 @@ export function UserNormalLlmPage() {
     }
   };
 
+  const applyAcceptResponse = useCallback((res: any) => {
+    if (res.progress) setProgress(res.progress);
+    setPredicted("");
+    setLlmError(null);
+    setShowOverride(false);
+    setCustomAttemptsUsed(res.custom_attempts_used ?? 0);
+    if (!res.next_unit) {
+      setDone(true);
+      setUnit(null);
+    } else {
+      setUnit(res.next_unit);
+    }
+  }, []);
+
   const accept = async (label: string) => {
     if (!unit || acceptingRef.current) return;
     acceptingRef.current = true;
     setAccepting(true);
     const attemptPayload = tracker.finalize();
     try {
-      await api.acceptLlm({
+      const res = await api.acceptLlm({
         session_id: sessionId,
         unit_id: unit.unit_id,
         phase: "normal",
@@ -203,7 +218,7 @@ export function UserNormalLlmPage() {
         attempt: attemptPayload
       });
       showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
-      setShowOverride(false);
+      applyAcceptResponse(res);
     } catch (error: any) {
       const status = error?.status;
       const retryable =
@@ -227,11 +242,11 @@ export function UserNormalLlmPage() {
       } else {
         showToast(t("flow.submitFailed"), "error");
       }
+      await load().catch(() => undefined);
     } finally {
       acceptingRef.current = false;
       setAccepting(false);
     }
-    await load().catch(() => undefined);
   };
 
   if (!sessionId) return null;

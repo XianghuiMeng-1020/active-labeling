@@ -85,10 +85,10 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       setProgress({ done, total });
 
       const [tax, next] = await Promise.all([
-        api.getTaxonomy(),
+        labels.length > 0 ? { labels } : api.getTaxonomy(),
         api.getNextUnit(sessionId, phase, "manual")
       ]);
-      setLabels(tax.labels);
+      if (tax.labels.length > 0) setLabels(tax.labels);
 
       if (phase === "normal") {
         const [labeledRes, rankRes] = await Promise.all([
@@ -142,6 +142,34 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     return () => window.removeEventListener("online", onOnline);
   }, []);
 
+  const applySubmitResponse = useCallback((res: any) => {
+    if (res.progress) setProgress(res.progress);
+    if (phase === "normal" && res.fully_labeled_essays?.length > 0) {
+      const ranked = res.ranked_essays ?? [];
+      const unranked = (res.fully_labeled_essays as number[]).find((idx: number) => !ranked.includes(idx));
+      if (unranked !== undefined) {
+        const essay = ESSAYS.find((e) => e.essayIndex === unranked);
+        if (essay) {
+          setRankingEssayIndex(unranked);
+          setShowRanking(true);
+          pendingUnitRef.current = res.next_unit ?? null;
+          setUnit(null);
+          return;
+        }
+      }
+    }
+    if (!res.next_unit) {
+      if (!navigatingRef.current) {
+        navigatingRef.current = true;
+        if (phase === "normal") nav("/user/normal/llm");
+        else nav("/user/active/llm");
+      }
+      setUnit(null);
+    } else {
+      setUnit(res.next_unit);
+    }
+  }, [phase, nav]);
+
   const submit = async (label: string) => {
     if (!unit || submitting || submittingRef.current) return;
     submittingRef.current = true;
@@ -149,7 +177,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     setSubmitting(true);
     setCardLeaving(true);
     try {
-      await api.submitManual({
+      const res = await api.submitManual({
         session_id: sessionId,
         unit_id: unit.unit_id,
         phase,
@@ -160,9 +188,9 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
 
       cardKey.current += 1;
-      await new Promise((r) => setTimeout(r, 220));
+      await new Promise((r) => setTimeout(r, 180));
       setCardLeaving(false);
-      await load();
+      applySubmitResponse(res);
     } catch (error: any) {
       setCardLeaving(false);
       const status = error?.status;
@@ -184,7 +212,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
         if (error?.code === "REQUEST_TIMEOUT") showToast(t("common.requestTimeout"), "error");
         else if (status !== 429) showToast(t("common.networkError"), "error");
         cardKey.current += 1;
-        await new Promise((r) => setTimeout(r, 220));
+        await new Promise((r) => setTimeout(r, 180));
         setCardLeaving(false);
         await load().catch(() => undefined);
       } else {

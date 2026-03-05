@@ -593,8 +593,48 @@ app.post("/api/labels/manual", async (c) => {
   if (body.phase === "active" && progress.done === progress.total) {
     await updateSessionDoneAt(c.env, body.session_id, "active_manual_done_at");
   }
-  await broadcastStats(c.env);
-  const payload = { ok: true, is_valid: valid.isValid, invalid_reason: valid.reason };
+  broadcastStats(c.env).catch(() => {});
+
+  const sessionId = body.session_id.trim();
+  const phase = body.phase;
+
+  const nextUnit = await getNextUnit(c.env, sessionId, phase, "manual");
+
+  let fullyLabeledEssays: number[] = [];
+  let rankedEssays: number[] = [];
+  if (phase === "normal") {
+    const [labeledRows, rankRows] = await Promise.all([
+      c.env.DB.prepare(
+        "SELECT unit_id FROM assignments WHERE session_id=? AND phase=? AND task='manual' AND status='done'"
+      ).bind(sessionId, phase).all<{ unit_id: string }>(),
+      c.env.DB.prepare(
+        "SELECT essay_index FROM ranking_submissions WHERE session_id=?"
+      ).bind(sessionId).all<{ essay_index: number }>()
+    ]);
+    const essayCounts: Record<number, number> = {};
+    for (const r of labeledRows.results ?? []) {
+      const m = r.unit_id.match(/^essay(\d+)_sentence/);
+      if (m) {
+        const idx = parseInt(m[1], 10);
+        essayCounts[idx] = (essayCounts[idx] ?? 0) + 1;
+      }
+    }
+    fullyLabeledEssays = Object.entries(essayCounts)
+      .filter(([, count]) => count >= 5)
+      .map(([idx]) => parseInt(idx, 10))
+      .sort((a, b) => a - b);
+    rankedEssays = (rankRows.results ?? []).map((r) => r.essay_index);
+  }
+
+  const payload = {
+    ok: true,
+    is_valid: valid.isValid,
+    invalid_reason: valid.reason,
+    next_unit: nextUnit ?? null,
+    progress,
+    fully_labeled_essays: fullyLabeledEssays,
+    ranked_essays: rankedEssays
+  };
   if (body.idempotency_key) {
     await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
   }
@@ -830,12 +870,30 @@ app.post("/api/llm/accept", async (c) => {
     isValid: valid.isValid,
     invalidReason: valid.reason
   });
-  const progress = await countProgress(c.env, body.session_id, "normal", "llm");
+  const sessionId = body.session_id.trim();
+  const progress = await countProgress(c.env, sessionId, "normal", "llm");
   if (progress.done === progress.total) {
-    await updateSessionDoneAt(c.env, body.session_id, "normal_llm_done_at");
+    await updateSessionDoneAt(c.env, sessionId, "normal_llm_done_at");
   }
-  await broadcastStats(c.env);
-  const payload = { ok: true, is_valid: valid.isValid, invalid_reason: valid.reason };
+  broadcastStats(c.env).catch(() => {});
+
+  const nextUnit = await getNextUnit(c.env, sessionId, "normal", "llm");
+  let customCount = 0;
+  if (nextUnit) {
+    const row = await c.env.DB.prepare(
+      "SELECT run_count FROM llm_run_counts WHERE session_id=? AND unit_id=? AND phase='normal' AND mode='custom'"
+    ).bind(sessionId, nextUnit.unit_id).first<{ run_count: number }>();
+    customCount = row?.run_count ?? 0;
+  }
+
+  const payload = {
+    ok: true,
+    is_valid: valid.isValid,
+    invalid_reason: valid.reason,
+    next_unit: nextUnit ?? null,
+    progress,
+    custom_attempts_used: customCount
+  };
   if (body.idempotency_key) {
     await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
   }
