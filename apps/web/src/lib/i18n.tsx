@@ -21,6 +21,7 @@ const messages: Record<Locale, Dict> = {
     "common.checking": "检查中...",
     "common.checkConnection": "检查连接",
     "common.error": "错误",
+    "common.retry": "重试",
     "common.networkError": "网络异常，请检查连接后重试",
     "common.requestTimeout": "请求超时，请稍后重试",
 
@@ -312,6 +313,7 @@ const messages: Record<Locale, Dict> = {
     "common.checking": "檢查中...",
     "common.checkConnection": "檢查連線",
     "common.error": "錯誤",
+    "common.retry": "重試",
     "common.networkError": "網路異常，請檢查連線後重試",
     "common.requestTimeout": "請求逾時，請稍後重試",
 
@@ -601,6 +603,7 @@ const messages: Record<Locale, Dict> = {
     "common.checking": "Checking...",
     "common.checkConnection": "Check Connection",
     "common.error": "Error",
+    "common.retry": "Retry",
     "common.networkError": "Network error. Please check your connection and retry.",
     "common.requestTimeout": "Request timed out. Please try again.",
 

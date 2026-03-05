@@ -58,6 +58,8 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const [showRanking, setShowRanking] = useState(false);
   const [rankingEssayIndex, setRankingEssayIndex] = useState<number | null>(null);
   const pendingUnitRef = useRef<UnitWithMeta | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const navigatingRef = useRef(false);
 
   const { toasts, showToast } = useToast();
   const tracker = useAttemptTracker(unit?.unit_id ?? "empty");
@@ -69,6 +71,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const load = useCallback(async () => {
     if (!sessionId) { nav("/user/start"); return; }
     setLoading(true);
+    setLoadError(null);
     try {
       const status = await api.getSessionStatus(sessionId);
       if (phase === "active" && !status.gates.can_enter_active_manual) {
@@ -111,15 +114,21 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       }
 
       if (!next.unit) {
-        if (phase === "normal") nav("/user/normal/llm");
+        if (phase === "normal" && !navigatingRef.current) {
+          navigatingRef.current = true;
+          nav("/user/normal/llm");
+        }
         setUnit(null);
       } else {
         setUnit(next.unit);
       }
+    } catch (err: any) {
+      console.error("load() failed:", err);
+      setLoadError(err?.message ?? t("common.error"));
     } finally {
       setLoading(false);
     }
-  }, [sessionId, phase, nav]);
+  }, [sessionId, phase, nav, t]);
 
   useEffect(() => {
     flushOfflineQueue().catch(() => undefined);
@@ -172,6 +181,10 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
         showToast(t("flow.queuedForRetry"), "warn");
         if (error?.code === "REQUEST_TIMEOUT") showToast(t("common.requestTimeout"), "error");
         else if (status !== 429) showToast(t("common.networkError"), "error");
+        cardKey.current += 1;
+        await new Promise((r) => setTimeout(r, 220));
+        setCardLeaving(false);
+        await load().catch(() => undefined);
       } else {
         showToast(t("flow.submitFailed"), "error");
       }
@@ -216,15 +229,8 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     setShowRanking(false);
     setRankingEssayIndex(null);
 
-    const pending = pendingUnitRef.current;
     pendingUnitRef.current = null;
-
-    if (pending) {
-      setUnit(pending);
-      await load();
-    } else {
-      if (phase === "normal") nav("/user/normal/llm");
-    }
+    await load();
   };
 
   useEffect(() => {
@@ -261,6 +267,19 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     );
   }
 
+  if (loadError) {
+    return (
+      <div className="page">
+        <div className="card error-box" style={{ textAlign: "center", padding: "32px 24px" }}>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>⚠️</div>
+          <h3 style={{ marginBottom: 8 }}>{t("common.error")}</h3>
+          <p style={{ fontSize: 13, marginBottom: 16, color: "var(--color-text-muted)" }}>{loadError}</p>
+          <button className="btn primary" onClick={() => load()}>{t("common.retry")}</button>
+        </div>
+      </div>
+    );
+  }
+
   if (showRanking && rankingEssayIndex !== null && phase === "normal") {
     const essay = ESSAYS.find((e) => e.essayIndex === rankingEssayIndex);
     if (essay) {
@@ -292,6 +311,9 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
           <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
           <h2>{t("flow.activeDoneTitle")}</h2>
           <p style={{ marginTop: 8 }}>{t("flow.allDone")}</p>
+          <button className="btn primary lg" style={{ marginTop: 20 }} onClick={() => nav("/welcome")}>
+            {t("welcome.letsGo")} →
+          </button>
         </div>
       </div>
     );

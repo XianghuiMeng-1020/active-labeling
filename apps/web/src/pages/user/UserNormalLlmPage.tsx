@@ -78,6 +78,7 @@ export function UserNormalLlmPage() {
   const [showOverride, setShowOverride] = useState(false);
   const [showPromptPreview, setShowPromptPreview] = useState<null | "prompt1" | "prompt2">(null);
   const [accepting, setAccepting] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const { toasts, showToast } = useToast();
   const tracker = useAttemptTracker(unit?.unit_id ?? "empty");
@@ -97,32 +98,38 @@ export function UserNormalLlmPage() {
 
   const load = useCallback(async () => {
     if (!sessionId) { nav("/user/start"); return; }
-    const status = await api.getSessionStatus(sessionId);
-    if (!status.gates.can_enter_normal_llm) { nav("/user/normal/manual"); return; }
-    const prog = status.normal_llm;
-    setProgress({ done: prog?.done ?? 0, total: prog?.total ?? 0 });
+    setLoadError(null);
+    try {
+      const status = await api.getSessionStatus(sessionId);
+      if (!status.gates.can_enter_normal_llm) { nav("/user/normal/manual"); return; }
+      const prog = status.normal_llm;
+      setProgress({ done: prog?.done ?? 0, total: prog?.total ?? 0 });
 
-    const [tax, prompts, next] = await Promise.all([
-      api.getTaxonomy(),
-      api.getPrompts(),
-      api.getNextUnit(sessionId, "normal", "llm")
-    ]);
-    setLabels(tax.labels);
-    setPrompt1Text(prompts.prompt1 ?? "");
-    setPrompt2Text(prompts.prompt2 ?? "");
-    setUnit(next.unit);
-    setPredicted("");
-    setLlmError(null);
-    setCustomAttemptsUsed(0);
-    setShowOverride(false);
+      const [tax, prompts, next] = await Promise.all([
+        api.getTaxonomy(),
+        api.getPrompts(),
+        api.getNextUnit(sessionId, "normal", "llm")
+      ]);
+      setLabels(tax.labels);
+      setPrompt1Text(prompts.prompt1 ?? "");
+      setPrompt2Text(prompts.prompt2 ?? "");
+      setUnit(next.unit);
+      setPredicted("");
+      setLlmError(null);
+      setCustomAttemptsUsed(0);
+      setShowOverride(false);
 
-    if (next.unit) {
-      try {
-        const cnt = await api.getCustomCount(sessionId, next.unit.unit_id, "normal");
-        setCustomAttemptsUsed(cnt.count);
-      } catch { /* ignore */ }
+      if (next.unit) {
+        try {
+          const cnt = await api.getCustomCount(sessionId, next.unit.unit_id, "normal");
+          setCustomAttemptsUsed(cnt.count);
+        } catch { /* ignore */ }
+      }
+      if (!next.unit) setDone(true);
+    } catch (err: any) {
+      console.error("LLM load() failed:", err);
+      setLoadError(err?.message ?? "Loading failed");
     }
-    if (!next.unit) setDone(true);
   }, [sessionId, nav]);
 
   useEffect(() => {
@@ -183,6 +190,7 @@ export function UserNormalLlmPage() {
     acceptingRef.current = true;
     setAccepting(true);
     const attemptPayload = tracker.finalize();
+    let acceptSucceeded = false;
     try {
       await api.acceptLlm({
         session_id: sessionId,
@@ -192,9 +200,9 @@ export function UserNormalLlmPage() {
         accepted_label: label,
         attempt: attemptPayload
       });
+      acceptSucceeded = true;
       showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
       setShowOverride(false);
-      await load();
     } catch (error: any) {
       const status = error?.status;
       const retryable =
@@ -222,9 +230,25 @@ export function UserNormalLlmPage() {
       acceptingRef.current = false;
       setAccepting(false);
     }
+    if (acceptSucceeded) {
+      await load().catch(() => undefined);
+    }
   };
 
   if (!sessionId) return null;
+
+  if (loadError) {
+    return (
+      <div className="page">
+        <div className="card error-box" style={{ textAlign: "center", padding: "32px 24px" }}>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>⚠️</div>
+          <h3 style={{ marginBottom: 8 }}>{t("common.error")}</h3>
+          <p style={{ fontSize: 13, marginBottom: 16, color: "var(--color-text-muted)" }}>{loadError}</p>
+          <button className="btn primary" onClick={() => load()}>{t("common.retry")}</button>
+        </div>
+      </div>
+    );
+  }
 
   if (done) {
     return (

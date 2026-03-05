@@ -888,6 +888,12 @@ app.post("/api/ranking/submit", async (c) => {
   if (!sessionId || typeof essayIndex !== "number" || !Array.isArray(ordering) || ordering.length === 0) {
     return json({ error: "session_id, essay_index, ordering required" }, 400);
   }
+  if (essayIndex < 1 || essayIndex > 100) {
+    return json({ error: "essay_index out of range" }, 400);
+  }
+  if (ordering.length > 50 || !ordering.every((v: unknown) => typeof v === "string" && v.length < 100)) {
+    return json({ error: "invalid ordering data" }, 400);
+  }
   await c.env.DB.prepare(
     `INSERT INTO ranking_submissions(session_id, essay_index, ordering, created_at)
      VALUES (?, ?, ?, ?)

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { type Essay } from "../lib/essayData";
 import { useI18n } from "../lib/i18n";
 
@@ -57,8 +57,10 @@ export function DifficultyRanking({ essay, onSubmit, submitting }: DifficultyRan
     setDraggingIdx(idx);
   }, []);
 
-  const onTouchMove = useCallback(
-    (e: React.TouchEvent) => {
+  const rankListRef = useRef<HTMLDivElement>(null);
+
+  const onTouchMoveNative = useCallback(
+    (e: TouchEvent) => {
       if (handleTouchStart.current === null) return;
       e.preventDefault();
       const touch = e.touches[0];
@@ -73,6 +75,13 @@ export function DifficultyRanking({ essay, onSubmit, submitting }: DifficultyRan
     },
     []
   );
+
+  useEffect(() => {
+    const el = rankListRef.current;
+    if (!el) return;
+    el.addEventListener("touchmove", onTouchMoveNative, { passive: false });
+    return () => el.removeEventListener("touchmove", onTouchMoveNative);
+  }, [onTouchMoveNative]);
 
   const onTouchEnd = useCallback(() => {
     if (handleTouchStart.current === null) return;
@@ -120,7 +129,7 @@ export function DifficultyRanking({ essay, onSubmit, submitting }: DifficultyRan
       </div>
 
       <div className="ranking-subtitle">{t("ranking.dragInstruction")}</div>
-      <div className="rank-list">
+      <div className="rank-list" ref={rankListRef}>
         {items.map((item, idx) => (
           <div
             key={item.unitId}
@@ -131,7 +140,6 @@ export function DifficultyRanking({ essay, onSubmit, submitting }: DifficultyRan
             onDragEnd={handleDragEnd}
             onDragOver={(e) => e.preventDefault()}
             onTouchStart={(e) => onTouchStart(idx, e)}
-            onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
             <span className="rank-position">{idx + 1}</span>
