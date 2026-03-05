@@ -111,7 +111,8 @@ export function UserNormalLlmPage() {
         needsStaticData ? api.getPrompts() : { prompt1: prompt1Text, prompt2: prompt2Text },
         api.getNextUnit(sessionId, "normal", "llm")
       ]);
-      if (tax.labels.length > 0) setLabels(tax.labels);
+      const HIDDEN = new Set(["CODE", "UNKNOWN"]);
+      if (tax.labels.length > 0) setLabels(tax.labels.filter((l: { label: string }) => !HIDDEN.has(l.label)));
       if (prompts.prompt1) setPrompt1Text(prompts.prompt1);
       if (prompts.prompt2) setPrompt2Text(prompts.prompt2);
       setUnit(next.unit);

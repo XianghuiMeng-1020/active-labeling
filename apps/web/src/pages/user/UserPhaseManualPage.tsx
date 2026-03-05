@@ -88,7 +88,8 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
         labels.length > 0 ? { labels } : api.getTaxonomy(),
         api.getNextUnit(sessionId, phase, "manual")
       ]);
-      if (tax.labels.length > 0) setLabels(tax.labels);
+      const HIDDEN = new Set(["CODE", "UNKNOWN"]);
+      if (tax.labels.length > 0) setLabels(tax.labels.filter((l: { label: string }) => !HIDDEN.has(l.label)));
 
       if (phase === "normal") {
         const [labeledRes, rankRes] = await Promise.all([
