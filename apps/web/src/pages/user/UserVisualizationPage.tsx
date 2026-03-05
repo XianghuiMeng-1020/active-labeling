@@ -43,11 +43,15 @@ function TimeCard({ label, manualMs, llmMs, unit }: { label: string; manualMs: n
           <div className="time-card-unit">{unit}</div>
         </div>
       </div>
-      {saved > 0 && (
+      {saved > 0 ? (
         <div style={{ textAlign: "center", marginTop: 10, fontSize: 13, fontWeight: 700, color: "var(--color-success)" }}>
           {t("viz.fasterPercent", { percent: saved })}
         </div>
-      )}
+      ) : manualMs > 0 && llmMs > 0 && saved <= 0 ? (
+        <div style={{ textAlign: "center", marginTop: 10, fontSize: 13, fontWeight: 700, color: "var(--color-text-muted)" }}>
+          {t("viz.similarSpeed")}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -10,13 +10,6 @@ function rowsToMap(rows: Array<{ label: string; count: number }>): Dict {
   return map;
 }
 
-async function queryLabelCount(env: Env, sql: string, binds: unknown[] = []) {
-  const result = await env.DB.prepare(sql)
-    .bind(...binds)
-    .all<{ label: string; count: number }>();
-  return rowsToMap(result.results ?? []);
-}
-
 export async function getOverallStats(env: Env) {
   const rows = await env.DB.prepare(
     `SELECT source, phase, label, COUNT(*) as count FROM (

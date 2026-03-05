@@ -197,9 +197,11 @@ async function issueAdminSessionToken(env: Env): Promise<{ token: string; expire
 }
 
 function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let result = 0;
-  for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  const maxLen = Math.max(a.length, b.length);
+  let result = a.length ^ b.length;
+  for (let i = 0; i < maxLen; i++) {
+    result |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  }
   return result === 0;
 }
 
@@ -556,6 +558,12 @@ app.post("/api/labels/manual", async (c) => {
       });
     }
   }
+  const asgn = await c.env.DB.prepare(
+    "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
+  ).bind(body.session_id.trim(), body.unit_id.trim(), body.phase).first<{ status: string }>();
+  if (!asgn) return json({ error: "assignment_not_found" }, 404);
+  if (asgn.status === "done") return json({ ok: true, already_done: true });
+
   const valid = validateAttempt(body.attempt, c.env);
   const attemptId = crypto.randomUUID();
   await runManualLabelBatch(c.env, {
@@ -804,6 +812,12 @@ app.post("/api/llm/accept", async (c) => {
       });
     }
   }
+  const asgn = await c.env.DB.prepare(
+    "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase='normal' AND task='llm'"
+  ).bind(body.session_id.trim(), body.unit_id.trim()).first<{ status: string }>();
+  if (!asgn) return json({ error: "assignment_not_found" }, 404);
+  if (asgn.status === "done") return json({ ok: true, already_done: true });
+
   const valid = validateAttempt(attemptPayload, c.env);
   await runLlmAcceptBatch(c.env, {
     sessionId: body.session_id.trim(),

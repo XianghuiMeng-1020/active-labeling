@@ -292,6 +292,7 @@ const messages: Record<Locale, Dict> = {
     "viz.continue": "继续体验主动学习",
     "viz.noData": "暂无足够数据，请先完成标注。",
     "viz.fasterPercent": "LLM 快了 {percent}%",
+    "viz.similarSpeed": "速度相近",
     "viz.metaSummary": "{sessions} 名参与者 · {essays} 篇文章 · 每篇 {sentencesPerEssay} 句",
 
     "label.EXPLANATION": "解释",
@@ -582,6 +583,7 @@ const messages: Record<Locale, Dict> = {
     "viz.continue": "繼續體驗主動學習",
     "viz.noData": "暫無足夠資料，請先完成標註。",
     "viz.fasterPercent": "LLM 快了 {percent}%",
+    "viz.similarSpeed": "速度相近",
     "viz.metaSummary": "{sessions} 名參與者 · {essays} 篇文章 · 每篇 {sentencesPerEssay} 句",
 
     "label.EXPLANATION": "解釋",
@@ -872,6 +874,7 @@ const messages: Record<Locale, Dict> = {
     "viz.continue": "Continue to Active Learning",
     "viz.noData": "Not enough data yet. Please complete labeling first.",
     "viz.fasterPercent": "LLM {percent}% faster",
+    "viz.similarSpeed": "Similar speed",
     "viz.metaSummary": "{sessions} participants · {essays} essays · {sentencesPerEssay} sentences/essay",
 
     "label.EXPLANATION": "Explanation",

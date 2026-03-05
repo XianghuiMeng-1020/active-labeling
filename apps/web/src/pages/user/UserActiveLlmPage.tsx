@@ -20,23 +20,42 @@ export function UserActiveLlmPage() {
   const sessionId = getSessionId();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<ActiveLlmItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     (async () => {
       if (!sessionId) { nav("/user/start"); return; }
       setLoading(true);
+      setError(null);
       try {
         const data = await api.getActiveLlmResults(sessionId);
-        setItems(data.items ?? []);
+        if (!cancelled) setItems(data.items ?? []);
+      } catch (e: any) {
+        if (!cancelled) setError(e?.message ?? t("common.error"));
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     })();
-  }, [sessionId, nav]);
+    return () => { cancelled = true; };
+  }, [sessionId, nav, t]);
 
   const readyCount = useMemo(() => items.filter((x) => !!x.label).length, [items]);
 
   if (!sessionId) return null;
+
+  if (error) {
+    return (
+      <div className="page">
+        <div className="card" style={{ textAlign: "center", padding: "32px 24px" }}>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>⚠️</div>
+          <h3 style={{ marginBottom: 8 }}>{t("common.error")}</h3>
+          <p style={{ fontSize: 13, marginBottom: 16, color: "var(--color-text-muted)" }}>{error}</p>
+          <button className="btn primary" onClick={() => window.location.reload()}>{t("common.retry")}</button>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

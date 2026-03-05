@@ -30,6 +30,7 @@ export function useAttemptTracker(unitKey: string) {
   });
 
   useEffect(() => {
+    cachedPayload.current = null;
     ref.current = {
       shownAtEpoch: Date.now(),
       lastTickPerf: performance.now(),
@@ -126,10 +127,13 @@ export function useAttemptTracker(unitKey: string) {
     };
   }, [unitKey]);
 
+  const cachedPayload = useRef<AttemptPayload | null>(null);
+
   const finalize = (): AttemptPayload => {
+    if (cachedPayload.current) return cachedPayload.current;
     const answeredAt = Date.now();
     ref.current.events.push({ t_perf_ms: performance.now(), t_epoch_ms: answeredAt, type: "answer" });
-    return {
+    const payload: AttemptPayload = {
       shown_at_epoch_ms: ref.current.shownAtEpoch,
       answered_at_epoch_ms: answeredAt,
       active_ms: Math.round(ref.current.activeMs),
@@ -140,6 +144,8 @@ export function useAttemptTracker(unitKey: string) {
       had_background: ref.current.hadBackground,
       events: ref.current.events
     };
+    cachedPayload.current = payload;
+    return payload;
   };
 
   return { finalize };
