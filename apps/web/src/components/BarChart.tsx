@@ -4,12 +4,13 @@ import {
   Chart as ChartJS,
   Legend,
   LinearScale,
+  Title,
   Tooltip
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useI18n } from "../lib/i18n";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
 
 const COLORS = [
   "#4f46e5", "#7c3aed", "#0ea5e9", "#10b981", "#f59e0b",
@@ -53,6 +54,8 @@ export function BarChart({
   };
 
   const itemsLabel = t("chart.items");
+  const xAxisLabel = t("chart.xAxisLabel");
+  const yAxisLabel = t("chart.yAxisLabel");
   const options = {
     responsive: true,
     plugins: {
@@ -63,10 +66,12 @@ export function BarChart({
       y: {
         beginAtZero: true,
         ticks: { stepSize: 1, precision: 0 },
-        grid: { color: "#f1f5f9" }
+        grid: { color: "#f1f5f9" },
+        title: { display: true, text: yAxisLabel, font: { size: 13, weight: "bold" as const }, color: "#64748b" }
       },
       x: {
-        grid: { display: false }
+        grid: { display: false },
+        title: { display: true, text: xAxisLabel, font: { size: 13, weight: "bold" as const }, color: "#64748b" }
       }
     },
     animation: { duration: 400 }

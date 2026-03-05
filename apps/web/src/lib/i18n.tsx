@@ -295,11 +295,49 @@ const messages: Record<Locale, Dict> = {
     "viz.similarSpeed": "速度相近",
     "viz.metaSummary": "{sessions} 名参与者 · {essays} 篇文章 · 每篇 {sentencesPerEssay} 句",
 
+    "label.CODE": "代码",
     "label.EXPLANATION": "解释",
     "label.EVALUATION": "评估",
     "label.RESPONSIBILITY": "责任",
     "label.APPLICATION": "应用",
-    "label.IMPLICATION": "影响"
+    "label.IMPLICATION": "影响",
+
+
+    "survey.title": "活动后问卷",
+    "survey.subtitle": "请根据你在本次活动中的体验完成以下问卷。",
+    "survey.scale_1": "非常不同意",
+    "survey.scale_2": "不同意",
+    "survey.scale_3": "中立",
+    "survey.scale_4": "同意",
+    "survey.scale_5": "非常同意",
+    "survey.sectionA": "A. 对工作坊和系统的理解",
+    "survey.q1": "我理解本工作坊旨在探讨生成式AI如何支持从原始文本到代码、模式和主题的定性分析。",
+    "survey.q2": "我理解工作坊试图教给我关于定性分析的内容。",
+    "survey.q4": "我理解AI辅助系统旨在支持而非替代人类的解释。",
+    "survey.q5": "我理解主动学习被用于帮助识别信息量大或不确定的标注案例。",
+    "survey.q6": "我理解主动学习与随机抽样在本活动中的区别。",
+    "survey.sectionB": "B. 活动体验",
+    "survey.q7": "AI辅助系统帮助我为编码或主题开发产生了初步想法。",
+    "survey.q9": "主动选择的文本片段对标注或解释是有用的。",
+    "survey.q10": "我有时不确定为什么某些文本片段被系统选中。",
+    "survey.sectionC": "C. 理解检验",
+    "survey.q11": "本活动中主动学习的主要目的是什么？",
+    "survey.mc_a": "A. 替代人类的编码决策",
+    "survey.mc_b": "B. 优先选择可能特别有信息量、不确定或对标注有用的样本",
+    "survey.mc_c": "C. 确保每位参与者看到完全相同的样本",
+    "survey.mc_d": "D. 我不确定",
+    "survey.sectionD": "D. 开放性问题",
+    "survey.q12": "用你自己的话描述，AI辅助系统旨在帮助定性分析中的哪些方面？",
+    "survey.q13": "关于主动学习在定性分析过程中的作用，如果有不清楚的地方，请说明。",
+    "survey.q14": "你对改进本工作坊有什么建议吗？",
+    "survey.openPlaceholder": "请输入你的回答...",
+    "survey.submit": "提交问卷",
+    "survey.thankYou": "感谢你完成问卷！",
+    "survey.thankYouDesc": "你的反馈对我们非常重要。",
+    "survey.goToSurvey": "填写问卷",
+
+    "chart.xAxisLabel": "标签",
+    "chart.yAxisLabel": "数量"
   },
   "zh-Hant": {
     "lang.label": "語言",
@@ -586,11 +624,49 @@ const messages: Record<Locale, Dict> = {
     "viz.similarSpeed": "速度相近",
     "viz.metaSummary": "{sessions} 名參與者 · {essays} 篇文章 · 每篇 {sentencesPerEssay} 句",
 
+    "label.CODE": "代碼",
     "label.EXPLANATION": "解釋",
     "label.EVALUATION": "評估",
     "label.RESPONSIBILITY": "責任",
     "label.APPLICATION": "應用",
-    "label.IMPLICATION": "影響"
+    "label.IMPLICATION": "影響",
+
+
+    "survey.title": "活動後問卷",
+    "survey.subtitle": "請根據你在本次活動中的體驗完成以下問卷。",
+    "survey.scale_1": "非常不同意",
+    "survey.scale_2": "不同意",
+    "survey.scale_3": "中立",
+    "survey.scale_4": "同意",
+    "survey.scale_5": "非常同意",
+    "survey.sectionA": "A. 對工作坊和系統的理解",
+    "survey.q1": "我理解本工作坊旨在探討生成式AI如何支持從原始文本到代碼、模式和主題的定性分析。",
+    "survey.q2": "我理解工作坊試圖教給我關於定性分析的內容。",
+    "survey.q4": "我理解AI輔助系統旨在支持而非替代人類的解釋。",
+    "survey.q5": "我理解主動學習被用於幫助識別資訊量大或不確定的標註案例。",
+    "survey.q6": "我理解主動學習與隨機抽樣在本活動中的區別。",
+    "survey.sectionB": "B. 活動體驗",
+    "survey.q7": "AI輔助系統幫助我為編碼或主題開發產生了初步想法。",
+    "survey.q9": "主動選擇的文本片段對標註或解釋是有用的。",
+    "survey.q10": "我有時不確定為什麼某些文本片段被系統選中。",
+    "survey.sectionC": "C. 理解檢驗",
+    "survey.q11": "本活動中主動學習的主要目的是什麼？",
+    "survey.mc_a": "A. 替代人類的編碼決策",
+    "survey.mc_b": "B. 優先選擇可能特別有資訊量、不確定或對標註有用的樣本",
+    "survey.mc_c": "C. 確保每位參與者看到完全相同的樣本",
+    "survey.mc_d": "D. 我不確定",
+    "survey.sectionD": "D. 開放性問題",
+    "survey.q12": "用你自己的話描述，AI輔助系統旨在幫助定性分析中的哪些方面？",
+    "survey.q13": "關於主動學習在定性分析過程中的作用，如果有不清楚的地方，請說明。",
+    "survey.q14": "你對改進本工作坊有什麼建議嗎？",
+    "survey.openPlaceholder": "請輸入你的回答...",
+    "survey.submit": "提交問卷",
+    "survey.thankYou": "感謝你完成問卷！",
+    "survey.thankYouDesc": "你的回饋對我們非常重要。",
+    "survey.goToSurvey": "填寫問卷",
+
+    "chart.xAxisLabel": "標籤",
+    "chart.yAxisLabel": "數量"
   },
   en: {
     "lang.label": "Language",
@@ -877,11 +953,49 @@ const messages: Record<Locale, Dict> = {
     "viz.similarSpeed": "Similar speed",
     "viz.metaSummary": "{sessions} participants · {essays} essays · {sentencesPerEssay} sentences/essay",
 
+    "label.CODE": "Code",
     "label.EXPLANATION": "Explanation",
     "label.EVALUATION": "Evaluation",
     "label.RESPONSIBILITY": "Responsibility",
     "label.APPLICATION": "Application",
-    "label.IMPLICATION": "Implication"
+    "label.IMPLICATION": "Implication",
+
+
+    "survey.title": "Post-Activity Survey",
+    "survey.subtitle": "Please complete this survey based on your experience during the activity.",
+    "survey.scale_1": "Strongly disagree",
+    "survey.scale_2": "Disagree",
+    "survey.scale_3": "Neutral",
+    "survey.scale_4": "Agree",
+    "survey.scale_5": "Strongly agree",
+    "survey.sectionA": "A. Understanding of the workshop and system",
+    "survey.q1": "I understood that this workshop examined how generative AI can support qualitative analysis from raw text to codes, patterns, and themes.",
+    "survey.q2": "I understood what the workshop was trying to teach me about qualitative analysis.",
+    "survey.q4": "I understood that the AI-supported system was designed to support, not replace, human interpretation.",
+    "survey.q5": "I understood that active learning was used to help identify informative or uncertain cases for labelling.",
+    "survey.q6": "I understood how active learning differed from random sampling in this activity.",
+    "survey.sectionB": "B. Experience of the activity",
+    "survey.q7": "The AI-supported system helped me generate initial ideas for coding or theme development.",
+    "survey.q9": "The actively selected excerpts were useful for labelling or interpretation.",
+    "survey.q10": "I was sometimes unsure why certain excerpts were selected by the system.",
+    "survey.sectionC": "C. Comprehension check",
+    "survey.q11": "What was the main purpose of active learning in this activity?",
+    "survey.mc_a": "A. To replace human coding decisions",
+    "survey.mc_b": "B. To prioritise examples that may be especially informative, uncertain, or useful for labelling",
+    "survey.mc_c": "C. To ensure every participant saw exactly the same examples",
+    "survey.mc_d": "D. I am not sure",
+    "survey.sectionD": "D. Open-ended questions",
+    "survey.q12": "In your own words, what was the AI-supported system designed to help with in qualitative analysis?",
+    "survey.q13": "What, if anything, was unclear about the role of active learning in the qualitative analysis process?",
+    "survey.q14": "Do you have any suggestions for improving this workshop?",
+    "survey.openPlaceholder": "Enter your answer...",
+    "survey.submit": "Submit Survey",
+    "survey.thankYou": "Thank you for completing the survey!",
+    "survey.thankYouDesc": "Your feedback is very valuable to us.",
+    "survey.goToSurvey": "Take Survey",
+
+    "chart.xAxisLabel": "Label",
+    "chart.yAxisLabel": "Count"
   }
 };
 
@@ -954,21 +1068,23 @@ export function getDefaultPromptTemplates(locale: Locale): { prompt1: string; pr
   if (locale === "zh-Hans") {
     return {
       prompt1: `任务：将输入句子分类为一个主题代码（只能选一个）：
-EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
+CODE, EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
 
 判定优先级（从高到低）：
-1) RESPONSIBILITY：伦理、公平、安全、问责、治理、风险防范，或明确规范性“应该如何安全使用”；
-2) EVALUATION：对 AI 的可靠性、价值、风险、局限、质量进行判断或比较；
-3) APPLICATION：AI 素养在学习/工作/生活中的具体应用、实践动作或决策使用；
-4) IMPLICATION：超出个体任务层面的广泛社会影响、长期后果或未来意义；
-5) EXPLANATION：定义、概念说明、机制解释、背景知识介绍。
+1) CODE：简短定义、术语定义、核心概念的简明表述；
+2) RESPONSIBILITY：伦理、公平、安全、问责、治理、风险防范，或明确规范性“应该如何安全使用”；
+3) EVALUATION：对 AI 的可靠性、价值、风险、局限、质量进行判断或比较；
+4) APPLICATION：AI 素养在学习/工作/生活中的具体应用、实践动作或决策使用；
+5) IMPLICATION：超出个体任务层面的广泛社会影响、长期后果或未来意义；
+6) EXPLANATION：定义、概念说明、机制解释、背景知识介绍。
 
 如一个句子涉及多个主题，选择“主要表达意图”最强的那一项。
 只返回 JSON：{"label":"<ONE_CODE>"}，不要输出其他内容。`,
       prompt2: `你是 AI 素养句子级主题分类器。输出一个主题代码：
-EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
+CODE, EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
 
 示例：
+- "AI literacy is the ability to understand, use, and evaluate AI technologies." => CODE
 - "AI literacy means understanding how AI systems are trained and where they can fail." => EXPLANATION
 - "AI can make errors, especially in complex or ambiguous situations." => EVALUATION
 - "This chatbot is helpful but still unreliable for high-stakes decisions." => EVALUATION
@@ -979,7 +1095,7 @@ EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
 - "Widespread AI adoption may reshape future job roles and civic participation." => IMPLICATION
 - "Overreliance on AI could weaken independent critical thinking over time." => IMPLICATION
 
-冲突优先级：RESPONSIBILITY > EVALUATION > APPLICATION > IMPLICATION > EXPLANATION
+冲突优先级：CODE > RESPONSIBILITY > EVALUATION > APPLICATION > IMPLICATION > EXPLANATION
 只返回 JSON：{"label":"<ONE_CODE>"}。`
     };
   }
@@ -987,21 +1103,23 @@ EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
   if (locale === "zh-Hant") {
     return {
       prompt1: `任務：將輸入句子分類為一個主題代碼（只能選一個）：
-EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
+CODE, EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
 
 判定優先級（由高到低）：
-1) RESPONSIBILITY：倫理、公平、安全、問責、治理、風險防範，或明確規範性「應該如何安全使用」；
-2) EVALUATION：對 AI 可靠性、價值、風險、侷限、品質進行判斷或比較；
-3) APPLICATION：AI 素養在學習/工作/生活中的具體應用、實踐動作或決策使用；
-4) IMPLICATION：超出個體任務層面的廣泛社會影響、長期後果或未來意義；
-5) EXPLANATION：定義、概念說明、機制解釋、背景知識介紹。
+1) CODE：簡短定義、術語定義、核心概念的簡明表述；
+2) RESPONSIBILITY：倫理、公平、安全、問責、治理、風險防範，或明確規範性「應該如何安全使用」；
+3) EVALUATION：對 AI 可靠性、價值、風險、侷限、品質進行判斷或比較；
+4) APPLICATION：AI 素養在學習/工作/生活中的具體應用、實踐動作或決策使用；
+5) IMPLICATION：超出個體任務層面的廣泛社會影響、長期後果或未來意義；
+6) EXPLANATION：定義、概念說明、機制解釋、背景知識介紹。
 
 若句子涉及多個主題，選擇「主要表達意圖」最強者。
 只返回 JSON：{"label":"<ONE_CODE>"}，不要輸出其他內容。`,
       prompt2: `你是 AI 素養句子級主題分類器。輸出一個主題代碼：
-EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
+CODE, EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
 
 示例：
+- "AI literacy is the ability to understand, use, and evaluate AI technologies." => CODE
 - "AI literacy means understanding how AI systems are trained and where they can fail." => EXPLANATION
 - "AI can make errors, especially in complex or ambiguous situations." => EVALUATION
 - "This chatbot is helpful but still unreliable for high-stakes decisions." => EVALUATION
@@ -1012,28 +1130,30 @@ EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
 - "Widespread AI adoption may reshape future job roles and civic participation." => IMPLICATION
 - "Overreliance on AI could weaken independent critical thinking over time." => IMPLICATION
 
-衝突優先級：RESPONSIBILITY > EVALUATION > APPLICATION > IMPLICATION > EXPLANATION
+衝突優先級：CODE > RESPONSIBILITY > EVALUATION > APPLICATION > IMPLICATION > EXPLANATION
 只返回 JSON：{"label":"<ONE_CODE>"}。`
     };
   }
 
   return {
     prompt1: `Task: Classify one sentence into exactly one theme code:
-EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
+CODE, EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION
 
 Decision priority:
-1) RESPONSIBILITY: ethics, fairness, safety, accountability, governance, misuse prevention, or clear normative guidance.
-2) EVALUATION: judging reliability, value, risks, limitations, trustworthiness, or quality of AI outputs.
-3) APPLICATION: concrete use of AI literacy in study/work/life actions and decision-making.
-4) IMPLICATION: broader societal/system-level consequences and long-term future impact.
-5) EXPLANATION: definitions, concepts, mechanisms, or background explanation.
+1) CODE: short definitions, terminology definitions, concise core concept statements.
+2) RESPONSIBILITY: ethics, fairness, safety, accountability, governance, misuse prevention, or clear normative guidance.
+3) EVALUATION: judging reliability, value, risks, limitations, trustworthiness, or quality of AI outputs.
+4) APPLICATION: concrete use of AI literacy in study/work/life actions and decision-making.
+5) IMPLICATION: broader societal/system-level consequences and long-term future impact.
+6) EXPLANATION: definitions, concepts, mechanisms, or background explanation.
 
 If multiple themes appear, choose the dominant communicative intent.
 Return JSON only: {"label":"<ONE_CODE>"} with no extra text.`,
     prompt2: `You are a sentence-level thematic classifier for AI literacy texts.
-Output one code only: EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION.
+Output one code only: CODE, EXPLANATION, EVALUATION, RESPONSIBILITY, APPLICATION, IMPLICATION.
 
 Examples:
+- "AI literacy is the ability to understand, use, and evaluate AI technologies." -> CODE
 - "AI literacy means understanding how AI systems are trained and where they can fail." -> EXPLANATION
 - "AI can make errors, especially in complex or ambiguous situations." -> EVALUATION
 - "This chatbot is helpful but still unreliable for high-stakes decisions." -> EVALUATION
@@ -1044,7 +1164,7 @@ Examples:
 - "Widespread AI adoption may reshape future job roles and civic participation." -> IMPLICATION
 - "Overreliance on AI could weaken independent critical thinking over time." -> IMPLICATION
 
-Tie-break priority: RESPONSIBILITY > EVALUATION > APPLICATION > IMPLICATION > EXPLANATION.
+Tie-break priority: CODE > RESPONSIBILITY > EVALUATION > APPLICATION > IMPLICATION > EXPLANATION.
 Return JSON only: {"label":"<ONE_CODE>"}.`
   };
 }

@@ -18,6 +18,7 @@ import { UserPhaseManualPage } from "./pages/user/UserPhaseManualPage";
 import { UserVisualizationPage } from "./pages/user/UserVisualizationPage";
 import { SharePage } from "./pages/share/SharePage";
 import { UserStartPage } from "./pages/user/UserStartPage";
+import { UserSurveyPage } from "./pages/user/UserSurveyPage";
 
 function App() {
   useEffect(() => {
@@ -57,6 +58,7 @@ function App() {
         <Route path="/user/visualization" element={<UserVisualizationPage />} />
         <Route path="/user/active/manual" element={<UserActiveManualPage />} />
         <Route path="/user/active/llm" element={<UserActiveLlmPage />} />
+        <Route path="/user/survey" element={<UserSurveyPage />} />
 
         {/* Admin routes — all protected by AdminGuard */}
         <Route path="/admin" element={<Navigate to="/admin/login" replace />} />

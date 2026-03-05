@@ -152,6 +152,20 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }),
+
+  submitSurvey: (payload: {
+    session_id: string;
+    likert: Record<string, number>;
+    mc_q11: string;
+    open_q12: string;
+    open_q13: string;
+    open_q14: string;
+  }) =>
+    req("/api/survey/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }),
   getRankingStatus: (sessionId: string) =>
     req(`/api/ranking/status?session_id=${encodeURIComponent(sessionId)}`) as Promise<{
       ranked_essays: number[];

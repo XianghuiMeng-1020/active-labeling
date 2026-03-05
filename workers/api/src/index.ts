@@ -111,6 +111,9 @@ app.use("/api/*", async (c, next) => {
   } else if (path.includes("ranking/submit")) {
     pathKey = "ranking";
     limit = 30;
+  } else if (path.includes("survey/submit")) {
+    pathKey = "survey";
+    limit = 10;
   } else if (path.includes("stats/visualization")) {
     pathKey = "read";
     limit = 60;
@@ -987,6 +990,35 @@ app.get("/api/ranking/status", async (c) => {
   ).bind(sessionId).all<{ essay_index: number }>();
   const ranked = (rows.results ?? []).map((r) => r.essay_index);
   return json({ ranked_essays: ranked });
+});
+
+// ─── Public: survey submissions ───────────────────────────────────────────────
+
+app.post("/api/survey/submit", async (c) => {
+  const body = await c.req.json<{
+    session_id?: string;
+    likert?: Record<string, number>;
+    mc_q11?: string;
+    open_q12?: string;
+    open_q13?: string;
+    open_q14?: string;
+  }>().catch(() => ({}));
+  const sessionId = (body as any).session_id?.trim();
+  if (!sessionId) {
+    return json({ error: "session_id required" }, 400);
+  }
+  const responseJson = JSON.stringify({
+    likert: (body as any).likert ?? {},
+    mc_q11: (body as any).mc_q11 ?? "",
+    open_q12: (body as any).open_q12 ?? "",
+    open_q13: (body as any).open_q13 ?? "",
+    open_q14: (body as any).open_q14 ?? "",
+  });
+  await c.env.DB.prepare(
+    `INSERT INTO survey_responses(session_id, response_json, created_at)
+     VALUES (?, ?, ?)`
+  ).bind(sessionId, responseJson, nowIso()).run();
+  return json({ ok: true });
 });
 
 app.get("/api/session/labeled-essays", async (c) => {

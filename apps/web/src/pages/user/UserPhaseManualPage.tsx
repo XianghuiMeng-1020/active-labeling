@@ -341,8 +341,8 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
           <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
           <h2>{t("flow.activeDoneTitle")}</h2>
           <p style={{ marginTop: 8 }}>{t("flow.allDone")}</p>
-          <button className="btn primary lg" style={{ marginTop: 20 }} onClick={() => nav("/welcome")}>
-            {t("welcome.letsGo")} →
+          <button className="btn primary lg" style={{ marginTop: 20 }} onClick={() => nav("/user/survey")}>
+            {t("survey.goToSurvey")} →
           </button>
         </div>
       </div>

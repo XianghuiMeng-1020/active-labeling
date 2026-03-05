@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { type Essay } from "../lib/essayData";
+import { type Essay, getSentenceText } from "../lib/essayData";
 import { useI18n } from "../lib/i18n";
 
 interface EssayDisplayProps {
@@ -8,7 +8,7 @@ interface EssayDisplayProps {
 }
 
 export function EssayDisplay({ essay, currentUnitId }: EssayDisplayProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const currentIdx = useMemo(
     () => essay.sentences.findIndex((s) => s.unitId === currentUnitId),
@@ -22,15 +22,16 @@ export function EssayDisplay({ essay, currentUnitId }: EssayDisplayProps) {
           {t("flow.essay")} {essay.essayIndex}
         </span>
       </div>
-      <div className="essay-sentences">
+      <div className="essay-flow">
         {essay.sentences.map((s, idx) => (
-          <div
+          <span
             key={s.unitId}
-            className={`essay-sentence ${idx === currentIdx ? "essay-sentence-active" : ""}`}
+            className={`essay-flow-sentence ${idx === currentIdx ? "essay-flow-active" : ""}`}
           >
-            <span className="essay-sentence-label">S{s.sentenceIndex}.</span>
-            <span className="essay-sentence-text">{s.text}</span>
-          </div>
+            <span className="essay-flow-tag">S{s.sentenceIndex}</span>
+            {getSentenceText(s, locale)}
+            {idx < essay.sentences.length - 1 ? " " : ""}
+          </span>
         ))}
       </div>
     </div>

@@ -130,6 +130,14 @@ export function UserActiveLlmPage() {
           );
         })
       )}
+
+      <button
+        className="btn primary full-width lg"
+        style={{ marginTop: 8, marginBottom: 32 }}
+        onClick={() => nav("/user/survey")}
+      >
+        {t("survey.goToSurvey")} →
+      </button>
     </div>
   );
 }
