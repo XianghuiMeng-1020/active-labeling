@@ -218,6 +218,18 @@ body {
   box-shadow: var(--shadow-md), -4px 0 12px rgba(139,92,246,0.1);
 }
 
+/* Active Learning: distinct header and banner */
+.progress-header.active-learning {
+  background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(99,102,241,0.08));
+  border-bottom-color: rgba(139,92,246,0.35);
+}
+
+.progress-header.active-learning .progress-ring .ring-fill { stroke: var(--color-active-badge); }
+.progress-header.active-learning .progress-title { color: #6d28d9; }
+.hero-banner.active-learning {
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #4f46e5 100%);
+}
+
 /* ─── Text block ──────────────────────────────────────────── */
 .text-block {
   font-size: 17px;
@@ -264,6 +276,10 @@ body {
   background: #ede9fe;
   color: var(--color-active-badge);
 }
+
+.unit-chip.difficulty-easy { background: #d1fae5; color: #065f46; }
+.unit-chip.difficulty-medium { background: #fef3c7; color: #92400e; }
+.unit-chip.difficulty-hard { background: #fee2e2; color: #991b1b; }
 
 /* ─── Label Grid (大触摸按钮) ─────────────────────────────── */
 .label-grid {
@@ -1315,14 +1331,14 @@ p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.65; }
 
 .ranking-hint {
   font-size: 13px;
-  color: var(--color-text-muted);
+  color: #000;
   margin-bottom: 12px;
 }
 
 .ranking-subtitle {
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: #000;
   margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.04em;

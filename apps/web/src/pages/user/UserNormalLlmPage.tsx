@@ -13,6 +13,7 @@ import { getEssaySentenceMeta } from "../../lib/unitUtils";
 import { getEssayByUnitId } from "../../lib/essayData";
 
 const CUSTOM_MAX = 5;
+const LLM_ATTEMPTS_PER_UNIT = 2;
 
 function OverrideSheet({
   labels,
@@ -79,6 +80,8 @@ export function UserNormalLlmPage() {
   const [showPromptPreview, setShowPromptPreview] = useState<null | "prompt1" | "prompt2">(null);
   const [accepting, setAccepting] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [runsThisUnit, setRunsThisUnit] = useState(0);
+  const [acceptedLabel, setAcceptedLabel] = useState<string | null>(null);
 
   const { toasts, showToast } = useToast();
   const tracker = useAttemptTracker(unit?.unit_id ?? "empty");
@@ -120,6 +123,8 @@ export function UserNormalLlmPage() {
       setLlmError(null);
       setCustomAttemptsUsed(0);
       setShowOverride(false);
+      setRunsThisUnit(0);
+      setAcceptedLabel(null);
 
       if (next.unit) {
         try {
@@ -169,6 +174,7 @@ export function UserNormalLlmPage() {
         custom_prompt_text: m === "custom" ? customPrompt : undefined
       });
       setPredicted(data.predicted_label ?? "");
+      setRunsThisUnit((prev) => prev + 1);
       if (m === "custom" && data.custom_attempts_used !== undefined) {
         setCustomAttemptsUsed(data.custom_attempts_used);
       }
@@ -195,6 +201,8 @@ export function UserNormalLlmPage() {
     setPredicted("");
     setLlmError(null);
     setShowOverride(false);
+    setAcceptedLabel(null);
+    setRunsThisUnit(0);
     setCustomAttemptsUsed(res.custom_attempts_used ?? 0);
     if (!res.next_unit) {
       setDone(true);
@@ -204,8 +212,9 @@ export function UserNormalLlmPage() {
     }
   }, []);
 
-  const accept = async (label: string) => {
-    if (!unit || acceptingRef.current) return;
+  const submitAcceptAndAdvance = async () => {
+    const label = acceptedLabel;
+    if (!unit || acceptingRef.current || !label) return;
     acceptingRef.current = true;
     setAccepting(true);
     const attemptPayload = tracker.finalize();
@@ -250,6 +259,16 @@ export function UserNormalLlmPage() {
     }
   };
 
+  const accept = (label: string) => {
+    setAcceptedLabel(label);
+  };
+
+  const goToNextSentence = () => {
+    if (acceptedLabel) {
+      submitAcceptAndAdvance();
+    }
+  };
+
   if (!sessionId) return null;
 
   if (loadError) {
@@ -272,9 +291,14 @@ export function UserNormalLlmPage() {
           <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
           <h2>{t("flow.doneNormal")}</h2>
           <p style={{ margin: "12px 0 24px" }}>{t("flow.canContinueActive")}</p>
-          <button className="btn primary lg full-width" onClick={() => nav("/user/visualization")}>
-            {t("viz.title")} →
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <button className="btn primary lg full-width" onClick={() => nav("/user/visualization")}>
+              {t("viz.title")} →
+            </button>
+            <button type="button" className="btn lg full-width" onClick={() => nav("/user/normal/manual")}>
+              {t("ranking.backToRanking")}
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -314,6 +338,11 @@ export function UserNormalLlmPage() {
             <div style={{ fontSize: 13, fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: 10, marginTop: 8 }}>
               {t("flow.selectPromptMode")}
             </div>
+            {!acceptedLabel && (
+              <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 8 }}>
+                {t("flow.attemptsLeft", { n: Math.max(0, LLM_ATTEMPTS_PER_UNIT - runsThisUnit) })}
+              </div>
+            )}
             <div className="segmented" style={{ marginBottom: 12 }}>
               {(["prompt1", "prompt2", "custom"] as LlmMode[]).map((m) => (
                 <button
@@ -379,7 +408,7 @@ export function UserNormalLlmPage() {
             <button
               className="btn primary full-width"
               onClick={() => runLlm(activeMode)}
-              disabled={llmLoading || (activeMode === "custom" && customExhausted)}
+              disabled={llmLoading || (activeMode === "custom" && customExhausted) || (acceptedLabel ? false : runsThisUnit >= LLM_ATTEMPTS_PER_UNIT)}
             >
               {llmLoading ? (
                 <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> {t("flow.runningEllipsis")}</>
@@ -394,6 +423,20 @@ export function UserNormalLlmPage() {
               <LlmSkeleton elapsed={llmElapsed} label={t("flow.modelRunning")} />
             ) : llmError ? (
               <div className="error-box">{llmError}</div>
+            ) : acceptedLabel ? (
+              <>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--color-success)", marginBottom: 8 }}>
+                  ✓ {t("flow.acceptedTryOther")}
+                </div>
+                <div className="btn-group" style={{ marginTop: 16 }}>
+                  <button className="btn" style={{ flex: 1 }} onClick={() => { setActiveMode("prompt2"); setAcceptedLabel(null); setPredicted(""); setRunsThisUnit(0); }}>
+                    {t("flow.tryPrompt2")}
+                  </button>
+                  <button className="btn primary" style={{ flex: 1 }} onClick={goToNextSentence} disabled={accepting}>
+                    {accepting ? <span className="spinner" /> : <>{t("flow.nextSentence")} →</>}
+                  </button>
+                </div>
+              </>
             ) : predicted ? (
               <>
                 <div style={{ fontSize: 13, fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: 8 }}>

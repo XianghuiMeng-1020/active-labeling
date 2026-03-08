@@ -30,11 +30,15 @@ function colorForLabel(label: string) {
 export function BarChart({
   title,
   counts,
-  noCard = false
+  noCard = false,
+  yAxisLabel,
+  xAxisLabel: xAxisLabelOverride
 }: {
   title: string;
   counts: Record<string, number>;
   noCard?: boolean;
+  yAxisLabel?: string;
+  xAxisLabel?: string;
 }) {
   const { t } = useI18n();
   const labels = Object.keys(counts);
@@ -54,8 +58,8 @@ export function BarChart({
   };
 
   const itemsLabel = t("chart.items");
-  const xAxisLabel = t("chart.xAxisLabel");
-  const yAxisLabel = t("chart.yAxisLabel");
+  const xAxisLabel = xAxisLabelOverride ?? t("chart.xAxisLabel");
+  const yAxisLabelText = yAxisLabel ?? t("chart.yAxisLabel");
   const options = {
     responsive: true,
     plugins: {
@@ -67,7 +71,7 @@ export function BarChart({
         beginAtZero: true,
         ticks: { stepSize: 1, precision: 0 },
         grid: { color: "#f1f5f9" },
-        title: { display: true, text: yAxisLabel, font: { size: 13, weight: "bold" as const }, color: "#64748b" }
+        title: { display: true, text: yAxisLabelText, font: { size: 13, weight: "bold" as const }, color: "#64748b" }
       },
       x: {
         grid: { display: false },

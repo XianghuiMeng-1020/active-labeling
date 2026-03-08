@@ -170,6 +170,12 @@ export const api = {
     req(`/api/ranking/status?session_id=${encodeURIComponent(sessionId)}`) as Promise<{
       ranked_essays: number[];
     }>,
+  reopenEssayForLabeling: (payload: { session_id: string; essay_index: number }) =>
+    req("/api/ranking/reopen", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }),
   getLabeledEssays: (sessionId: string, phase: Phase = "normal") =>
     req(`/api/session/labeled-essays?session_id=${encodeURIComponent(sessionId)}&phase=${phase}`) as Promise<{
       fully_labeled_essays: number[];

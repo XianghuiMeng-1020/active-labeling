@@ -108,7 +108,7 @@ app.use("/api/*", async (c, next) => {
   } else if (path.includes("session/reset")) {
     pathKey = "session_reset";
     limit = 20;
-  } else if (path.includes("ranking/submit")) {
+  } else if (path.includes("ranking/submit") || path.includes("ranking/reopen")) {
     pathKey = "ranking";
     limit = 30;
   } else if (path.includes("survey/submit")) {
@@ -990,6 +990,36 @@ app.get("/api/ranking/status", async (c) => {
   ).bind(sessionId).all<{ essay_index: number }>();
   const ranked = (rows.results ?? []).map((r) => r.essay_index);
   return json({ ranked_essays: ranked });
+});
+
+// ─── Reopen essay for re-labeling (from ranking page: back to edit labels) ───
+app.post("/api/ranking/reopen", async (c) => {
+  const body = (await c.req.json<{ session_id?: string; essay_index?: number }>().catch(() => ({}))) ?? {};
+  const sessionId = String(body.session_id ?? "").trim();
+  const essayIndex = typeof body.essay_index === "number" ? body.essay_index : undefined;
+  if (!sessionId || essayIndex == null || essayIndex < 1 || essayIndex > 100) {
+    return json({ error: "session_id and essay_index (1–100) required" }, 400);
+  }
+  const pattern = `essay${String(essayIndex).padStart(4, "0")}_%`;
+  await c.env.DB.prepare(
+    "DELETE FROM ranking_submissions WHERE session_id = ? AND essay_index = ?"
+  ).bind(sessionId, essayIndex).run();
+  await c.env.DB.prepare(
+    "DELETE FROM interaction_events WHERE attempt_id IN (SELECT attempt_id FROM label_attempts WHERE session_id = ? AND phase = 'normal' AND task = 'manual' AND unit_id LIKE ?)"
+  ).bind(sessionId, pattern).run();
+  await c.env.DB.prepare(
+    "DELETE FROM label_attempts WHERE session_id = ? AND phase = 'normal' AND task = 'manual' AND unit_id LIKE ?"
+  ).bind(sessionId, pattern).run();
+  await c.env.DB.prepare(
+    "DELETE FROM manual_labels WHERE session_id = ? AND phase = 'normal' AND unit_id LIKE ?"
+  ).bind(sessionId, pattern).run();
+  await c.env.DB.prepare(
+    "UPDATE assignments SET status = 'todo' WHERE session_id = ? AND phase = 'normal' AND task = 'manual' AND unit_id LIKE ?"
+  ).bind(sessionId, pattern).run();
+  await c.env.DB.prepare(
+    "UPDATE sessions SET normal_manual_done_at = NULL WHERE session_id = ?"
+  ).bind(sessionId).run();
+  return json({ ok: true });
 });
 
 // ─── Public: survey submissions ───────────────────────────────────────────────

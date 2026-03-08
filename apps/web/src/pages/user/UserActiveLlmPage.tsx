@@ -77,9 +77,10 @@ export function UserActiveLlmPage() {
 
   return (
     <div className="page">
-      <div className="hero-banner">
+      <div className="hero-banner active-learning">
         <h1>{t("flow.u4Title")}</h1>
         <p>{t("flow.u4Hint", { ready: readyCount, total: items.length })}</p>
+        <span className="badge purple" style={{ marginTop: 8, display: "inline-block" }}>⚡ Active Learning</span>
       </div>
 
       {items.length === 0 ? (

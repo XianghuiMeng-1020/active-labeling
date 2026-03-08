@@ -152,7 +152,14 @@ export function UserVisualizationPage() {
       title: { display: false }
     },
     scales: {
-      y: { beginAtZero: true, ticks: { stepSize: 1 } }
+      y: {
+        beginAtZero: true,
+        ticks: { stepSize: 1 },
+        title: { display: true, text: t("chart.yAxisLabelFrequency"), font: { size: 13, weight: "bold" as const }, color: "#64748b" }
+      },
+      x: {
+        title: { display: true, text: t("chart.xAxisLabel"), font: { size: 13, weight: "bold" as const }, color: "#64748b" }
+      }
     }
   };
 

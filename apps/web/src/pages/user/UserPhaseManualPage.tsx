@@ -34,6 +34,19 @@ function parseAlReason(reason: string | null | undefined, t: (k: string, v?: Rec
   return null;
 }
 
+/** Derive Easy/Medium/Hard from al_reason entropy (for display only). */
+function getDifficultyFromReason(reason: string | null | undefined): "Easy" | "Medium" | "Hard" | null {
+  if (!reason) return null;
+  try {
+    const obj = JSON.parse(reason) as { entropy?: number };
+    const e = obj.entropy;
+    if (typeof e !== "number") return null;
+    if (e < 0.35) return "Easy";
+    if (e < 0.65) return "Medium";
+    return "Hard";
+  } catch { return null; }
+}
+
 type UndoEntry = { unit_id: string; label: string; text: string };
 type UnitWithMeta = { unit_id: string; text: string; al_reason?: string | null; al_score?: number | null };
 
@@ -67,6 +80,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const unitMeta = useMemo(() => getEssaySentenceMeta(unit?.unit_id), [unit?.unit_id]);
   const currentEssay = useMemo(() => unit ? getEssayByUnitId(unit.unit_id) : null, [unit]);
   const alHint = useMemo(() => parseAlReason(unit?.al_reason, t), [unit?.al_reason, t]);
+  const difficultyLabel = useMemo(() => getDifficultyFromReason(unit?.al_reason), [unit?.al_reason]);
 
   const load = useCallback(async () => {
     if (!sessionId) { nav("/user/start"); return; }
@@ -323,7 +337,23 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
               <div className="progress-subtitle">{t("flow.essay")} {rankingEssayIndex} — {t("ranking.title")}</div>
             </div>
           </div>
-          <DifficultyRanking essay={essay} onSubmit={handleRankingSubmit} submitting={rankingSubmitting} />
+          <DifficultyRanking
+            essay={essay}
+            onSubmit={handleRankingSubmit}
+            submitting={rankingSubmitting}
+            onBackToLabeling={async () => {
+              if (!sessionId || rankingEssayIndex === null) return;
+              try {
+                await api.reopenEssayForLabeling({ session_id: sessionId, essay_index: rankingEssayIndex });
+                setShowRanking(false);
+                setRankingEssayIndex(null);
+                await load();
+              } catch {
+                showToast(t("flow.submitFailed"), "error");
+              }
+            }}
+            backToLabelingLabel={t("ranking.backToEditLabels")}
+          />
           <ToastContainer toasts={toasts} />
         </div>
       );
@@ -352,13 +382,13 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
 
   return (
     <div className="page">
-      <div className="progress-header">
+      <div className={`progress-header ${phase === "active" ? "active-learning" : ""}`}>
         <ProgressRing done={progress.done} total={progress.total} />
         <div className="progress-info">
           <div className="progress-title">{title}</div>
           <div className="progress-subtitle">{t("flow.submitNext")}</div>
         </div>
-        {phase === "active" && <span className="badge purple">Active</span>}
+        {phase === "active" && <span className="badge purple">⚡ Active Learning</span>}
       </div>
 
       <DeadLetterBanner />
@@ -399,6 +429,11 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
               ) : null}
               {phase === "active" && (
                 <span className="unit-chip active">⚡ {t("flow.activeLearning")}</span>
+              )}
+              {phase === "active" && difficultyLabel && (
+                <span className={`unit-chip difficulty-${difficultyLabel.toLowerCase()}`}>
+                  {difficultyLabel === "Easy" ? t("flow.difficultyEasy") : difficultyLabel === "Medium" ? t("flow.difficultyMedium") : t("flow.difficultyHard")}
+                </span>
               )}
             </div>
 

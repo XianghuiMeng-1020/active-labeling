@@ -6,9 +6,11 @@ interface DifficultyRankingProps {
   essay: Essay;
   onSubmit: (ranking: string[]) => void;
   submitting?: boolean;
+  onBackToLabeling?: () => void;
+  backToLabelingLabel?: string;
 }
 
-export function DifficultyRanking({ essay, onSubmit, submitting }: DifficultyRankingProps) {
+export function DifficultyRanking({ essay, onSubmit, submitting, onBackToLabeling, backToLabelingLabel }: DifficultyRankingProps) {
   const { t, locale } = useI18n();
   const [items, setItems] = useState(() =>
     essay.sentences.map((s) => ({
@@ -180,14 +182,21 @@ export function DifficultyRanking({ essay, onSubmit, submitting }: DifficultyRan
         ))}
       </div>
 
-      <button
-        className="btn primary full-width lg"
-        style={{ marginTop: 16 }}
-        onClick={() => onSubmit(items.map((i) => i.unitId))}
-        disabled={submitting}
-      >
-        {submitting ? <span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> : <>{t("ranking.confirm")} →</>}
-      </button>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
+        {onBackToLabeling && backToLabelingLabel && (
+          <button type="button" className="btn" style={{ width: "100%" }} onClick={onBackToLabeling} disabled={submitting}>
+            {backToLabelingLabel}
+          </button>
+        )}
+        <button
+          className="btn primary full-width lg"
+          style={{ marginTop: 0 }}
+          onClick={() => onSubmit(items.map((i) => i.unitId))}
+          disabled={submitting}
+        >
+          {submitting ? <span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> : <>{t("ranking.confirm")} →</>}
+        </button>
+      </div>
     </div>
   );
 }

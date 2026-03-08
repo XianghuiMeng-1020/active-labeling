@@ -110,6 +110,13 @@ const messages: Record<Locale, Dict> = {
     "flow.essay": "文章",
     "flow.sentence": "句子",
     "flow.shortcutHint": "快捷键：按 1-9 可快速选择对应标签",
+    "flow.attemptsLeft": "剩余 {n} 次尝试",
+    "flow.tryPrompt2": "用提示词 2 再试",
+    "flow.nextSentence": "下一句",
+    "flow.acceptedTryOther": "已接受。可换提示词再试或进入下一句。",
+    "flow.difficultyEasy": "容易",
+    "flow.difficultyMedium": "中等",
+    "flow.difficultyHard": "较难",
     "flow.queuedForRetry": "网络异常，已加入重试队列，恢复网络后会自动提交",
     "flow.deadLetterWarning": "有 {count} 条提交因服务器拒绝未能同步，已存为死信。",
     "flow.clearDeadLetter": "清除死信记录",
@@ -274,8 +281,11 @@ const messages: Record<Locale, Dict> = {
 
     "ranking.title": "句子难度排序",
     "ranking.hint": "请根据你标注时的感受，把最难标注的句子排到最前面。",
-    "ranking.dragInstruction": "拖拽排序（最难 → 最容易）",
+    "ranking.dragInstruction": "拖拽排序：从最难到最容易（drag the hardest to easiest）",
     "ranking.confirm": "确认排序",
+    "ranking.backToLabeling": "← 返回标注",
+    "ranking.backToEditLabels": "← 返回编辑本篇标签",
+    "ranking.backToRanking": "← 返回难度排序",
 
     "viz.title": "标注效率对比",
     "viz.subtitle": "来看看 AI 辅助标注能省多少时间！",
@@ -337,7 +347,8 @@ const messages: Record<Locale, Dict> = {
     "survey.goToSurvey": "填写问卷",
 
     "chart.xAxisLabel": "标签",
-    "chart.yAxisLabel": "数量"
+    "chart.yAxisLabel": "数量",
+    "chart.yAxisLabelFrequency": "频次"
   },
   "zh-Hant": {
     "lang.label": "語言",
@@ -441,6 +452,13 @@ const messages: Record<Locale, Dict> = {
     "flow.essay": "文章",
     "flow.sentence": "句子",
     "flow.shortcutHint": "快捷鍵：按 1-9 可快速選擇對應標籤",
+    "flow.attemptsLeft": "剩餘 {n} 次嘗試",
+    "flow.tryPrompt2": "用提示詞 2 再試",
+    "flow.nextSentence": "下一句",
+    "flow.acceptedTryOther": "已接受。可換提示詞再試或進入下一句。",
+    "flow.difficultyEasy": "容易",
+    "flow.difficultyMedium": "中等",
+    "flow.difficultyHard": "較難",
     "flow.queuedForRetry": "網路異常，已加入重試佇列，恢復網路後會自動提交",
     "flow.deadLetterWarning": "有 {count} 條提交因伺服器拒絕未能同步，已存為死信。",
     "flow.clearDeadLetter": "清除死信記錄",
@@ -603,8 +621,11 @@ const messages: Record<Locale, Dict> = {
 
     "ranking.title": "句子難度排序",
     "ranking.hint": "請根據你標註時的感受，把最難標註的句子排到最前面。",
-    "ranking.dragInstruction": "拖曳排序（最難 → 最容易）",
+    "ranking.dragInstruction": "拖曳排序：從最難到最容易（drag the hardest to easiest）",
     "ranking.confirm": "確認排序",
+    "ranking.backToLabeling": "← 返回標註",
+    "ranking.backToEditLabels": "← 返回編輯本篇標籤",
+    "ranking.backToRanking": "← 返回難度排序",
 
     "viz.title": "標註效率對比",
     "viz.subtitle": "來看看 AI 輔助標註能省多少時間！",
@@ -666,7 +687,8 @@ const messages: Record<Locale, Dict> = {
     "survey.goToSurvey": "填寫問卷",
 
     "chart.xAxisLabel": "標籤",
-    "chart.yAxisLabel": "數量"
+    "chart.yAxisLabel": "數量",
+    "chart.yAxisLabelFrequency": "頻次"
   },
   en: {
     "lang.label": "Language",
@@ -770,6 +792,13 @@ const messages: Record<Locale, Dict> = {
     "flow.essay": "Essay",
     "flow.sentence": "Sentence",
     "flow.shortcutHint": "Keyboard: press 1-9 to select labels quickly",
+    "flow.attemptsLeft": "You have {n} attempts left",
+    "flow.tryPrompt2": "Try Prompt 2",
+    "flow.nextSentence": "Next sentence",
+    "flow.acceptedTryOther": "Accepted. Try another prompt or go to next.",
+    "flow.difficultyEasy": "Easy",
+    "flow.difficultyMedium": "Medium",
+    "flow.difficultyHard": "Hard",
     "flow.queuedForRetry": "Network issue: saved to retry queue and will auto-submit when online",
     "flow.deadLetterWarning": "{count} submission(s) were rejected by the server and saved as dead letter.",
     "flow.clearDeadLetter": "Clear dead letter",
@@ -932,8 +961,11 @@ const messages: Record<Locale, Dict> = {
 
     "ranking.title": "Sentence Difficulty Ranking",
     "ranking.hint": "Based on your labeling experience, drag the hardest-to-label sentence to the top.",
-    "ranking.dragInstruction": "Drag to rank (Hardest → Easiest)",
+    "ranking.dragInstruction": "Drag the hardest to easiest",
     "ranking.confirm": "Confirm Ranking",
+    "ranking.backToLabeling": "← Back to labeling",
+    "ranking.backToEditLabels": "← Back to edit labels (this essay)",
+    "ranking.backToRanking": "← Back to ranking",
 
     "viz.title": "Labeling Efficiency Comparison",
     "viz.subtitle": "Let's see how much time AI-assisted labeling can save!",
@@ -995,7 +1027,8 @@ const messages: Record<Locale, Dict> = {
     "survey.goToSurvey": "Take Survey",
 
     "chart.xAxisLabel": "Label",
-    "chart.yAxisLabel": "Count"
+    "chart.yAxisLabel": "Count",
+    "chart.yAxisLabelFrequency": "Frequency"
   }
 };
 
