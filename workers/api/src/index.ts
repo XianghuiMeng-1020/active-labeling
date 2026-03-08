@@ -89,16 +89,16 @@ app.use("/api/*", async (c, next) => {
   let limit = 0;
   if (path.includes("session/start")) {
     pathKey = "session_start";
-    limit = 45; // 30+ users starting in same minute
+    limit = 50; // 30+ users starting in same minute
   } else if (path.includes("labels/manual") || path.includes("labels/undo")) {
     pathKey = "labels";
-    limit = 420; // ~30 users × 14 labels/min
+    limit = 500; // 30×15=450
   } else if (path.includes("llm/run")) {
     pathKey = "llm_run";
-    limit = 120; // 30 users × a few runs/min
+    limit = 300; // 30×15 in ~2 min
   } else if (path.includes("llm/accept")) {
     pathKey = "llm_accept";
-    limit = 420; // ~30 users × 14 accepts/min
+    limit = 500; // 30×15=450
   } else if (path.includes("client/errors")) {
     pathKey = "client_errors";
     limit = 30;
@@ -110,7 +110,7 @@ app.use("/api/*", async (c, next) => {
     limit = 20;
   } else if (path.includes("ranking/submit") || path.includes("ranking/reopen")) {
     pathKey = "ranking";
-    limit = 90; // allow ~20 users × 3 essays/min
+    limit = 100; // 30×3=90, headroom
   } else if (path.includes("survey/submit")) {
     pathKey = "survey";
     limit = 10;
@@ -119,10 +119,10 @@ app.use("/api/*", async (c, next) => {
     limit = 12; // per minute per IP (U4 ensure + retries)
   } else if (path.includes("stats/visualization")) {
     pathKey = "viz";
-    limit = 180; // 30 users
+    limit = 200; // 30 users, headroom
   } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays") || path.includes("active/llm/results")) {
     pathKey = "read";
-    limit = 500; // 30 users × ~15 read requests/min
+    limit = 600; // 30 users × ~20+ read/user
   }
   if (pathKey && limit) {
     const over = await checkRateLimit(c.env, c, pathKey, limit);
