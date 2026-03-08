@@ -78,12 +78,24 @@ async function req(path: string, init?: RequestInit) {
 export const api = {
   getTaxonomy: () => req("/api/taxonomy"),
   getPrompts: () => req("/api/prompts"),
-  startSession: (payload: { user_id?: string; normal_n?: number; active_m?: number }) =>
-    req("/api/session/start", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    }),
+  startSession: async (payload: { user_id?: string; normal_n?: number; active_m?: number }) => {
+    try {
+      return await req("/api/session/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+    } catch (e: any) {
+      if (e?.code === "NETWORK_ERROR" || e?.code === "REQUEST_TIMEOUT") {
+        return req("/api/session/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      }
+      throw e;
+    }
+  },
   resetSession: (payload: { session_id: string; reset_token?: string }) =>
     req("/api/session/reset", {
       method: "POST",
@@ -96,6 +108,8 @@ export const api = {
     req(`/api/units/next?session_id=${encodeURIComponent(sessionId)}&phase=${phase}&task=${task}`),
   getActiveLlmResults: (sessionId: string) =>
     req(`/api/active/llm/results?session_id=${encodeURIComponent(sessionId)}`),
+  ensureActiveLlmResults: (sessionId: string) =>
+    req(`/api/active/llm/ensure?session_id=${encodeURIComponent(sessionId)}`, { method: "POST" }),
   submitManual: (payload: {
     session_id: string;
     unit_id: string;

@@ -29,8 +29,18 @@ export function UserActiveLlmPage() {
       setLoading(true);
       setError(null);
       try {
-        const data = await api.getActiveLlmResults(sessionId);
+        await api.ensureActiveLlmResults(sessionId).catch(() => {});
+        let data: { items?: ActiveLlmItem[] } = await api.getActiveLlmResults(sessionId);
         if (!cancelled) setItems(data.items ?? []);
+        const hasPending = (data.items ?? []).some((x) => !x.label);
+        const deadline = Date.now() + 120_000;
+        while (hasPending && !cancelled && Date.now() < deadline) {
+          await new Promise((r) => setTimeout(r, 5000));
+          if (cancelled) break;
+          data = await api.getActiveLlmResults(sessionId);
+          if (!cancelled) setItems(data.items ?? []);
+          if (!(data.items ?? []).some((x) => !x.label)) break;
+        }
       } catch (e: any) {
         if (!cancelled) setError(e?.message ?? t("common.error"));
       } finally {

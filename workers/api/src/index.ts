@@ -89,16 +89,16 @@ app.use("/api/*", async (c, next) => {
   let limit = 0;
   if (path.includes("session/start")) {
     pathKey = "session_start";
-    limit = 15;
+    limit = 45; // 30+ users starting in same minute
   } else if (path.includes("labels/manual") || path.includes("labels/undo")) {
     pathKey = "labels";
-    limit = 120;
+    limit = 420; // ~30 users × 14 labels/min
   } else if (path.includes("llm/run")) {
     pathKey = "llm_run";
-    limit = 60;
+    limit = 120; // 30 users × a few runs/min
   } else if (path.includes("llm/accept")) {
     pathKey = "llm_accept";
-    limit = 120;
+    limit = 420; // ~30 users × 14 accepts/min
   } else if (path.includes("client/errors")) {
     pathKey = "client_errors";
     limit = 30;
@@ -110,16 +110,19 @@ app.use("/api/*", async (c, next) => {
     limit = 20;
   } else if (path.includes("ranking/submit") || path.includes("ranking/reopen")) {
     pathKey = "ranking";
-    limit = 30;
+    limit = 90; // allow ~20 users × 3 essays/min
   } else if (path.includes("survey/submit")) {
     pathKey = "survey";
     limit = 10;
+  } else if (path.includes("active/llm/ensure")) {
+    pathKey = "active_llm_ensure";
+    limit = 12; // per minute per IP (U4 ensure + retries)
   } else if (path.includes("stats/visualization")) {
+    pathKey = "viz";
+    limit = 180; // 30 users
+  } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays") || path.includes("active/llm/results")) {
     pathKey = "read";
-    limit = 60;
-  } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays")) {
-    pathKey = "read";
-    limit = 300;
+    limit = 500; // 30 users × ~15 read requests/min
   }
   if (pathKey && limit) {
     const over = await checkRateLimit(c.env, c, pathKey, limit);
@@ -332,15 +335,32 @@ async function incrementCustomRunCount(
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 
-app.get("/", (c) =>
-  json({
-    message: "Service is running",
-    service: "sentence-labeling-api",
-    status: "ok",
-    time: nowIso(),
-    docs: { health: "/api/health", session_start: "POST /api/session/start" }
-  })
-);
+const FRONTEND_URL = "https://sentence-labeling-web.pages.dev";
+
+app.get("/", (c) => {
+  const accept = c.req.header("Accept") ?? "";
+  if (accept.includes("application/json")) {
+    return json({
+      message: "Service is running",
+      service: "sentence-labeling-api",
+      status: "ok",
+      time: nowIso(),
+      docs: { health: "/api/health", session_start: "POST /api/session/start" },
+      frontend: FRONTEND_URL
+    });
+  }
+  return c.html(
+    `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sentence Labeling API</title></head><body style="font-family:system-ui;max-width:560px;margin:2rem auto;padding:0 1rem;">
+<h1>Sentence Labeling API</h1>
+<p>This is the <strong>backend API</strong> service. It does not serve the app interface.</p>
+<p><strong>To use the app (frontend), open:</strong><br/>
+<a href="${FRONTEND_URL}">${FRONTEND_URL}</a></p>
+<p><small>API health: <a href="/api/health">/api/health</a></small></p>
+</body></html>`,
+    200,
+    { "Content-Type": "text/html; charset=utf-8" }
+  );
+});
 
 app.get("/api/health", (c) => {
   return json({ status: "ok", build: BUILD_ID, time: nowIso() });
@@ -941,6 +961,64 @@ app.get("/api/active/llm/results", async (c) => {
     }>();
 
   return json({ items: rows.results ?? [] });
+});
+
+// ─── Ensure Active LLM results for a session (on-demand for U4) ──────────────
+const ACTIVE_LLM_ENSURE_MAX_UNITS = 20;
+const ACTIVE_LLM_ENSURE_TIMEOUT_MS = 90_000;
+
+app.post("/api/active/llm/ensure", async (c) => {
+  const sessionId = c.req.query("session_id")?.trim();
+  if (!sessionId) return json({ error: "session_id required" }, 400);
+
+  const env = c.env;
+  const startTime = Date.now();
+
+  // Get this session's active assignment unit_ids
+  const assignRows = await env.DB.prepare(
+    `SELECT a.unit_id FROM assignments a
+     WHERE a.session_id = ? AND a.phase = 'active' AND a.task = 'manual'
+     ORDER BY a.ordering ASC`
+  )
+    .bind(sessionId)
+    .all<{ unit_id: string }>();
+  const unitIds = (assignRows.results ?? []).map((r) => r.unit_id);
+  if (unitIds.length === 0) return json({ ok: true, generated: 0, message: "no active units" });
+
+  // Which units already have system_active prompt2 label?
+  const existing = await env.DB.prepare(
+    `SELECT unit_id FROM llm_labels
+     WHERE session_id = 'system_active' AND phase = 'active' AND mode = 'prompt2' AND unit_id IN (${unitIds.map(() => "?").join(",")})`
+  )
+    .bind(...unitIds)
+    .all<{ unit_id: string }>();
+  const existingSet = new Set((existing.results ?? []).map((r) => r.unit_id));
+  const missingIds = unitIds.filter((id) => !existingSet.has(id)).slice(0, ACTIVE_LLM_ENSURE_MAX_UNITS);
+  if (missingIds.length === 0) return json({ ok: true, generated: 0, message: "all results ready" });
+
+  const taxonomy = await getTaxonomyValues(env);
+  const prompt1 = await getPrompt(env, "prompt1");
+  const prompt2 = await getPrompt(env, "prompt2");
+
+  let generated = 0;
+  for (const unitId of missingIds) {
+    if (Date.now() - startTime > ACTIVE_LLM_ENSURE_TIMEOUT_MS) break;
+    const unitRow = await env.DB.prepare("SELECT unit_id, text FROM units WHERE unit_id = ?")
+      .bind(unitId)
+      .first<{ unit_id: string; text: string }>();
+    if (!unitRow?.text) continue;
+    try {
+      const r1 = await runLlmWithRetry(env, { text: unitRow.text, prompt: prompt1, taxonomy, mode: "prompt1" });
+      await new Promise((r) => setTimeout(r, 400));
+      const r2 = await runLlmWithRetry(env, { text: unitRow.text, prompt: prompt2, taxonomy, mode: "prompt2" });
+      await runActiveLlmBatch(env, unitId, r1, r2);
+      generated += 1;
+    } catch (e) {
+      console.error("[active/llm/ensure] unit error", unitId, e);
+    }
+    await new Promise((r) => setTimeout(r, 300));
+  }
+  return json({ ok: true, generated, message: generated > 0 ? "results generated" : "timeout or error" });
 });
 
 // ─── Custom attempt count query ───────────────────────────────────────────────

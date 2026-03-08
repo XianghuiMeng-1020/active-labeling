@@ -984,22 +984,24 @@ p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.65; }
 
 .error-box {
   background: var(--color-error-bg);
-  border: 1px solid var(--color-error-border);
+  border: 1.5px solid var(--color-error-border);
   border-radius: var(--radius-sm);
   padding: 14px 18px;
-  color: var(--color-error);
+  color: #b91c1c;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 .success-box {
   background: var(--color-success-bg);
-  border: 1px solid var(--color-success-border);
+  border: 1.5px solid var(--color-success-border);
   border-radius: var(--radius-sm);
   padding: 14px 18px;
-  color: var(--color-success);
+  color: #15803d;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 /* ─── Spinner ─────────────────────────────────────────────── */

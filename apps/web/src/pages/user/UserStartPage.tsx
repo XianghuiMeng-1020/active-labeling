@@ -116,7 +116,7 @@ export function UserStartPage() {
             <span>I consent to my labels/annotations from this workshop's labeling system being collected and used for research/teaching, with results reported anonymously or in aggregate where possible.</span>
           </label>
 
-          <button className="btn primary full-width lg" disabled={loading || !consent} onClick={start}>
+          <button className="btn primary full-width lg" disabled={loading} onClick={start}>
             {loading ? <span className="spinner" /> : t("flow.startLabeling")}
           </button>
 
