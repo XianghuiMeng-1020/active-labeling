@@ -930,6 +930,18 @@ label {
   display: none;
 }
 
+.lang-switcher-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-switcher-symbol {
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.9;
+}
+
 .lang-switcher select {
   font-size: 12px;
   padding: 5px 10px;

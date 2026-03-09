@@ -11,13 +11,16 @@ export function LanguageSwitcher() {
   return (
     <div className={`lang-switcher ${isAdmin ? "admin" : ""}`}>
       <label htmlFor="lang-select">{t("lang.label")}</label>
-      <select id="lang-select" value={locale} onChange={(e) => setLocale(e.target.value as Locale)}>
-        {locales.map((item) => (
-          <option key={item} value={item}>
-            {t(`lang.${item}`)}
-          </option>
-        ))}
-      </select>
+      <span className="lang-switcher-inner" aria-hidden="true">
+        <span className="lang-switcher-symbol" title={t("lang.label")}>🌐</span>
+        <select id="lang-select" value={locale} onChange={(e) => setLocale(e.target.value as Locale)} aria-label={t("lang.label")}>
+          {locales.map((item) => (
+            <option key={item} value={item}>
+              {t(`lang.${item}`)}
+            </option>
+          ))}
+        </select>
+      </span>
     </div>
   );
 }

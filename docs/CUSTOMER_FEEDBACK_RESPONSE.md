@@ -129,6 +129,31 @@ We can indicate label Easy/Medium/Hard? Based on Entropy or other measures, the 
 
 ---
 
+## 10. Can we add the symbol
+
+**用户原话：**  
+Can we add the symbol
+
+**回应：**  
+已实现。  
+在**语言切换下拉**左侧增加 🌐 符号（[LanguageSwitcher.tsx](apps/web/src/components/LanguageSwitcher.tsx)），位置与样式见 [ANNOTATION_SYMBOL_CLARIFICATION.md](ANNOTATION_SYMBOL_CLARIFICATION.md)。
+
+---
+
+## 11. Double check the drop down menu of our current annotation tool
+
+**用户原话：**  
+Additionally double check the drop down menu of our current annotation tool
+
+**回应：**  
+已落实。  
+- 对标注工具内所有与「选择/下拉」相关的交互做了复查（语言切换、手动/LLM 标签选择、提示词模式选择）。  
+- 复查报告见 [docs/ANNOTATION_DROPDOWN_AUDIT_REPORT.md](ANNOTATION_DROPDOWN_AUDIT_REPORT.md)。  
+- 发现 1 处可访问性改进：语言切换 `<select>` 在视觉上无可见标签，已为 `<select>` 增加 `aria-label={t("lang.label")}`，便于辅助技术识别。  
+其余功能、i18n、样式检查通过。
+
+---
+
 ## 汇总表
 
 | # | 需求摘要 | 状态 | 说明 |
@@ -142,5 +167,7 @@ We can indicate label Easy/Medium/Hard? Based on Entropy or other measures, the 
 | 7 | 图表 X/Y 轴标签，Y 为 frequency | ✅ 已实现 | 可视化页 Y=Frequency，X=Label |
 | 8 | 主动学习 UI 与普通标注区分 | ✅ 已实现 | 紫色 active-learning 样式与徽章 |
 | 9 | Easy/Medium/Hard 基于 Entropy | ✅ 已实现 | `getDifficultyFromReason(al_reason)` + 芯片展示 |
+| 10 | Can we add the symbol | ✅ 已实现 | 语言切换下拉左侧增加 🌐 符号 |
+| 11 | Double check drop down menu | ✅ 已落实 | 复查报告 + 语言切换 `aria-label` 修复 |
 
-以上需求均已落地；若后续有新的文案或阈值（如尝试次数、熵区间）需要调整，可在此基础上微调即可。
+以上 1–11 均已落地。若后续有新的文案或阈值（如尝试次数、熵区间）需要调整，可在此基础上微调即可。
