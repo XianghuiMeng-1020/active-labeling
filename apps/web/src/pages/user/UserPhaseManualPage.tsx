@@ -393,26 +393,6 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
 
       <DeadLetterBanner />
 
-      {lastSubmitted && (
-        <div className="undo-banner">
-          <div className="undo-text">
-            <span className="undo-label">{labelText(lastSubmitted.label)}</span>
-            {" — "}
-            <span className="undo-excerpt">
-              {lastSubmitted.text.slice(0, 55)}{lastSubmitted.text.length > 55 ? "…" : ""}
-            </span>
-          </div>
-          <button
-            className="btn"
-            style={{ flexShrink: 0, fontSize: 13, padding: "6px 14px", background: "#fef9c3", border: "1px solid #facc15", color: "#713f12" }}
-            onClick={undo}
-            disabled={undoing}
-          >
-            {undoing ? "..." : `↩ ${t("flow.undo")}`}
-          </button>
-        </div>
-      )}
-
       {unit ? (
         <>
           {currentEssay && (
@@ -456,6 +436,25 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
                 </button>
               ))}
             </div>
+            {lastSubmitted && (
+              <div className="undo-banner" style={{ marginTop: 16, paddingTop: 12, borderTop: "1px solid var(--color-border)" }}>
+                <div className="undo-text">
+                  <span className="undo-label">{labelText(lastSubmitted.label)}</span>
+                  {" — "}
+                  <span className="undo-excerpt">
+                    {lastSubmitted.text.slice(0, 55)}{lastSubmitted.text.length > 55 ? "…" : ""}
+                  </span>
+                </div>
+                <button
+                  className="btn"
+                  style={{ flexShrink: 0, fontSize: 13, padding: "6px 14px", background: "#fef9c3", border: "1px solid #facc15", color: "#713f12" }}
+                  onClick={undo}
+                  disabled={undoing}
+                >
+                  {undoing ? "..." : `↩ ${t("flow.undo")}`}
+                </button>
+              </div>
+            )}
           </div>
         </>
       ) : (

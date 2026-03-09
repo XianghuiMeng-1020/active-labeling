@@ -75,6 +75,9 @@ export function UserSurveyPage() {
       <div className="page" style={{ justifyContent: "center", minHeight: "100dvh" }}>
         <div className="welcome-card" style={{ textAlign: "center" }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "var(--color-success)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>
+            {t("survey.complete")}
+          </div>
           <h2>{t("survey.thankYou")}</h2>
           <p style={{ color: "var(--color-text-muted)", marginTop: 8 }}>{t("survey.thankYouDesc")}</p>
         </div>
