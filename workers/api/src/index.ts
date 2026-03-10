@@ -120,7 +120,10 @@ app.use("/api/*", async (c, next) => {
   } else if (path.includes("stats/visualization")) {
     pathKey = "viz";
     limit = 200; // 30 users, headroom
-  } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays") || path.includes("active/llm/results")) {
+  } else if (path.includes("page-view")) {
+    pathKey = "page_view";
+    limit = 300; // 30 users, multiple pages
+  } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays") || path.includes("active/llm/results") || path.includes("stats/label-difference") || path.includes("stats/informativeness")) {
     pathKey = "read";
     limit = 600; // 30 users × ~20+ read/user
   }
@@ -507,6 +510,39 @@ app.get("/api/prompts", async (c) => {
   const prompt1 = await getPrompt(c.env, "prompt1");
   const prompt2 = await getPrompt(c.env, "prompt2");
   return json({ prompt1, prompt2 });
+});
+
+// ─── Page view time (per-page and per-question time; per-question is in label_attempts) ───
+
+app.post("/api/page-view/enter", async (c) => {
+  const body = (await c.req.json<{ session_id?: string; page_path?: string; entered_at_epoch_ms?: number }>().catch(() => null)) ?? {};
+  if (!body.session_id?.trim() || !body.page_path?.trim()) {
+    return json({ error: "session_id and page_path required" }, 400);
+  }
+  const entered = typeof body.entered_at_epoch_ms === "number" ? body.entered_at_epoch_ms : Date.now();
+  await c.env.DB.prepare(
+    "INSERT INTO page_views(session_id, page_path, entered_at_epoch_ms, left_at_epoch_ms) VALUES (?, ?, ?, NULL)"
+  )
+    .bind(body.session_id.trim(), body.page_path.trim(), entered)
+    .run();
+  return json({ ok: true });
+});
+
+app.post("/api/page-view/leave", async (c) => {
+  const body = (await c.req.json<{ session_id?: string; page_path?: string; left_at_epoch_ms?: number }>().catch(() => null)) ?? {};
+  if (!body.session_id?.trim() || !body.page_path?.trim()) {
+    return json({ error: "session_id and page_path required" }, 400);
+  }
+  const left = typeof body.left_at_epoch_ms === "number" ? body.left_at_epoch_ms : Date.now();
+  const row = await c.env.DB.prepare(
+    "SELECT id FROM page_views WHERE session_id = ? AND page_path = ? AND left_at_epoch_ms IS NULL ORDER BY entered_at_epoch_ms DESC LIMIT 1"
+  )
+    .bind(body.session_id.trim(), body.page_path.trim())
+    .first<{ id: number }>();
+  if (row) {
+    await c.env.DB.prepare("UPDATE page_views SET left_at_epoch_ms = ? WHERE id = ?").bind(left, row.id).run();
+  }
+  return json({ ok: true });
 });
 
 // ─── Idempotency (claim-first to avoid TOCTOU) ─────────────────────────────────
@@ -1156,6 +1192,77 @@ app.get("/api/session/labeled-essays", async (c) => {
     .sort((a, b) => a - b);
 
   return json({ fully_labeled_essays: fullyLabeled });
+});
+
+// ─── Public: label difference (human vs LLM, for visualization page) ───────────
+
+function parseEssayIndexFromUnitId(unitId: string): number | null {
+  const m = unitId.match(/essay0*(\d+)_sentence/i);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+app.get("/api/stats/label-difference", async (c) => {
+  const sessionId = c.req.query("session_id");
+  if (!sessionId?.trim()) return json({ error: "session_id required" }, 400);
+
+  const rows = await c.env.DB.prepare(
+    `SELECT
+       m.unit_id AS unit_id,
+       u.text AS text,
+       m.label AS human_label,
+       COALESCE(l.accepted_label, l.predicted_label) AS llm_label
+     FROM manual_labels m
+     JOIN units u ON u.unit_id = m.unit_id
+     LEFT JOIN llm_labels l ON l.session_id = m.session_id AND l.unit_id = m.unit_id AND l.phase = 'normal' AND l.mode = 'prompt2'
+     WHERE m.session_id = ? AND m.phase = 'normal'
+     ORDER BY m.unit_id`
+  )
+    .bind(sessionId.trim())
+    .all<{ unit_id: string; text: string; human_label: string; llm_label: string | null }>();
+
+  const byEssay = new Map<number, Array<{ unit_id: string; text: string; human_label: string; llm_label: string; diff: boolean }>>();
+  for (const r of rows.results ?? []) {
+    const essayIdx = parseEssayIndexFromUnitId(r.unit_id);
+    if (essayIdx == null) continue;
+    const llm = r.llm_label ?? "";
+    const diff = r.human_label !== llm;
+    if (!byEssay.has(essayIdx)) byEssay.set(essayIdx, []);
+    byEssay.get(essayIdx)!.push({
+      unit_id: r.unit_id,
+      text: r.text,
+      human_label: r.human_label,
+      llm_label: llm,
+      diff
+    });
+  }
+  const essays = [1, 2, 3].map((essay_index) => ({
+    essay_index,
+    sentences: byEssay.get(essay_index) ?? []
+  }));
+
+  return json({ essays });
+});
+
+// ─── Public: per-essay informativeness (for active learning comparison) ───────
+
+app.get("/api/stats/informativeness", async (c) => {
+  const rows = await c.env.DB.prepare(
+    "SELECT unit_id, score FROM al_scores"
+  ).all<{ unit_id: string; score: number }>();
+  const byEssay = new Map<number, number[]>();
+  for (const r of rows.results ?? []) {
+    const idx = parseEssayIndexFromUnitId(r.unit_id);
+    if (idx != null) {
+      if (!byEssay.has(idx)) byEssay.set(idx, []);
+      byEssay.get(idx)!.push(r.score);
+    }
+  }
+  const essays = [1, 2, 3].map((essay_index) => {
+    const scores = byEssay.get(essay_index) ?? [];
+    const avg_score = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+    return { essay_index, avg_score, count: scores.length };
+  });
+  return json({ essays });
 });
 
 // ─── Public: visualization data (for users after Stage 2) ─────────────────────

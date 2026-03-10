@@ -451,7 +451,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
                   onClick={undo}
                   disabled={undoing}
                 >
-                  {undoing ? "..." : `↩ ${t("flow.undo")}`}
+                  {undoing ? "..." : `↩ ${t("flow.undoLastStep")}`}
                 </button>
               </div>
             )}

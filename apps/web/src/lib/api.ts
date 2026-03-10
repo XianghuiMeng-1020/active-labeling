@@ -195,6 +195,29 @@ export const api = {
       fully_labeled_essays: number[];
     }>,
 
+  recordPageViewEnter: (sessionId: string, pagePath: string, enteredAtEpochMs: number) =>
+    req("/api/page-view/enter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId, page_path: pagePath, entered_at_epoch_ms: enteredAtEpochMs })
+    }),
+  recordPageViewLeave: (sessionId: string, pagePath: string, leftAtEpochMs: number) =>
+    req("/api/page-view/leave", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId, page_path: pagePath, left_at_epoch_ms: leftAtEpochMs })
+    }),
+  getLabelDifference: (sessionId: string) =>
+    req(`/api/stats/label-difference?session_id=${encodeURIComponent(sessionId)}`) as Promise<{
+      essays: Array<{
+        essay_index: number;
+        sentences: Array<{ unit_id: string; text: string; human_label: string; llm_label: string; diff: boolean }>;
+      }>;
+    }>,
+  getInformativeness: () =>
+    req("/api/stats/informativeness") as Promise<{
+      essays: Array<{ essay_index: number; avg_score: number; count: number }>;
+    }>,
   getVisualizationStats: () =>
     req("/api/stats/visualization") as Promise<{
       label_distribution: {

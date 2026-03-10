@@ -1,9 +1,10 @@
-import { useEffect } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { AdminGuard } from "./components/AdminGuard";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { api } from "./lib/api";
+import { getSessionId } from "./lib/storage";
 import { AdminConfigPage } from "./pages/admin/AdminConfigPage";
 import { AdminDashboardNormalPage } from "./pages/admin/AdminDashboardNormalPage";
 import { AdminDashboardOverallPage } from "./pages/admin/AdminDashboardOverallPage";
@@ -21,6 +22,9 @@ import { UserStartPage } from "./pages/user/UserStartPage";
 import { UserSurveyPage } from "./pages/user/UserSurveyPage";
 
 function App() {
+  const location = useLocation();
+  const pathnameRef = useRef<string | null>(null);
+
   useEffect(() => {
     const onError = (event: ErrorEvent) => {
       api.reportClientError({
@@ -44,6 +48,22 @@ function App() {
       window.removeEventListener("unhandledrejection", onRejection);
     };
   }, []);
+
+  // Record page view time: enter on pathname, leave on pathname change or unmount
+  useEffect(() => {
+    const sessionId = getSessionId();
+    const path = location.pathname;
+    if (!sessionId || !path) return;
+    const entered = Date.now();
+    pathnameRef.current = path;
+    api.recordPageViewEnter(sessionId, path, entered).catch(() => undefined);
+    return () => {
+      if (pathnameRef.current) {
+        api.recordPageViewLeave(sessionId, pathnameRef.current, Date.now()).catch(() => undefined);
+        pathnameRef.current = null;
+      }
+    };
+  }, [location.pathname]);
 
   return (
     <>
