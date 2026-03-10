@@ -141,6 +141,12 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }),
+  runLlmEssay: (payload: { session_id: string; essay_index: number; mode?: LlmMode }) =>
+    req("/api/llm/run-essay", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }) as Promise<{ results: Array<{ unit_id: string; predicted_label: string }> }>,
   acceptLlm: (payload: {
     session_id: string;
     unit_id: string;
@@ -190,6 +196,24 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }),
+  undoRanking: (payload: { session_id: string; essay_index: number }) =>
+    req("/api/ranking/undo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }),
+  getEssayLabels: (sessionId: string, essayIndex: number) =>
+    req(
+      `/api/essay-labels?session_id=${encodeURIComponent(sessionId)}&essay_index=${essayIndex}`
+    ) as Promise<{
+      essay_index: number;
+      sentences: Array<{
+        unit_id: string;
+        text: string;
+        manual_label: string;
+        llm_label: string | null;
+      }>;
+    }>,
   getLabeledEssays: (sessionId: string, phase: Phase = "normal") =>
     req(`/api/session/labeled-essays?session_id=${encodeURIComponent(sessionId)}&phase=${phase}`) as Promise<{
       fully_labeled_essays: number[];

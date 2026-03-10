@@ -5,10 +5,11 @@ import { useI18n } from "../lib/i18n";
 interface EssayDisplayProps {
   essay: Essay;
   currentUnitId: string;
+  labelsByUnitId?: Record<string, string>;
 }
 
-export function EssayDisplay({ essay, currentUnitId }: EssayDisplayProps) {
-  const { t, locale } = useI18n();
+export function EssayDisplay({ essay, currentUnitId, labelsByUnitId }: EssayDisplayProps) {
+  const { t, locale, labelText } = useI18n();
 
   const currentIdx = useMemo(
     () => essay.sentences.findIndex((s) => s.unitId === currentUnitId),
@@ -28,7 +29,10 @@ export function EssayDisplay({ essay, currentUnitId }: EssayDisplayProps) {
             key={s.unitId}
             className={`essay-flow-sentence ${idx === currentIdx ? "essay-flow-active" : ""}`}
           >
-            <span className="essay-flow-tag">S{s.sentenceIndex}</span>
+            <span className="essay-flow-tag">
+              S{s.sentenceIndex}
+              {labelsByUnitId?.[s.unitId] ? ` · ${labelText(labelsByUnitId[s.unitId])}` : ""}
+            </span>
             {getSentenceText(s, locale)}
             {idx < essay.sentences.length - 1 ? " " : ""}
           </span>

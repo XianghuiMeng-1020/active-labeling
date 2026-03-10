@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAttemptTracker } from "../../hooks/useAttemptTracker";
 import { api, type LlmMode } from "../../lib/api";
 import { useI18n } from "../../lib/i18n";
@@ -60,8 +60,10 @@ function LlmSkeleton({ elapsed, label }: { elapsed: number; label: string }) {
 
 export function UserNormalLlmPage() {
   const nav = useNavigate();
+  const location = useLocation();
   const { t, labelText } = useI18n();
   const sessionId = getSessionId();
+  const lastRankedEssayIndex = (location.state as { lastRankedEssayIndex?: number } | null)?.lastRankedEssayIndex;
 
   const [labels, setLabels] = useState<Array<{ label: string }>>([]);
   const [prompt1Text, setPrompt1Text] = useState("");
@@ -82,6 +84,11 @@ export function UserNormalLlmPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [runsThisUnit, setRunsThisUnit] = useState(0);
   const [acceptedLabel, setAcceptedLabel] = useState<string | null>(null);
+  const [undoRankingInProgress, setUndoRankingInProgress] = useState(false);
+  const [llmLabelsByUnitId, setLlmLabelsByUnitId] = useState<Record<string, string>>({});
+  const [essaySentences, setEssaySentences] = useState<Array<{ unit_id: string; text: string; manual_label: string; llm_label: string | null }>>([]);
+  const [runEssayLoading, setRunEssayLoading] = useState(false);
+  const [overrideUnitId, setOverrideUnitId] = useState<string | null>(null);
 
   const { toasts, showToast } = useToast();
   const tracker = useAttemptTracker(unit?.unit_id ?? "empty");
@@ -90,6 +97,39 @@ export function UserNormalLlmPage() {
 
   const unitMeta = useMemo(() => (unit ? getEssaySentenceMeta(unit.unit_id) : null), [unit]);
   const currentEssay = useMemo(() => (unit ? getEssayByUnitId(unit.unit_id) : null), [unit]);
+
+  const essayIndexForLlmLabels = currentEssay?.essayIndex ?? null;
+  useEffect(() => {
+    if (!sessionId || essayIndexForLlmLabels == null) {
+      setLlmLabelsByUnitId({});
+      setEssaySentences([]);
+      return;
+    }
+    let cancelled = false;
+    api.getEssayLabels(sessionId, essayIndexForLlmLabels).then((res) => {
+      if (cancelled) return;
+      const map: Record<string, string> = {};
+      for (const s of res.sentences) {
+        if (s.llm_label) map[s.unit_id] = s.llm_label;
+      }
+      setLlmLabelsByUnitId(map);
+      setEssaySentences(res.sentences);
+    }).catch(() => {
+      if (!cancelled) {
+        setLlmLabelsByUnitId({});
+        setEssaySentences([]);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [sessionId, essayIndexForLlmLabels]);
+
+  const essayDisplayLlmLabels = useMemo(() => {
+    const base = { ...llmLabelsByUnitId };
+    if (unit && (acceptedLabel || predicted)) {
+      base[unit.unit_id] = acceptedLabel ?? predicted;
+    }
+    return base;
+  }, [llmLabelsByUnitId, unit?.unit_id, acceptedLabel, predicted]);
 
   useEffect(() => {
     return () => {
@@ -228,6 +268,7 @@ export function UserNormalLlmPage() {
         attempt: attemptPayload
       });
       showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
+      setLlmLabelsByUnitId((prev) => ({ ...prev, [unit.unit_id]: label }));
       applyAcceptResponse(res);
     } catch (error: any) {
       const status = error?.status;
@@ -263,6 +304,65 @@ export function UserNormalLlmPage() {
     setAcceptedLabel(label);
   };
 
+  const handleRunEssay = async () => {
+    if (!sessionId || !currentEssay || runEssayLoading) return;
+    setRunEssayLoading(true);
+    try {
+      const res = await api.runLlmEssay({
+        session_id: sessionId,
+        essay_index: currentEssay.essayIndex,
+        mode: "prompt1"
+      });
+      setLlmLabelsByUnitId((prev) => {
+        const next = { ...prev };
+        for (const r of res.results) next[r.unit_id] = r.predicted_label;
+        return next;
+      });
+      showToast(t("flow.modelReturned"), "success");
+    } catch (err: any) {
+      showToast(err?.message ?? t("flow.llmError"), "error");
+    } finally {
+      setRunEssayLoading(false);
+    }
+  };
+
+  const handleAcceptForUnit = async (unitId: string, label: string) => {
+    if (!sessionId || acceptingRef.current) return;
+    acceptingRef.current = true;
+    setAccepting(true);
+    const attemptPayload = tracker.finalize();
+    try {
+      const res = await api.acceptLlm({
+        session_id: sessionId,
+        unit_id: unitId,
+        phase: "normal",
+        mode: "prompt1",
+        accepted_label: label,
+        attempt: attemptPayload
+      });
+      setLlmLabelsByUnitId((prev) => ({ ...prev, [unitId]: label }));
+      if (res.progress) setProgress(res.progress);
+      showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
+      if (essayIndexForLlmLabels != null) {
+        const res2 = await api.getEssayLabels(sessionId, essayIndexForLlmLabels);
+        setEssaySentences(res2.sentences);
+        const map: Record<string, string> = {};
+        for (const s of res2.sentences) {
+          if (s.llm_label) map[s.unit_id] = s.llm_label;
+        }
+        setLlmLabelsByUnitId((prev) => ({ ...prev, ...map }));
+      }
+      if (res.next_unit == null) setDone(true);
+    } catch (err: any) {
+      showToast(err?.message ?? t("flow.submitFailed"), "error");
+    } finally {
+      acceptingRef.current = false;
+      setAccepting(false);
+    }
+  };
+
+  const allEssayAccepted = essaySentences.length > 0 && essaySentences.every((s) => s.llm_label != null && s.llm_label !== "");
+
   const goToNextSentence = () => {
     if (acceptedLabel) {
       submitAcceptAndAdvance();
@@ -284,6 +384,20 @@ export function UserNormalLlmPage() {
     );
   }
 
+  const handleUndoRanking = async () => {
+    if (sessionId == null || lastRankedEssayIndex == null || undoRankingInProgress) return;
+    setUndoRankingInProgress(true);
+    try {
+      await api.undoRanking({ session_id: sessionId, essay_index: lastRankedEssayIndex });
+      showToast(t("flow.undone"), "warn");
+      nav("/user/normal/manual", { state: { showRankingForEssay: lastRankedEssayIndex } });
+    } catch {
+      showToast(t("flow.undoFailed"), "error");
+    } finally {
+      setUndoRankingInProgress(false);
+    }
+  };
+
   if (done) {
     return (
       <div className="page" style={{ justifyContent: "center" }}>
@@ -292,6 +406,16 @@ export function UserNormalLlmPage() {
           <h2>{t("flow.doneNormal")}</h2>
           <p style={{ margin: "12px 0 24px" }}>{t("flow.canContinueActive")}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {lastRankedEssayIndex != null && (
+              <button
+                type="button"
+                className="btn lg full-width"
+                onClick={handleUndoRanking}
+                disabled={undoRankingInProgress}
+              >
+                {undoRankingInProgress ? "..." : t("flow.undoBackToRanking")}
+              </button>
+            )}
             <button className="btn primary lg full-width" onClick={() => nav("/user/visualization")}>
               {t("viz.title")} →
             </button>
@@ -324,10 +448,77 @@ export function UserNormalLlmPage() {
 
       <DeadLetterBanner />
 
+      {unit && currentEssay && essaySentences.length > 0 && (
+        <div className="card" style={{ marginBottom: 16 }}>
+          <h3 style={{ marginBottom: 8 }}>{t("flow.essayLlmTitle", { n: currentEssay.essayIndex })}</h3>
+          <button
+            type="button"
+            className="btn primary full-width"
+            onClick={handleRunEssay}
+            disabled={runEssayLoading}
+          >
+            {runEssayLoading ? (
+              <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> {t("flow.runningEllipsis")}</>
+            ) : (
+              <>▶ {t("flow.runEssayLabelAll")}</>
+            )}
+          </button>
+          <div style={{ marginTop: 16 }}>
+            {essaySentences.map((s) => {
+              const displayLabel = llmLabelsByUnitId[s.unit_id];
+              return (
+                <div
+                  key={s.unit_id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "10px 0",
+                    borderBottom: "1px solid var(--color-border)"
+                  }}
+                >
+                  <span style={{ flex: 1, fontSize: 13 }}>{s.text.slice(0, 60)}{s.text.length > 60 ? "…" : ""}</span>
+                  <span style={{ fontSize: 12, color: "var(--color-text-muted)", minWidth: 80 }}>
+                    {displayLabel ? labelText(displayLabel) : "—"}
+                  </span>
+                  {displayLabel && (
+                    <>
+                      <button
+                        type="button"
+                        className="btn"
+                        style={{ padding: "4px 10px", fontSize: 12 }}
+                        onClick={() => handleAcceptForUnit(s.unit_id, displayLabel)}
+                        disabled={accepting}
+                      >
+                        ✓ {t("flow.accept")}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn"
+                        style={{ padding: "4px 10px", fontSize: 12 }}
+                        onClick={() => setOverrideUnitId(s.unit_id)}
+                        disabled={accepting}
+                      >
+                        ✎ {t("flow.override").replace(/:?\s*$/, "")}
+                      </button>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {allEssayAccepted && (
+            <button type="button" className="btn primary full-width" style={{ marginTop: 12 }} onClick={() => load()}>
+              {t("flow.nextEssay")} →
+            </button>
+          )}
+        </div>
+      )}
+
       {unit && (
         <>
           {currentEssay && (
-            <EssayDisplay essay={currentEssay} currentUnitId={unit.unit_id} />
+            <EssayDisplay essay={currentEssay} currentUnitId={unit.unit_id} labelsByUnitId={essayDisplayLlmLabels} />
           )}
 
           <div className="card unit-card-enter">
@@ -339,7 +530,13 @@ export function UserNormalLlmPage() {
               {t("flow.selectPromptMode")}
             </div>
             {!acceptedLabel && (
-              <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 8 }}>
+              <div
+                style={{
+                  fontSize: 12,
+                  color: Math.max(0, LLM_ATTEMPTS_PER_UNIT - runsThisUnit) === 0 ? "var(--color-error, #dc2626)" : "var(--color-text-muted)",
+                  marginBottom: 8
+                }}
+              >
                 {t("flow.attemptsLeft", { n: Math.max(0, LLM_ATTEMPTS_PER_UNIT - runsThisUnit) })}
               </div>
             )}
@@ -468,6 +665,17 @@ export function UserNormalLlmPage() {
           labels={labels}
           onSelect={accept}
           onClose={() => setShowOverride(false)}
+          title={t("flow.overrideTitle")}
+        />
+      )}
+      {overrideUnitId && (
+        <OverrideSheet
+          labels={labels}
+          onSelect={(label) => {
+            handleAcceptForUnit(overrideUnitId, label);
+            setOverrideUnitId(null);
+          }}
+          onClose={() => setOverrideUnitId(null)}
           title={t("flow.overrideTitle")}
         />
       )}

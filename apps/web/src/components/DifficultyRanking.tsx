@@ -8,10 +8,11 @@ interface DifficultyRankingProps {
   submitting?: boolean;
   onBackToLabeling?: () => void;
   backToLabelingLabel?: string;
+  labelsByUnitId?: Record<string, string>;
 }
 
-export function DifficultyRanking({ essay, onSubmit, submitting, onBackToLabeling, backToLabelingLabel }: DifficultyRankingProps) {
-  const { t, locale } = useI18n();
+export function DifficultyRanking({ essay, onSubmit, submitting, onBackToLabeling, backToLabelingLabel, labelsByUnitId }: DifficultyRankingProps) {
+  const { t, locale, labelText } = useI18n();
   const [items, setItems] = useState(() =>
     essay.sentences.map((s) => ({
       unitId: s.unitId,
@@ -130,7 +131,10 @@ export function DifficultyRanking({ essay, onSubmit, submitting, onBackToLabelin
         <div className="essay-flow" style={{ fontSize: 13 }}>
           {essay.sentences.map((s, idx) => (
             <span key={s.unitId} className="essay-flow-sentence">
-              <span className="essay-flow-tag">S{s.sentenceIndex}</span>
+              <span className="essay-flow-tag">
+                S{s.sentenceIndex}
+                {labelsByUnitId?.[s.unitId] ? ` · ${labelText(labelsByUnitId[s.unitId])}` : ""}
+              </span>
               {getSentenceText(s, locale)}
               {idx < essay.sentences.length - 1 ? " " : ""}
             </span>
@@ -157,7 +161,10 @@ export function DifficultyRanking({ essay, onSubmit, submitting, onBackToLabelin
             >
               <span className="rank-position">{idx + 1}</span>
               <span className="rank-grip">⠿</span>
-              <span className="rank-label">{item.label}</span>
+              <span className="rank-label">
+                {item.label}
+                {labelsByUnitId?.[item.unitId] ? ` · ${labelText(labelsByUnitId[item.unitId])}` : ""}
+              </span>
               <span className="rank-text">{item.text.slice(0, 50)}…</span>
               <div className="rank-arrows">
                 <button

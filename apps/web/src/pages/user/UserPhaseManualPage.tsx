@@ -104,6 +104,18 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       const total = prog?.total ?? 0;
       setProgress({ done, total });
 
+      // When navigating from LLM "back to ranking": go straight to ranking view, do not set unit from getNextUnit
+      const pendingShowRanking = (location.state as { showRankingForEssay?: number } | null)?.showRankingForEssay;
+      if (phase === "normal" && pendingShowRanking != null && ESSAYS.some((e) => e.essayIndex === pendingShowRanking)) {
+        appliedShowRankingRef.current = true;
+        setShowRanking(true);
+        setRankingEssayIndex(pendingShowRanking);
+        setUnit(null);
+        nav(location.pathname, { replace: true, state: {} });
+        setLoading(false);
+        return;
+      }
+
       const [tax, next] = await Promise.all([
         labels.length > 0 ? { labels } : api.getTaxonomy(),
         api.getNextUnit(sessionId, phase, "manual")
@@ -154,7 +166,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     } finally {
       setLoading(false);
     }
-  }, [sessionId, phase, nav, t]);
+  }, [sessionId, phase, nav, t, location]);
 
   useEffect(() => {
     flushOfflineQueue().catch(() => undefined);
@@ -389,12 +401,13 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
             onSubmit={handleRankingSubmit}
             submitting={rankingSubmitting}
             labelsByUnitId={essayLabelsMap}
-            onBackToPreviousRanking={rankingEssayIndex > 1 ? () => setRankingEssayIndex(rankingEssayIndex - 1) : undefined}
-            backToPreviousRankingLabel={rankingEssayIndex > 1 ? t("ranking.backToPreviousRanking") : undefined}
             onBackToLabeling={async () => {
               if (!sessionId || rankingEssayIndex === null) return;
               try {
                 await api.reopenEssayForLabeling({ session_id: sessionId, essay_index: rankingEssayIndex });
+                const status = await api.getSessionStatus(sessionId);
+                const prog = status.normal_manual;
+                if (prog) setProgress({ done: prog.done ?? 0, total: prog.total ?? 0 });
                 setShowRanking(false);
                 setRankingEssayIndex(null);
                 await load();

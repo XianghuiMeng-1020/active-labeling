@@ -903,6 +903,69 @@ app.post("/api/llm/run", async (c) => {
   }
 });
 
+// ─── LLM run-essay: run LLM for all units in an essay (predicted only, no accept) ───
+
+type LlmRunEssayBody = { session_id?: string; essay_index?: number; mode?: LlmMode };
+
+app.post("/api/llm/run-essay", async (c) => {
+  const raw = (await c.req.json<LlmRunEssayBody>().catch(() => null)) ?? ({} as LlmRunEssayBody);
+  if (!raw.session_id?.trim() || typeof raw.essay_index !== "number" || raw.essay_index < 1 || raw.essay_index > 100) {
+    return json({ error: "session_id and essay_index (1–100) required" }, 400);
+  }
+  const sessionId = raw.session_id.trim();
+  const essayIndex = raw.essay_index;
+  const mode: LlmMode = ["prompt1", "prompt2", "custom"].includes(raw.mode ?? "") ? raw.mode! : "prompt1";
+  const pattern = `essay${String(essayIndex).padStart(4, "0")}_%`;
+
+  const assignmentRows = await c.env.DB.prepare(
+    `SELECT a.unit_id FROM assignments a
+     WHERE a.session_id = ? AND a.phase = 'normal' AND a.task = 'llm' AND a.unit_id LIKE ?
+     ORDER BY a.ordering ASC`
+  )
+    .bind(sessionId, pattern)
+    .all<{ unit_id: string }>();
+  const unitIds = (assignmentRows.results ?? []).map((r) => r.unit_id);
+  if (unitIds.length === 0) {
+    return json({ error: "no units found for this essay", results: [] }, 200);
+  }
+
+  const taxonomy = await getTaxonomyValues(c.env);
+  const prompt = await getPrompt(c.env, mode);
+  const results: Array<{ unit_id: string; predicted_label: string }> = [];
+
+  for (const unitId of unitIds) {
+    const requestId = crypto.randomUUID();
+    const unit = await c.env.DB.prepare("SELECT text FROM units WHERE unit_id = ?")
+      .bind(unitId)
+      .first<{ text: string }>();
+    if (!unit) continue;
+    try {
+      await qwenAcquire(c.env);
+      const startMs = Date.now();
+      const llm = await runLlm(c.env, { text: unit.text, prompt, taxonomy, requestId });
+      await qwenRelease(c.env, 200, Date.now() - startMs, 0);
+      await saveLlmPrediction(c.env, {
+        sessionId,
+        unitId,
+        phase: "normal",
+        mode,
+        predictedLabel: llm.predictedLabel,
+        rawJson: JSON.stringify({ raw_text: llm.rawText, provider: llm.provider, request_id: requestId }),
+        model: llm.model
+      });
+      results.push({ unit_id: unitId, predicted_label: llm.predictedLabel });
+    } catch (err: any) {
+      console.error(`[LLM] run-essay ${unitId} error:`, err.message);
+      return json(
+        { error: "LLM call failed", detail: err.message?.slice(0, 200), failed_unit_id: unitId },
+        500
+      );
+    }
+  }
+
+  return json({ results });
+});
+
 // ─── LLM accept (user confirms or overrides) ─────────────────────────────────
 
 app.post("/api/llm/accept", async (c) => {
