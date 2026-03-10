@@ -108,7 +108,7 @@ app.use("/api/*", async (c, next) => {
   } else if (path.includes("session/reset")) {
     pathKey = "session_reset";
     limit = 20;
-  } else if (path.includes("ranking/submit") || path.includes("ranking/reopen")) {
+  } else if (path.includes("ranking/submit") || path.includes("ranking/reopen") || path.includes("ranking/undo")) {
     pathKey = "ranking";
     limit = 100; // 30×3=90, headroom
   } else if (path.includes("survey/submit")) {
@@ -123,7 +123,7 @@ app.use("/api/*", async (c, next) => {
   } else if (path.includes("page-view")) {
     pathKey = "page_view";
     limit = 300; // 30 users, multiple pages
-  } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays") || path.includes("active/llm/results") || path.includes("stats/label-difference") || path.includes("stats/informativeness")) {
+  } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays") || path.includes("active/llm/results") || path.includes("stats/label-difference") || path.includes("stats/informativeness") || path.includes("essay-labels")) {
     pathKey = "read";
     limit = 600; // 30 users × ~20+ read/user
   }
@@ -1138,32 +1138,31 @@ app.get("/api/ranking/status", async (c) => {
 });
 
 // ─── Reopen essay for re-labeling (from ranking page: back to edit labels) ───
+// Soft reopen: only remove ranking submission so user can re-edit labels; keep existing labels and progress.
 app.post("/api/ranking/reopen", async (c) => {
-  const body = (await c.req.json<{ session_id?: string; essay_index?: number }>().catch(() => ({}))) ?? {};
+  const body: { session_id?: string; essay_index?: number } = (await c.req.json<{ session_id?: string; essay_index?: number }>().catch(() => ({}))) ?? {};
   const sessionId = String(body.session_id ?? "").trim();
   const essayIndex = typeof body.essay_index === "number" ? body.essay_index : undefined;
   if (!sessionId || essayIndex == null || essayIndex < 1 || essayIndex > 100) {
     return json({ error: "session_id and essay_index (1–100) required" }, 400);
   }
-  const pattern = `essay${String(essayIndex).padStart(4, "0")}_%`;
   await c.env.DB.prepare(
     "DELETE FROM ranking_submissions WHERE session_id = ? AND essay_index = ?"
   ).bind(sessionId, essayIndex).run();
+  return json({ ok: true });
+});
+
+// ─── Undo ranking (only remove submission; do not reopen essay for labeling) ───
+app.post("/api/ranking/undo", async (c) => {
+  const body: { session_id?: string; essay_index?: number } = (await c.req.json<{ session_id?: string; essay_index?: number }>().catch(() => ({}))) ?? {};
+  const sessionId = String(body.session_id ?? "").trim();
+  const essayIndex = typeof body.essay_index === "number" ? body.essay_index : undefined;
+  if (!sessionId || essayIndex == null || essayIndex < 1 || essayIndex > 100) {
+    return json({ error: "session_id and essay_index (1–100) required" }, 400);
+  }
   await c.env.DB.prepare(
-    "DELETE FROM interaction_events WHERE attempt_id IN (SELECT attempt_id FROM label_attempts WHERE session_id = ? AND phase = 'normal' AND task = 'manual' AND unit_id LIKE ?)"
-  ).bind(sessionId, pattern).run();
-  await c.env.DB.prepare(
-    "DELETE FROM label_attempts WHERE session_id = ? AND phase = 'normal' AND task = 'manual' AND unit_id LIKE ?"
-  ).bind(sessionId, pattern).run();
-  await c.env.DB.prepare(
-    "DELETE FROM manual_labels WHERE session_id = ? AND phase = 'normal' AND unit_id LIKE ?"
-  ).bind(sessionId, pattern).run();
-  await c.env.DB.prepare(
-    "UPDATE assignments SET status = 'todo' WHERE session_id = ? AND phase = 'normal' AND task = 'manual' AND unit_id LIKE ?"
-  ).bind(sessionId, pattern).run();
-  await c.env.DB.prepare(
-    "UPDATE sessions SET normal_manual_done_at = NULL WHERE session_id = ?"
-  ).bind(sessionId).run();
+    "DELETE FROM ranking_submissions WHERE session_id = ? AND essay_index = ?"
+  ).bind(sessionId, essayIndex).run();
   return json({ ok: true });
 });
 
@@ -1241,10 +1240,16 @@ app.get("/api/stats/label-difference", async (c) => {
        m.unit_id AS unit_id,
        u.text AS text,
        m.label AS human_label,
-       COALESCE(l.accepted_label, l.predicted_label) AS llm_label
+       COALESCE(
+         l2.accepted_label, l2.predicted_label,
+         l1.accepted_label, l1.predicted_label,
+         lc.accepted_label, lc.predicted_label
+       ) AS llm_label
      FROM manual_labels m
      JOIN units u ON u.unit_id = m.unit_id
-     LEFT JOIN llm_labels l ON l.session_id = m.session_id AND l.unit_id = m.unit_id AND l.phase = 'normal' AND l.mode = 'prompt2'
+     LEFT JOIN llm_labels l2 ON l2.session_id = m.session_id AND l2.unit_id = m.unit_id AND l2.phase = 'normal' AND l2.mode = 'prompt2'
+     LEFT JOIN llm_labels l1 ON l1.session_id = m.session_id AND l1.unit_id = m.unit_id AND l1.phase = 'normal' AND l1.mode = 'prompt1'
+     LEFT JOIN llm_labels lc ON lc.session_id = m.session_id AND lc.unit_id = m.unit_id AND lc.phase = 'normal' AND lc.mode = 'custom'
      WHERE m.session_id = ? AND m.phase = 'normal'
      ORDER BY m.unit_id`
   )
@@ -1272,6 +1277,45 @@ app.get("/api/stats/label-difference", async (c) => {
   }));
 
   return json({ essays });
+});
+
+// ─── Public: per-essay labels (for display in ranking and essay view) ─────────
+app.get("/api/essay-labels", async (c) => {
+  const sessionId = c.req.query("session_id");
+  const essayIndexParam = c.req.query("essay_index");
+  if (!sessionId?.trim()) return json({ error: "session_id required" }, 400);
+  const essayIndex = essayIndexParam ? parseInt(essayIndexParam, 10) : NaN;
+  if (!Number.isFinite(essayIndex) || essayIndex < 1 || essayIndex > 100) {
+    return json({ error: "essay_index (1–100) required" }, 400);
+  }
+  const pattern = `essay${String(essayIndex).padStart(4, "0")}_sentence%`;
+  const rows = await c.env.DB.prepare(
+    `SELECT
+       m.unit_id AS unit_id,
+       u.text AS text,
+       m.label AS manual_label,
+       COALESCE(
+         l2.accepted_label, l2.predicted_label,
+         l1.accepted_label, l1.predicted_label,
+         lc.accepted_label, lc.predicted_label
+       ) AS llm_label
+     FROM manual_labels m
+     JOIN units u ON u.unit_id = m.unit_id
+     LEFT JOIN llm_labels l2 ON l2.session_id = m.session_id AND l2.unit_id = m.unit_id AND l2.phase = 'normal' AND l2.mode = 'prompt2'
+     LEFT JOIN llm_labels l1 ON l1.session_id = m.session_id AND l1.unit_id = m.unit_id AND l1.phase = 'normal' AND l1.mode = 'prompt1'
+     LEFT JOIN llm_labels lc ON lc.session_id = m.session_id AND lc.unit_id = m.unit_id AND lc.phase = 'normal' AND lc.mode = 'custom'
+     WHERE m.session_id = ? AND m.phase = 'normal' AND m.unit_id LIKE ?
+     ORDER BY m.unit_id`
+  )
+    .bind(sessionId.trim(), pattern)
+    .all<{ unit_id: string; text: string; manual_label: string; llm_label: string | null }>();
+  const sentences = (rows.results ?? []).map((r) => ({
+    unit_id: r.unit_id,
+    text: r.text,
+    manual_label: r.manual_label,
+    llm_label: r.llm_label ?? null
+  }));
+  return json({ essay_index: essayIndex, sentences });
 });
 
 // ─── Public: per-essay informativeness (for active learning comparison) ───────

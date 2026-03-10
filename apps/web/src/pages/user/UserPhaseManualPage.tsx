@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAttemptTracker } from "../../hooks/useAttemptTracker";
 import { api } from "../../lib/api";
 import { useI18n } from "../../lib/i18n";
@@ -56,8 +56,10 @@ type UnitWithMeta = { unit_id: string; text: string; al_reason?: string | null; 
 
 export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const nav = useNavigate();
+  const location = useLocation();
   const { t, labelText } = useI18n();
   const sessionId = getSessionId();
+  const showRankingForEssay = (location.state as { showRankingForEssay?: number } | null)?.showRankingForEssay;
 
   const [labels, setLabels] = useState<Array<{ label: string }>>([]);
   const [unit, setUnit] = useState<UnitWithMeta | null>(null);
@@ -75,6 +77,8 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const pendingUnitRef = useRef<UnitWithMeta | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const navigatingRef = useRef(false);
+  const appliedShowRankingRef = useRef(false);
+  const [essayLabelsMap, setEssayLabelsMap] = useState<Record<string, string>>({});
 
   const { toasts, showToast } = useToast();
   const tracker = useAttemptTracker(unit?.unit_id ?? "empty");
@@ -107,13 +111,14 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       const HIDDEN = new Set(["CODE", "UNKNOWN"]);
       if (tax.labels.length > 0) setLabels(tax.labels.filter((l: { label: string }) => !HIDDEN.has(l.label)));
 
+      let rankedEssays: number[] = [];
       if (phase === "normal") {
         const [labeledRes, rankRes] = await Promise.all([
           api.getLabeledEssays(sessionId, "normal").catch(() => ({ fully_labeled_essays: [] as number[] })),
           api.getRankingStatus(sessionId).catch(() => ({ ranked_essays: [] as number[] }))
         ]);
         const fullyLabeled = labeledRes.fully_labeled_essays;
-        const rankedEssays = rankRes.ranked_essays;
+        rankedEssays = rankRes.ranked_essays;
 
         if (fullyLabeled.length > 0) {
           const unranked = fullyLabeled.find((idx) => !rankedEssays.includes(idx));
@@ -134,8 +139,10 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       if (!next.unit) {
         if (!navigatingRef.current) {
           navigatingRef.current = true;
-          if (phase === "normal") nav("/user/normal/llm");
-          else nav("/user/active/llm");
+          if (phase === "normal") {
+            const lastRankedEssayIndex = rankedEssays.length > 0 ? Math.max(...rankedEssays) : undefined;
+            nav("/user/normal/llm", { state: { lastRankedEssayIndex } });
+          } else nav("/user/active/llm");
         }
         setUnit(null);
       } else {
@@ -153,6 +160,43 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     flushOfflineQueue().catch(() => undefined);
     load();
   }, [phase, load]);
+
+  useEffect(() => {
+    if (
+      !loading &&
+      phase === "normal" &&
+      showRankingForEssay != null &&
+      !appliedShowRankingRef.current &&
+      ESSAYS.some((e) => e.essayIndex === showRankingForEssay)
+    ) {
+      appliedShowRankingRef.current = true;
+      setRankingEssayIndex(showRankingForEssay);
+      setShowRanking(true);
+      setUnit(null);
+      nav(location.pathname, { replace: true, state: {} });
+    }
+  }, [loading, phase, showRankingForEssay, nav, location.pathname]);
+
+  const essayIndexForLabels = phase === "normal" ? (currentEssay?.essayIndex ?? (showRanking && rankingEssayIndex !== null ? rankingEssayIndex : null)) : null;
+  useEffect(() => {
+    if (!sessionId || essayIndexForLabels == null) {
+      setEssayLabelsMap({});
+      return;
+    }
+    let cancelled = false;
+    api.getEssayLabels(sessionId, essayIndexForLabels).then((res) => {
+      if (cancelled) return;
+      const map: Record<string, string> = {};
+      for (const s of res.sentences) {
+        map[s.unit_id] = s.manual_label;
+      }
+      setEssayLabelsMap(map);
+    }).catch(() => {
+      if (!cancelled) setEssayLabelsMap({});
+    });
+    return () => { cancelled = true; };
+  }, [sessionId, essayIndexForLabels]);
+
   useEffect(() => {
     const onOnline = () => { flushOfflineQueue().catch(() => undefined); };
     window.addEventListener("online", onOnline);
@@ -202,6 +246,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
         attempt: attemptPayload
       });
       setLastSubmitted({ unit_id: unit.unit_id, label, text: unit.text });
+      setEssayLabelsMap((prev) => ({ ...prev, [unit.unit_id]: label }));
       showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
 
       cardKey.current += 1;
@@ -343,6 +388,9 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
             essay={essay}
             onSubmit={handleRankingSubmit}
             submitting={rankingSubmitting}
+            labelsByUnitId={essayLabelsMap}
+            onBackToPreviousRanking={rankingEssayIndex > 1 ? () => setRankingEssayIndex(rankingEssayIndex - 1) : undefined}
+            backToPreviousRankingLabel={rankingEssayIndex > 1 ? t("ranking.backToPreviousRanking") : undefined}
             onBackToLabeling={async () => {
               if (!sessionId || rankingEssayIndex === null) return;
               try {
@@ -403,7 +451,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       {unit ? (
         <>
           {currentEssay && (
-            <EssayDisplay essay={currentEssay} currentUnitId={unit.unit_id} />
+            <EssayDisplay essay={currentEssay} currentUnitId={unit.unit_id} labelsByUnitId={essayLabelsMap} />
           )}
 
           <div
