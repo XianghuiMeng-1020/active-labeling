@@ -164,3 +164,25 @@ export async function pingLlm(env: Env, requestId: string): Promise<{
     };
   }
 }
+
+/** Call LLM to rate labeling difficulty of a sentence. Returns Easy | Medium | Hard for display and ordering. */
+export async function getDifficultyFromLlm(
+  env: Env,
+  text: string,
+  requestId?: string
+): Promise<"Easy" | "Medium" | "Hard"> {
+  const id = requestId ?? crypto.randomUUID();
+  const messages = [
+    {
+      role: "system",
+      content: "You rate how difficult it is for a human to assign a single theme label to a sentence. Reply with exactly one word: Easy, Medium, or Hard. Easy = obvious theme; Hard = ambiguous or needs context."
+    },
+    { role: "user", content: `Sentence to rate:\n\n${text.slice(0, 500)}` }
+  ];
+  const result = await callQwenWithRetry(env, messages, id, 2);
+  const raw = (result.data?.choices?.[0]?.message?.content ?? "").trim().toLowerCase();
+  if (raw.includes("hard")) return "Hard";
+  if (raw.includes("medium")) return "Medium";
+  if (raw.includes("easy")) return "Easy";
+  return "Medium";
+}

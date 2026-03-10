@@ -13,7 +13,7 @@ import {
   saveLlmPrediction,
   updateSessionDoneAt
 } from "./db";
-import { runLlm, runLlmWithRetry, pingLlm } from "./llm";
+import { runLlm, runLlmWithRetry, pingLlm, getDifficultyFromLlm } from "./llm";
 import { getOverallStats, getSessionsProgress } from "./stats";
 import { json, nowIso, validateAttempt, extractLabel, buildLlmInstruction } from "./utils";
 import type { AttemptPayload, Env, LlmMode, Phase } from "./types";
@@ -283,21 +283,21 @@ async function assignUnits(env: Env, sessionId: string, normalN: number, activeM
   });
   if (stmts.length > 0) await env.DB.batch(stmts);
 
-  // Active phase: 主动学习只选一篇 — 选信息量最高的那一篇，只从该篇中取 unit
+  // Active phase: 主动学习只选一篇 — 选信息量最高的那一篇，按难度（Hard 优先）再按 score 排序
   const allWithScores = await env.DB.prepare(
-    `SELECT u.unit_id, COALESCE(s.score, 0) AS score
+    `SELECT u.unit_id, COALESCE(s.score, 0) AS score, s.reason AS reason
      FROM units u
      LEFT JOIN al_scores s ON s.unit_id = u.unit_id`
-  ).all<{ unit_id: string; score: number }>();
+  ).all<{ unit_id: string; score: number; reason: string | null }>();
 
-  const byEssay = new Map<number, { unit_id: string; score: number }[]>();
+  const difficultyOrder = (d: string | undefined) => (d === "Hard" ? 3 : d === "Medium" ? 2 : d === "Easy" ? 1 : 0);
+  const byEssay = new Map<number, Array<{ unit_id: string; score: number; reason: string | null }>>();
   for (const r of allWithScores.results ?? []) {
     const essayIdx = parseEssayIndexFromUnitId(r.unit_id);
     if (essayIdx == null) continue;
     if (!byEssay.has(essayIdx)) byEssay.set(essayIdx, []);
-    byEssay.get(essayIdx)!.push({ unit_id: r.unit_id, score: r.score });
+    byEssay.get(essayIdx)!.push({ unit_id: r.unit_id, score: r.score, reason: r.reason });
   }
-  // 选信息量总和最高的那一篇（若无 score 则按 unit_id 选第一篇）
   let chosenEssay = 1;
   let maxSum = -1;
   for (const [essayIdx, units] of byEssay) {
@@ -308,7 +308,21 @@ async function assignUnits(env: Env, sessionId: string, normalN: number, activeM
     }
   }
   const unitsOfChosen = byEssay.get(chosenEssay) ?? [];
-  const sorted = [...unitsOfChosen].sort((a, b) => b.score - a.score || a.unit_id.localeCompare(b.unit_id));
+  const sorted = [...unitsOfChosen].sort((a, b) => {
+    let da = 0, db = 0;
+    try {
+      if (a.reason) {
+        const o = JSON.parse(a.reason) as { difficulty_llm?: string };
+        da = difficultyOrder(o.difficulty_llm);
+      }
+      if (b.reason) {
+        const o = JSON.parse(b.reason) as { difficulty_llm?: string };
+        db = difficultyOrder(o.difficulty_llm);
+      }
+    } catch { /* ignore */ }
+    if (db !== da) return db - da; // Hard first
+    return b.score - a.score || a.unit_id.localeCompare(b.unit_id);
+  });
   const activeIds = sorted.slice(0, activeM).map((u) => u.unit_id);
 
   const activeStmts = activeIds.map((unitId, idx) =>
@@ -2022,17 +2036,36 @@ async function executeEdAlRun(env: Env, runId: string, params: EdAlParams) {
     const selectedIds = new Set(kCenterGreedy(items, activeM, seed));
     log(`k-center greedy selected ${selectedIds.size} diverse units`);
 
-    // Step 5: Write al_scores for all top candidates (batch)
+    // Step 5: LLM difficulty for selected units (for display and ordering), then write al_scores
+    const difficultyByUnit = new Map<string, "Easy" | "Medium" | "Hard">();
+    for (const unit of topCandidates) {
+      if (!selectedIds.has(unit.unit_id)) continue;
+      const t0 = Date.now();
+      try {
+        await qwenAcquire(env);
+        const difficulty = await getDifficultyFromLlm(env, unit.text, `al-diff-${unit.unit_id.slice(0, 12)}`);
+        await qwenRelease(env, 200, Date.now() - t0, 0);
+        difficultyByUnit.set(unit.unit_id, difficulty);
+        log(`  difficulty_llm ${unit.unit_id.slice(0, 12)}: ${difficulty}`);
+        await new Promise((r) => setTimeout(r, 400));
+      } catch (e: any) {
+        await qwenRelease(env, e?.status ?? 500, Date.now() - t0, e?.retryCount ?? 0);
+        console.warn("[ED-AL] getDifficultyFromLlm failed for", unit.unit_id, e);
+      }
+    }
     const now = nowIso();
     const alScoreStmts = topCandidates.map((unit, i) => {
       const diversityRank = selectedIds.has(unit.unit_id) ? i + 1 : null;
-      const reason = JSON.stringify({
+      const reasonObj: Record<string, unknown> = {
         method: "ed_al_v1",
         entropy: Number(unit.entropy.toFixed(6)),
         top_labels: unit.topLabels,
         diversity_rank: diversityRank,
         selected: selectedIds.has(unit.unit_id)
-      });
+      };
+      const difficultyLlm = difficultyByUnit.get(unit.unit_id);
+      if (difficultyLlm) reasonObj.difficulty_llm = difficultyLlm;
+      const reason = JSON.stringify(reasonObj);
       return env.DB.prepare(
         `INSERT INTO al_scores(unit_id, score, reason, updated_at)
          VALUES (?, ?, ?, ?)

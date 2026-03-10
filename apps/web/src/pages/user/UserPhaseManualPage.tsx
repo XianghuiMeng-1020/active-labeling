@@ -34,11 +34,13 @@ function parseAlReason(reason: string | null | undefined, t: (k: string, v?: Rec
   return null;
 }
 
-/** Derive Easy/Medium/Hard from al_reason entropy (for display only). */
+/** Derive Easy/Medium/Hard: prefer LLM difficulty_llm, else from al_reason entropy. */
 function getDifficultyFromReason(reason: string | null | undefined): "Easy" | "Medium" | "Hard" | null {
   if (!reason) return null;
   try {
-    const obj = JSON.parse(reason) as { entropy?: number };
+    const obj = JSON.parse(reason) as { difficulty_llm?: string; entropy?: number };
+    if (obj.difficulty_llm === "Easy" || obj.difficulty_llm === "Medium" || obj.difficulty_llm === "Hard")
+      return obj.difficulty_llm;
     const e = obj.entropy;
     if (typeof e !== "number") return null;
     if (e < 0.35) return "Easy";
@@ -372,9 +374,14 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
           <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
           <h2>{t("flow.activeDoneTitle")}</h2>
           <p style={{ marginTop: 8 }}>{t("flow.allDone")}</p>
-          <button className="btn primary lg" style={{ marginTop: 20 }} onClick={() => nav("/user/survey")}>
-            {t("survey.goToSurvey")} →
-          </button>
+          <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap", justifyContent: "center" }}>
+            <button className="btn" style={{ marginTop: 0 }} onClick={() => nav("/user/visualization")}>
+              {t("flow.backToLabelComparison")}
+            </button>
+            <button className="btn primary lg" style={{ marginTop: 0 }} onClick={() => nav("/user/survey")}>
+              {t("survey.goToSurvey")} →
+            </button>
+          </div>
         </div>
       </div>
     );

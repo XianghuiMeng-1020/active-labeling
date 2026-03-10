@@ -194,12 +194,15 @@ export function UserVisualizationPage() {
                 <div style={{ padding: "8px 12px", background: "var(--color-bg-secondary)", fontWeight: 600, fontSize: 13 }}>
                   {t("viz.essayN", { n: essay.essay_index })}
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0, fontSize: 13 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: 0, fontSize: 13 }}>
                   <div style={{ padding: "8px 12px", borderRight: "1px solid var(--color-border)", fontWeight: 600, color: "var(--color-text-secondary)" }}>
-                    {t("viz.manual")}
+                    {t("viz.textColumn")}
                   </div>
-                  <div style={{ padding: "8px 12px", fontWeight: 600, color: "var(--color-text-secondary)" }}>
-                    {t("viz.llm")}
+                  <div style={{ padding: "8px 12px", borderRight: "1px solid var(--color-border)", fontWeight: 600, color: "var(--color-text-secondary)", minWidth: 90 }}>
+                    {t("viz.manualLabelColumn")}
+                  </div>
+                  <div style={{ padding: "8px 12px", fontWeight: 600, color: "var(--color-text-secondary)", minWidth: 90 }}>
+                    {t("viz.llmLabelColumn")}
                   </div>
                   {essay.sentences.map((s) => (
                     <div key={s.unit_id} style={{ display: "contents" }}>
@@ -208,21 +211,33 @@ export function UserVisualizationPage() {
                           padding: "8px 12px",
                           borderRight: "1px solid var(--color-border)",
                           borderTop: "1px solid var(--color-border)",
-                          backgroundColor: s.diff ? "rgba(251, 191, 36, 0.15)" : undefined
+                          backgroundColor: s.diff ? "rgba(251, 191, 36, 0.15)" : undefined,
+                          color: "var(--color-text-muted)",
+                          fontSize: 12
                         }}
                       >
-                        <span style={{ fontWeight: 600, marginRight: 6 }}>{labelText(s.human_label)}</span>
-                        <span style={{ color: "var(--color-text-muted)", fontSize: 12 }}>{s.text.slice(0, 60)}{s.text.length > 60 ? "…" : ""}</span>
+                        {s.text}
+                      </div>
+                      <div
+                        style={{
+                          padding: "8px 12px",
+                          borderRight: "1px solid var(--color-border)",
+                          borderTop: "1px solid var(--color-border)",
+                          backgroundColor: s.diff ? "rgba(251, 191, 36, 0.15)" : undefined,
+                          fontWeight: 600
+                        }}
+                      >
+                        {labelText(s.human_label)}
                       </div>
                       <div
                         style={{
                           padding: "8px 12px",
                           borderTop: "1px solid var(--color-border)",
-                          backgroundColor: s.diff ? "rgba(251, 191, 36, 0.15)" : undefined
+                          backgroundColor: s.diff ? "rgba(251, 191, 36, 0.15)" : undefined,
+                          fontWeight: 600
                         }}
                       >
-                        <span style={{ fontWeight: 600, marginRight: 6 }}>{s.llm_label ? labelText(s.llm_label) : "—"}</span>
-                        <span style={{ color: "var(--color-text-muted)", fontSize: 12 }}>{s.text.slice(0, 60)}{s.text.length > 60 ? "…" : ""}</span>
+                        {s.llm_label ? labelText(s.llm_label) : "—"}
                       </div>
                     </div>
                   ))}
