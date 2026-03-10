@@ -283,21 +283,38 @@ async function assignUnits(env: Env, sessionId: string, normalN: number, activeM
   });
   if (stmts.length > 0) await env.DB.batch(stmts);
 
-  // Active phase: use AL scores to reorder the same units (or fetch remaining ones)
-  const activeRows = await env.DB.prepare(
-    `SELECT u.unit_id
+  // Active phase: 主动学习只选一篇 — 选信息量最高的那一篇，只从该篇中取 unit
+  const allWithScores = await env.DB.prepare(
+    `SELECT u.unit_id, COALESCE(s.score, 0) AS score
      FROM units u
-     LEFT JOIN al_scores s ON s.unit_id = u.unit_id
-     ORDER BY COALESCE(s.score, 0) DESC, u.unit_id ASC
-     LIMIT ?`
-  )
-    .bind(activeM)
-    .all<{ unit_id: string }>();
+     LEFT JOIN al_scores s ON s.unit_id = u.unit_id`
+  ).all<{ unit_id: string; score: number }>();
 
-  const activeStmts = (activeRows.results ?? []).map((row, idx) =>
+  const byEssay = new Map<number, { unit_id: string; score: number }[]>();
+  for (const r of allWithScores.results ?? []) {
+    const essayIdx = parseEssayIndexFromUnitId(r.unit_id);
+    if (essayIdx == null) continue;
+    if (!byEssay.has(essayIdx)) byEssay.set(essayIdx, []);
+    byEssay.get(essayIdx)!.push({ unit_id: r.unit_id, score: r.score });
+  }
+  // 选信息量总和最高的那一篇（若无 score 则按 unit_id 选第一篇）
+  let chosenEssay = 1;
+  let maxSum = -1;
+  for (const [essayIdx, units] of byEssay) {
+    const sum = units.reduce((a, u) => a + u.score, 0);
+    if (sum > maxSum) {
+      maxSum = sum;
+      chosenEssay = essayIdx;
+    }
+  }
+  const unitsOfChosen = byEssay.get(chosenEssay) ?? [];
+  const sorted = [...unitsOfChosen].sort((a, b) => b.score - a.score || a.unit_id.localeCompare(b.unit_id));
+  const activeIds = sorted.slice(0, activeM).map((u) => u.unit_id);
+
+  const activeStmts = activeIds.map((unitId, idx) =>
     env.DB.prepare(
       "INSERT INTO assignments(session_id, unit_id, phase, task, status, ordering) VALUES (?, ?, 'active', 'manual', 'todo', ?)"
-    ).bind(sessionId, row.unit_id, idx)
+    ).bind(sessionId, unitId, idx)
   );
   if (activeStmts.length > 0) await env.DB.batch(activeStmts);
 }
