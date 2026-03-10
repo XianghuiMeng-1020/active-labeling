@@ -1138,7 +1138,8 @@ app.get("/api/ranking/status", async (c) => {
 });
 
 // ─── Reopen essay for re-labeling (from ranking page: back to edit labels) ───
-// Soft reopen: only remove ranking submission so user can re-edit labels; keep existing labels and progress.
+// Delete ranking + reopen the LAST sentence of the essay so user can re-label it.
+// This keeps all other labels intact (progress N-1 instead of 0).
 app.post("/api/ranking/reopen", async (c) => {
   const body: { session_id?: string; essay_index?: number } = (await c.req.json<{ session_id?: string; essay_index?: number }>().catch(() => ({}))) ?? {};
   const sessionId = String(body.session_id ?? "").trim();
@@ -1146,9 +1147,44 @@ app.post("/api/ranking/reopen", async (c) => {
   if (!sessionId || essayIndex == null || essayIndex < 1 || essayIndex > 100) {
     return json({ error: "session_id and essay_index (1–100) required" }, 400);
   }
-  await c.env.DB.prepare(
-    "DELETE FROM ranking_submissions WHERE session_id = ? AND essay_index = ?"
-  ).bind(sessionId, essayIndex).run();
+  const pattern = `essay${String(essayIndex).padStart(4, "0")}_%`;
+
+  const lastUnit = await c.env.DB.prepare(
+    `SELECT unit_id FROM assignments
+     WHERE session_id = ? AND phase = 'normal' AND task = 'manual' AND unit_id LIKE ? AND status = 'done'
+     ORDER BY ordering DESC LIMIT 1`
+  ).bind(sessionId, pattern).first<{ unit_id: string }>();
+
+  const stmts = [
+    c.env.DB.prepare(
+      "DELETE FROM ranking_submissions WHERE session_id = ? AND essay_index = ?"
+    ).bind(sessionId, essayIndex),
+  ];
+
+  if (lastUnit) {
+    stmts.push(
+      c.env.DB.prepare(
+        "DELETE FROM interaction_events WHERE attempt_id IN (SELECT attempt_id FROM label_attempts WHERE session_id = ? AND unit_id = ? AND phase = 'normal' AND task = 'manual')"
+      ).bind(sessionId, lastUnit.unit_id),
+      c.env.DB.prepare(
+        "DELETE FROM label_attempts WHERE session_id = ? AND unit_id = ? AND phase = 'normal' AND task = 'manual'"
+      ).bind(sessionId, lastUnit.unit_id),
+      c.env.DB.prepare(
+        "DELETE FROM manual_labels WHERE session_id = ? AND unit_id = ? AND phase = 'normal'"
+      ).bind(sessionId, lastUnit.unit_id),
+      c.env.DB.prepare(
+        "UPDATE assignments SET status = 'todo' WHERE session_id = ? AND unit_id = ? AND phase = 'normal' AND task = 'manual'"
+      ).bind(sessionId, lastUnit.unit_id),
+    );
+  }
+
+  stmts.push(
+    c.env.DB.prepare(
+      "UPDATE sessions SET normal_manual_done_at = NULL WHERE session_id = ?"
+    ).bind(sessionId),
+  );
+
+  await c.env.DB.batch(stmts);
   return json({ ok: true });
 });
 
