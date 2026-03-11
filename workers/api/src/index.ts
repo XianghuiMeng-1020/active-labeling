@@ -1090,7 +1090,38 @@ app.get("/api/active/llm/results", async (c) => {
       reason: string | null;
     }>();
 
-  return json({ items: rows.results ?? [] });
+  const items = rows.results ?? [];
+
+  const needDifficulty = items.filter((r) => r.score == null && r.reason == null);
+  if (needDifficulty.length > 0) {
+    const unitIds = needDifficulty.map((r) => r.unit_id);
+    const placeholders = unitIds.map(() => "?").join(",");
+    const llmRows = await c.env.DB.prepare(
+      `SELECT unit_id, predicted_label, mode
+       FROM llm_labels
+       WHERE unit_id IN (${placeholders})
+         AND phase = 'normal'`
+    )
+      .bind(...unitIds)
+      .all<{ unit_id: string; predicted_label: string; mode: string }>();
+
+    const labelsByUnit = new Map<string, Set<string>>();
+    for (const r of llmRows.results ?? []) {
+      if (!labelsByUnit.has(r.unit_id)) labelsByUnit.set(r.unit_id, new Set());
+      labelsByUnit.get(r.unit_id)!.add(r.predicted_label);
+    }
+
+    for (const item of items) {
+      if (item.score != null || item.reason != null) continue;
+      const labels = labelsByUnit.get(item.unit_id);
+      if (labels) {
+        const difficulty = labels.size >= 3 ? "Hard" : labels.size >= 2 ? "Medium" : "Easy";
+        item.reason = JSON.stringify({ difficulty_llm: difficulty, distinct_predictions: labels.size });
+      }
+    }
+  }
+
+  return json({ items });
 });
 
 // ─── Ensure Active LLM results for a session (on-demand for U4) ──────────────
