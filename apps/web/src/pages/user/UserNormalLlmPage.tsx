@@ -402,6 +402,20 @@ export function UserNormalLlmPage() {
         </div>
       )}
 
+      {lastRankedEssayIndex != null && (
+        <div style={{ marginTop: 16 }}>
+          <button
+            type="button"
+            className="btn full-width"
+            style={{ fontSize: 13, padding: "8px 14px", background: "#fef9c3", border: "1px solid #facc15", color: "#713f12" }}
+            onClick={handleUndoRanking}
+            disabled={undoRankingInProgress}
+          >
+            {undoRankingInProgress ? "..." : `↩ ${t("flow.undoBackToRanking")}`}
+          </button>
+        </div>
+      )}
+
       {overrideUnitId && (
         <OverrideSheet
           labels={labels}
