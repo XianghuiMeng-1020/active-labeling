@@ -68,7 +68,9 @@ export function UserNormalLlmPage() {
   const location = useLocation();
   const { t, labelText } = useI18n();
   const sessionId = getSessionId();
-  const lastRankedEssayIndex = (location.state as { lastRankedEssayIndex?: number } | null)?.lastRankedEssayIndex;
+  const [lastRankedEssayIndex, setLastRankedEssayIndex] = useState<number | null>(
+    () => (location.state as { lastRankedEssayIndex?: number } | null)?.lastRankedEssayIndex ?? null
+  );
 
   const [labels, setLabels] = useState<Array<{ label: string }>>([]);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
@@ -160,6 +162,7 @@ export function UserNormalLlmPage() {
 
   const handleRunEssay = async () => {
     if (!sessionId || !currentEssay || runEssayLoading) return;
+    setLastRankedEssayIndex(null);
     setRunEssayLoading(true);
     try {
       const res = await api.runLlmEssay({
@@ -199,6 +202,7 @@ export function UserNormalLlmPage() {
 
   const handleAcceptForUnit = async (unitId: string, label: string) => {
     if (accepting) return;
+    setLastRankedEssayIndex(null);
     setAccepting(true);
     try {
       await acceptOne(unitId, label);
