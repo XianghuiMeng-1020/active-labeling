@@ -73,7 +73,7 @@ export function UserNormalLlmPage() {
   );
 
   const [labels, setLabels] = useState<Array<{ label: string }>>([]);
-  const [progress, setProgress] = useState({ done: 0, total: 0 });
+  const [_progress, setProgress] = useState({ done: 0, total: 0 });
   const [done, setDone] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [undoRankingInProgress, setUndoRankingInProgress] = useState(false);
@@ -94,6 +94,15 @@ export function UserNormalLlmPage() {
     () => (currentEssayIndex != null ? ESSAYS.find((e) => e.essayIndex === currentEssayIndex) ?? null : null),
     [currentEssayIndex]
   );
+
+  const essayTotal = ESSAYS.length;
+  const essayDone = useMemo(() => {
+    if (done) return essayTotal;
+    if (currentEssayIndex == null) return 0;
+    const sorted = ESSAYS.map((e) => e.essayIndex).sort((a, b) => a - b);
+    const idx = sorted.indexOf(currentEssayIndex);
+    return idx >= 0 ? idx : 0;
+  }, [done, currentEssayIndex, essayTotal]);
 
   const allPredicted = useMemo(
     () => essaySentences.length > 0 && essaySentences.every((s) => Boolean(llmLabelsByUnitId[s.unit_id])),
@@ -294,7 +303,7 @@ export function UserNormalLlmPage() {
   return (
     <div className="page">
       <div className="progress-header">
-        <ProgressRing done={progress.done} total={progress.total} />
+        <ProgressRing done={essayDone} total={essayTotal} />
         <div className="progress-info">
           <div className="progress-title">{t("flow.u2Title")}</div>
           <div className="progress-subtitle">{t("flow.runModelHint")}</div>
