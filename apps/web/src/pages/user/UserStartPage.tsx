@@ -14,7 +14,7 @@ export function UserStartPage() {
   const [message, setMessage] = useState("");
   const [messageKind, setMessageKind] = useState<"success" | "error">("success");
   const [currentSessionId, setCurrentSessionId] = useState(getSessionId());
-  const [consent, setConsent] = useState(false);
+  const [consent, setConsent] = useState(true);
 
   const start = async () => {
     setLoading(true);
