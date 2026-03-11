@@ -332,6 +332,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     setRankingSubmitting(false);
     setShowRanking(false);
     setRankingEssayIndex(null);
+    setLastSubmitted(null);
 
     pendingUnitRef.current = null;
     await load();
