@@ -14,18 +14,25 @@ type ActiveLlmItem = {
   reason: string | null;
 };
 
-function getDifficultyFromReason(reason: string | null | undefined): "Easy" | "Medium" | "Hard" | null {
-  if (!reason) return null;
-  try {
-    const obj = JSON.parse(reason) as { difficulty_llm?: string; entropy?: number };
-    if (obj.difficulty_llm === "Easy" || obj.difficulty_llm === "Medium" || obj.difficulty_llm === "Hard")
-      return obj.difficulty_llm;
-    const e = obj.entropy;
-    if (typeof e !== "number") return null;
-    if (e < 0.35) return "Easy";
-    if (e < 0.65) return "Medium";
+function getDifficulty(reason: string | null | undefined, score: number | null | undefined): "Easy" | "Medium" | "Hard" | null {
+  if (reason) {
+    try {
+      const obj = JSON.parse(reason) as { difficulty_llm?: string; entropy?: number };
+      if (obj.difficulty_llm === "Easy" || obj.difficulty_llm === "Medium" || obj.difficulty_llm === "Hard")
+        return obj.difficulty_llm;
+      if (typeof obj.entropy === "number") {
+        if (obj.entropy < 0.35) return "Easy";
+        if (obj.entropy < 0.65) return "Medium";
+        return "Hard";
+      }
+    } catch { /* ignore */ }
+  }
+  if (typeof score === "number") {
+    if (score < 0.35) return "Easy";
+    if (score < 0.65) return "Medium";
     return "Hard";
-  } catch { return null; }
+  }
+  return null;
 }
 
 export function UserActiveLlmPage() {
@@ -127,7 +134,7 @@ export function UserActiveLlmPage() {
           const meta = getEssaySentenceMeta(item.unit_id);
           const displayLabel = localOverrides[item.unit_id] ?? item.label;
           const hasLabel = !!displayLabel;
-          const difficulty = getDifficultyFromReason(item.reason);
+          const difficulty = getDifficulty(item.reason, item.score);
           return (
             <div className="card" key={`${item.unit_id}-${idx}`}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
