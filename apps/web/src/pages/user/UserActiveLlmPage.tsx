@@ -14,6 +14,20 @@ type ActiveLlmItem = {
   reason: string | null;
 };
 
+function getDifficultyFromReason(reason: string | null | undefined): "Easy" | "Medium" | "Hard" | null {
+  if (!reason) return null;
+  try {
+    const obj = JSON.parse(reason) as { difficulty_llm?: string; entropy?: number };
+    if (obj.difficulty_llm === "Easy" || obj.difficulty_llm === "Medium" || obj.difficulty_llm === "Hard")
+      return obj.difficulty_llm;
+    const e = obj.entropy;
+    if (typeof e !== "number") return null;
+    if (e < 0.35) return "Easy";
+    if (e < 0.65) return "Medium";
+    return "Hard";
+  } catch { return null; }
+}
+
 export function UserActiveLlmPage() {
   const nav = useNavigate();
   const { t, labelText } = useI18n();
@@ -21,6 +35,16 @@ export function UserActiveLlmPage() {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<ActiveLlmItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [labels, setLabels] = useState<Array<{ label: string }>>([]);
+  const [overrideUnitId, setOverrideUnitId] = useState<string | null>(null);
+  const [localOverrides, setLocalOverrides] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    api.getTaxonomy().then((tax) => {
+      const HIDDEN = new Set(["CODE", "UNKNOWN"]);
+      setLabels(tax.labels.filter((l: { label: string }) => !HIDDEN.has(l.label)));
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -101,7 +125,9 @@ export function UserActiveLlmPage() {
       ) : (
         items.map((item, idx) => {
           const meta = getEssaySentenceMeta(item.unit_id);
-          const hasLabel = !!item.label;
+          const displayLabel = localOverrides[item.unit_id] ?? item.label;
+          const hasLabel = !!displayLabel;
+          const difficulty = getDifficultyFromReason(item.reason);
           return (
             <div className="card" key={`${item.unit_id}-${idx}`}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
@@ -115,14 +141,19 @@ export function UserActiveLlmPage() {
                 ) : (
                   <span className="badge yellow">{t("flow.u4Pending")}</span>
                 )}
+                {difficulty && (
+                  <span className={`unit-chip difficulty-${difficulty.toLowerCase()}`}>
+                    {difficulty === "Easy" ? t("flow.difficultyEasy") : difficulty === "Medium" ? t("flow.difficultyMedium") : t("flow.difficultyHard")}
+                  </span>
+                )}
               </div>
               <div className="text-block" style={{ fontSize: 15 }}>{item.text}</div>
               <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
                 <div>
                   <span style={{ fontSize: 12, fontWeight: 600, color: "var(--color-text-secondary)" }}>{t("flow.u4Predicted")}</span>
                   <div style={{ fontWeight: 700, fontSize: 16, marginTop: 2 }}>
-                    {item.label ? (
-                      <span className="predicted-badge" style={{ fontSize: 13, padding: "4px 14px" }}>🤖 {labelText(item.label)}</span>
+                    {displayLabel ? (
+                      <span className="predicted-badge" style={{ fontSize: 13, padding: "4px 14px" }}>🤖 {labelText(displayLabel)}</span>
                     ) : (
                       <span style={{ color: "var(--color-text-muted)" }}>—</span>
                     )}
@@ -135,6 +166,16 @@ export function UserActiveLlmPage() {
                       {item.score.toFixed(4)}
                     </div>
                   </div>
+                )}
+                {hasLabel && (
+                  <button
+                    type="button"
+                    className="btn"
+                    style={{ padding: "4px 12px", fontSize: 12, marginLeft: "auto" }}
+                    onClick={() => setOverrideUnitId(item.unit_id)}
+                  >
+                    ✎ {t("flow.changeLabel")}
+                  </button>
                 )}
               </div>
             </div>
@@ -149,6 +190,30 @@ export function UserActiveLlmPage() {
       >
         {t("survey.goToSurvey")} →
       </button>
+
+      {overrideUnitId && labels.length > 0 && (
+        <>
+          <div className="bottom-sheet-overlay" onClick={() => setOverrideUnitId(null)} />
+          <div className="bottom-sheet">
+            <div className="bottom-sheet-handle" />
+            <div className="bottom-sheet-title">{t("flow.overrideTitle")}</div>
+            <div className="label-grid">
+              {labels.map((l) => (
+                <button
+                  key={l.label}
+                  className="label-btn"
+                  onClick={() => {
+                    setLocalOverrides((prev) => ({ ...prev, [overrideUnitId]: l.label }));
+                    setOverrideUnitId(null);
+                  }}
+                >
+                  {labelText(l.label)}
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
