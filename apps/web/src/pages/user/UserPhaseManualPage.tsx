@@ -79,6 +79,8 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const navigatingRef = useRef(false);
   const appliedShowRankingRef = useRef(false);
   const [essayLabelsMap, setEssayLabelsMap] = useState<Record<string, string>>({});
+  const [lastRankedEssayIndex, setLastRankedEssayIndex] = useState<number | null>(null);
+  const [undoingRanking, setUndoingRanking] = useState(false);
 
   const { toasts, showToast } = useToast();
   const tracker = useAttemptTracker(unit?.unit_id ?? "empty");
@@ -258,6 +260,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
         attempt: attemptPayload
       });
       setLastSubmitted({ unit_id: unit.unit_id, label, text: unit.text });
+      setLastRankedEssayIndex(null);
       setEssayLabelsMap((prev) => ({ ...prev, [unit.unit_id]: label }));
       showToast(`✓ ${t("flow.submittedAs", { label: labelText(label) })}`, "success");
 
@@ -329,13 +332,33 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       setRankingSubmitting(false);
       return;
     }
+    const justRankedIndex = rankingEssayIndex;
     setRankingSubmitting(false);
     setShowRanking(false);
     setRankingEssayIndex(null);
     setLastSubmitted(null);
+    setLastRankedEssayIndex(justRankedIndex);
 
     pendingUnitRef.current = null;
     await load();
+  };
+
+  const handleUndoRanking = async () => {
+    if (!sessionId || lastRankedEssayIndex == null || undoingRanking) return;
+    setUndoingRanking(true);
+    try {
+      await api.undoRanking({ session_id: sessionId, essay_index: lastRankedEssayIndex });
+      showToast(t("flow.undone"), "warn");
+      const essayIdx = lastRankedEssayIndex;
+      setLastRankedEssayIndex(null);
+      setShowRanking(true);
+      setRankingEssayIndex(essayIdx);
+      setUnit(null);
+    } catch {
+      showToast(t("flow.undoFailed"), "error");
+    } finally {
+      setUndoingRanking(false);
+    }
   };
 
   useEffect(() => {
@@ -521,6 +544,19 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
                   disabled={undoing}
                 >
                   {undoing ? "..." : `↩ ${t("flow.undoLastStep")}`}
+                </button>
+              </div>
+            )}
+            {lastRankedEssayIndex != null && (
+              <div style={{ marginTop: lastSubmitted ? 8 : 16, paddingTop: lastSubmitted ? 0 : 12, borderTop: lastSubmitted ? "none" : "1px solid var(--color-border)" }}>
+                <button
+                  type="button"
+                  className="btn full-width"
+                  style={{ fontSize: 13, padding: "8px 14px", background: "#fef9c3", border: "1px solid #facc15", color: "#713f12" }}
+                  onClick={handleUndoRanking}
+                  disabled={undoingRanking}
+                >
+                  {undoingRanking ? "..." : `↩ ${t("flow.undoBackToRanking")}`}
                 </button>
               </div>
             )}
