@@ -1,0 +1,37 @@
+[
+  {
+    "label": "CODE",
+    "description": "Short definition",
+    "ordering": 0
+  },
+  {
+    "label": "EXPLANATION",
+    "description": "Explains AI, AI literacy, or related concepts",
+    "ordering": 1
+  },
+  {
+    "label": "EVALUATION",
+    "description": "Assesses AI reliability, value, risks, or limitations",
+    "ordering": 2
+  },
+  {
+    "label": "RESPONSIBILITY",
+    "description": "Refers to ethical, fair, safe, and accountable AI use",
+    "ordering": 3
+  },
+  {
+    "label": "APPLICATION",
+    "description": "Describes the use of AI literacy in practical contexts",
+    "ordering": 4
+  },
+  {
+    "label": "IMPLICATION",
+    "description": "Highlights broader consequences or future significance",
+    "ordering": 5
+  },
+  {
+    "label": "UNKNOWN",
+    "description": "Fallback label for parser mismatch",
+    "ordering": 6
+  }
+]

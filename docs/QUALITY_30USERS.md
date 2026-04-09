@@ -20,6 +20,22 @@
 - 使用 `scripts/e2e_20users.mjs` 或 `scripts/multi-user-stress-test.mjs` 做多用户压测（可调至 30 用户）。
 - 确认环境变量：前端 `VITE_API_BASE` 指向正确 API；后端 `QWEN_MAX_CONCURRENT` 视 Qwen 配额设置（默认 2，队列串行，质量稳定）。
 
+### 推送后：对 link 做多用户模拟测试
+代码已推送到 `origin/main` 后，等部署完成（Cloudflare Workers/Pages 约 1～2 分钟），在**能访问部署 API 的环境**执行：
+
+```bash
+# 部署 API（替换为你的 Worker 地址）
+export API_BASE="https://sentence-labeling-api.xmeng19.workers.dev"
+export ADMIN_TOKEN="你的生产 Admin Token"
+
+node scripts/e2e_20users.mjs "$API_BASE" "$ADMIN_TOKEN"
+```
+
+- 若本机连部署 API 超时（如 `ConnectTimeoutError`），可在**同一云区域**的 CI/另一台机子跑，或先对**本地 Worker** 测：
+  `npm run dev` 起 Worker 后执行：  
+  `node scripts/e2e_20users.mjs http://localhost:8787 dev-admin-token`
+- 通过即说明：会话创建（无需同意）、manual/LLM 流程、限流与数据一致性在 20 人并发下正常；U4 的 ensure 在用户进入 U4 时由前端自动调用。
+
 ---
 
 ## 2. 30 用户同时使用（High quality output）

@@ -71,7 +71,7 @@ BASE_URL=https://sentence-labeling-web.pages.dev npx playwright test tests/produ
 
 3. **Admin Token**：Admin 站与用户站同源，Token 需在后端配置（如 Cloudflare Secrets 或 env）中设置，否则无法登录。
 
-4. **仅选一篇（主动学习）**：当前未改 assignment 生成逻辑，若老师要求「主动学习只做其中一篇文章」，需再改后端分配逻辑并可能改前端说明。
+4. **仅选一篇（主动学习）**：已实现 — `assignUnits` 在 active 阶段只从信息量最高的单篇取 unit 分配。
 
 ---
 

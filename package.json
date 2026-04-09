@@ -1,0 +1,31 @@
+{
+  "name": "active-labeling",
+  "version": "1.0.0",
+  "description": "研讨会场景下的交互式文本标注系统，基于 Cloudflare Pages + Workers + D1，使用 **ED-AL v1**（Entropy + Diversity 主动学习算法），LLM 仅用 **Qwen（阿里云 DashScope）**。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:back-undo": "playwright test tests/back_undo_edge_cases.spec.ts --project=chromium",
+    "test:back-undo:ci": "BASE_URL=http://localhost:5173 API_BASE=http://localhost:8787 playwright test tests/back_undo_edge_cases.spec.ts --project=chromium"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XianghuiMeng-1020/active-labeling.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/XianghuiMeng-1020/active-labeling/issues"
+  },
+  "homepage": "https://github.com/XianghuiMeng-1020/active-labeling#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "undici": "^7.24.5"
+  }
+}

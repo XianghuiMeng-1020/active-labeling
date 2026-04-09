@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,6 +11,7 @@ import {
   Legend
 } from "chart.js";
 import { api } from "../../lib/api";
+import { ENABLE_ACTIVE_LEARNING } from "../../lib/featureFlags";
 import { useI18n } from "../../lib/i18n";
 import { getSessionId } from "../../lib/storage";
 
@@ -60,13 +61,34 @@ type LabelDiffData = Awaited<ReturnType<typeof api.getLabelDifference>>;
 
 export function UserVisualizationPage() {
   const nav = useNavigate();
+  const location = useLocation();
   const { t, labelText } = useI18n();
   const sessionId = getSessionId();
+  const fromActiveDone = (location.state as { fromActiveDone?: boolean } | null)?.fromActiveDone === true;
   const [data, setData] = useState<VizData | null>(null);
   const [labelDiff, setLabelDiff] = useState<LabelDiffData | null>(null);
   const [informativeness, setInformativeness] = useState<Array<{ essay_index: number; avg_score: number; count: number }> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [navigatingActive, setNavigatingActive] = useState(false);
+
+  const handleContinueToActive = async () => {
+    if (!ENABLE_ACTIVE_LEARNING) { nav("/user/survey"); return; }
+    if (!sessionId) return;
+    setNavigatingActive(true);
+    try {
+      await api.ensureActiveAssignments(sessionId);
+      nav("/user/active/manual");
+    } catch (e: any) {
+      if (e?.data?.status === "al_not_ready") {
+        setError(t("al.notReadyUser"));
+      } else {
+        nav("/user/active/manual");
+      }
+    } finally {
+      setNavigatingActive(false);
+    }
+  };
 
   useEffect(() => {
     if (!sessionId) { nav("/user/start"); return; }
@@ -74,11 +96,20 @@ export function UserVisualizationPage() {
     (async () => {
       setLoading(true);
       try {
-        const status = await api.getSessionStatus(sessionId);
-        if (!status.gates.can_enter_active_manual) {
-          if (status.gates.can_enter_normal_llm) nav("/user/normal/llm");
-          else nav("/user/normal/manual");
-          return;
+        let status = await api.getSessionStatus(sessionId);
+        if (!fromActiveDone && !status.gates.can_enter_active_manual) {
+          const normalLlmDone = status.normal_llm?.total > 0 && status.normal_llm.done === status.normal_llm.total;
+          if (normalLlmDone && ENABLE_ACTIVE_LEARNING) {
+            try {
+              await api.ensureActiveAssignments(sessionId);
+              status = await api.getSessionStatus(sessionId);
+            } catch { /* ignore, will check gate below */ }
+          }
+          if (!status.gates.can_enter_active_manual) {
+            if (status.gates.can_enter_normal_llm) nav("/user/normal/llm");
+            else nav("/user/normal/manual");
+            return;
+          }
         }
         const [viz, diff, info] = await Promise.all([
           api.getVisualizationStats(),
@@ -97,7 +128,7 @@ export function UserVisualizationPage() {
       }
     })();
     return () => { cancelled = true; };
-  }, [sessionId, nav]);
+  }, [sessionId, nav, fromActiveDone]);
 
   if (!sessionId) return null;
 
@@ -117,8 +148,8 @@ export function UserVisualizationPage() {
       <div className="page">
         <div className="card" style={{ textAlign: "center", padding: 32 }}>
           <p>{error ?? t("viz.noData")}</p>
-          <button className="btn primary" style={{ marginTop: 16 }} onClick={() => nav("/user/active/manual")}>
-            {t("viz.continue")} →
+          <button className="btn primary" style={{ marginTop: 16 }} onClick={handleContinueToActive} disabled={navigatingActive}>
+            {navigatingActive ? <span className="spinner" /> : <>{t(ENABLE_ACTIVE_LEARNING ? "viz.continue" : "survey.goToSurvey")} →</>}
           </button>
         </div>
       </div>
@@ -297,10 +328,11 @@ export function UserVisualizationPage() {
 
       <button
         className="btn primary full-width lg"
-        onClick={() => nav("/user/active/manual")}
+        onClick={handleContinueToActive}
+        disabled={navigatingActive}
         style={{ marginTop: 8 }}
       >
-        {t("viz.continue")} →
+        {navigatingActive ? <span className="spinner" /> : <>{t(ENABLE_ACTIVE_LEARNING ? "viz.continue" : "survey.goToSurvey")} →</>}
       </button>
     </div>
   );

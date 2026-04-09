@@ -5,7 +5,7 @@
  * Each user: start → manual label 15 → LLM accept 15 → verify status → check viz.
  */
 
-const API = process.argv[2] || "http://localhost:64401";
+const API = process.argv[2] || "http://localhost:8787";
 const ADMIN_TOKEN = process.argv[3] || "dev-admin-token";
 const NUM_USERS = 10;
 const BATCH_SIZE = 3;

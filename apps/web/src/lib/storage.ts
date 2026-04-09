@@ -1,5 +1,6 @@
 const SESSION_KEY = "labeling_session_id";
 const RESET_TOKEN_KEY = "labeling_reset_token";
+const CONSENT_KEY = "labeling_consent";
 const ADMIN_SESSION_KEY = "labeling_admin_session";
 const ADMIN_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 
@@ -45,6 +46,15 @@ export function getResetToken() {
 export function clearSessionId() {
   safeRemoveItem(SESSION_KEY);
   safeRemoveItem(RESET_TOKEN_KEY);
+  safeRemoveItem(CONSENT_KEY);
+}
+
+export function getConsent(): boolean {
+  return safeGetItem(CONSENT_KEY) !== "0";
+}
+
+export function setConsent(consent: boolean) {
+  safeSetItem(CONSENT_KEY, consent ? "1" : "0");
 }
 
 function readAdminSession(): AdminSession | null {

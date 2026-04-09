@@ -1347,7 +1347,8 @@ p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.65; }
   padding: 2px 4px;
 }
 
-.essay-flow-active .essay-flow-tag {
+.essay-flow-active .essay-flow-tag,
+.essay-flow-tag-labeled {
   background: #7c3aed;
   color: #fff;
 }
@@ -1757,4 +1758,10 @@ p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.65; }
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+@keyframes al-progress {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(150%); }
+  100% { transform: translateX(-100%); }
 }

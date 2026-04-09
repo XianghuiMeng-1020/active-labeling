@@ -1,0 +1,85 @@
+{
+  "exported_at": "2026-03-31T12:19:27.050Z",
+  "data_date": "2026-03-24",
+  "filter": "sessions.created_at between 2026-03-24T00:00:00 and 2026-03-25T00:00:00",
+  "description": "Real workshop user data collected on March 24, 2026. AI Literacy sentence-level thematic coding task.",
+  "tables": [
+    {
+      "table": "sessions",
+      "rows": 119
+    },
+    {
+      "table": "units",
+      "rows": 15
+    },
+    {
+      "table": "assignments",
+      "rows": 4165
+    },
+    {
+      "table": "manual_labels",
+      "rows": 1020
+    },
+    {
+      "table": "llm_labels",
+      "rows": 712
+    },
+    {
+      "table": "label_attempts",
+      "rows": 1568
+    },
+    {
+      "table": "interaction_events",
+      "rows": 4253
+    },
+    {
+      "table": "ranking_submissions",
+      "rows": 197
+    },
+    {
+      "table": "survey_responses",
+      "rows": 18
+    },
+    {
+      "table": "page_views",
+      "rows": 690
+    },
+    {
+      "table": "llm_run_counts",
+      "rows": 0
+    },
+    {
+      "table": "taxonomy_labels",
+      "rows": 7
+    },
+    {
+      "table": "prompts",
+      "rows": 2
+    },
+    {
+      "table": "[enriched] labels_merged",
+      "rows": 1147
+    },
+    {
+      "table": "[enriched] timing_analysis",
+      "rows": 776
+    },
+    {
+      "table": "[enriched] human_vs_llm",
+      "rows": 712
+    },
+    {
+      "table": "[enriched] page_time_per_user",
+      "rows": 690
+    },
+    {
+      "table": "[enriched] per_user_summary",
+      "rows": 119
+    },
+    {
+      "table": "[enriched] label_distribution_per_unit",
+      "rows": 74
+    }
+  ],
+  "database": "labeling_db"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 21,
+    "session_id": "0d5c3671-4e5b-44c6-a871-3af69c43d1db",
+    "response_json": "{\"likert\":{\"survey.q1\":4,\"survey.q2\":4,\"survey.q4\":4,\"survey.q7\":4,\"survey.q10\":1},\"mc_q11\":\"\",\"open_q12\":\"Save time and avoid human researchers need to do repetitive tasks\",\"open_q13\":\"\",\"open_q14\":\"Try suggest some tools or ways that we can implement ai into our daily research tasks. Give us some real and applicable takeaway\"}",
+    "created_at": "2026-03-24T08:10:41.763Z"
+  },
+  {
+    "id": 9,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "response_json": "{\"likert\":{\"survey.q1\":4,\"survey.q2\":4,\"survey.q4\":5,\"survey.q7\":2,\"survey.q10\":4},\"mc_q11\":\"\",\"open_q12\":\"一些比较好辨认的 减少了一些重复工作 但是还是很难完全相信\",\"open_q13\":\"\",\"open_q14\":\"非常好的工作坊，很感谢，如果能有更多关于AI编码的，前沿研究介绍就好了\"}",
+    "created_at": "2026-03-24T07:27:17.998Z"
+  },
+  {
+    "id": 19,
+    "session_id": "10ce0470-45da-4950-a942-56e9247145f6",
+    "response_json": "{\"likert\":{\"survey.q1\":3,\"survey.q2\":3,\"survey.q4\":4,\"survey.q7\":3,\"survey.q10\":3},\"mc_q11\":\"\",\"open_q12\":\"Actually I still cannot understand…but good to see what other researchers are doing analyzing in this way.\",\"open_q13\":\"\",\"open_q14\":\"Appreciate the ppt can be shared to the audience.\"}",
+    "created_at": "2026-03-24T07:39:12.610Z"
+  },
+  {
+    "id": 16,
+    "session_id": "2e1928bd-3a92-4c28-b5d8-0007e75eefdf",
+    "response_json": "{\"likert\":{\"survey.q1\":4,\"survey.q2\":3,\"survey.q4\":4,\"survey.q7\":4,\"survey.q10\":4},\"mc_q11\":\"\",\"open_q12\":\"AI可以帮我们进行初步的判断和分析，然后人可以在这个基础上去进行进一步的判断，或者是多个coders来一起进行判断。\",\"open_q13\":\"\",\"open_q14\":\"这个interface可以做成open coding的形式吗？\"}",
+    "created_at": "2026-03-24T07:31:12.443Z"
+  },
+  {
+    "id": 22,
+    "session_id": "4d86c2f8-e4ae-4112-a92e-c203c680cbd3",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":5,\"survey.q10\":5},\"mc_q11\":\"\",\"open_q12\":\"no comments\",\"open_q13\":\"\",\"open_q14\":\"no comments\"}",
+    "created_at": "2026-03-25T22:53:38.329Z"
+  },
+  {
+    "id": 5,
+    "session_id": "690e6f55-5517-4d7c-a3ae-5745796fb6fa",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":5,\"survey.q10\":5},\"mc_q11\":\"\",\"open_q12\":\"1\",\"open_q13\":\"\",\"open_q14\":\"1\"}",
+    "created_at": "2026-03-24T06:37:20.998Z"
+  },
+  {
+    "id": 13,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":3,\"survey.q7\":4,\"survey.q10\":4},\"mc_q11\":\"\",\"open_q12\":\"Provide knowledgeable resources\",\"open_q13\":\"\",\"open_q14\":\"\"}",
+    "created_at": "2026-03-24T07:28:02.743Z"
+  },
+  {
+    "id": 15,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":3,\"survey.q4\":5,\"survey.q7\":4,\"survey.q10\":4},\"mc_q11\":\"\",\"open_q12\":\"\",\"open_q13\":\"\",\"open_q14\":\"\"}",
+    "created_at": "2026-03-24T07:30:40.743Z"
+  },
+  {
+    "id": 2,
+    "session_id": "91280f26-3d72-4561-83b1-110d1e30e569",
+    "response_json": "{\"likert\":{\"survey.q1\":3,\"survey.q2\":4,\"survey.q4\":4,\"survey.q5\":2,\"survey.q6\":4,\"survey.q7\":2,\"survey.q9\":3,\"survey.q10\":4},\"mc_q11\":\"survey.mc_b\",\"open_q12\":\"Help people conduct analyses more objectively (humans usually incorporate subjective considerations when conducting qualitative analyses).\",\"open_q13\":\"\",\"open_q14\":\"About U4, the result part should provide the answer of LLM after its active learning.\"}",
+    "created_at": "2026-03-07T12:43:18.337Z"
+  },
+  {
+    "id": 20,
+    "session_id": "9170a8f4-a57b-4ee6-af19-3a173885911d",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":2,\"survey.q10\":2},\"mc_q11\":\"\",\"open_q12\":\"1）identify themes\\n2）give a code so that humans can do 判断题 rather than 选择题\",\"open_q13\":\"\",\"open_q14\":\"希望可以多讲一下背后的技术原理，比如具体的支持这个系统的prompt engineering细节，而不是停留在用户端\"}",
+    "created_at": "2026-03-24T07:59:13.057Z"
+  },
+  {
+    "id": 1,
+    "session_id": "a9220884-4f54-4f7f-b5a8-be431c4569fb",
+    "response_json": "{\"likert\":{\"survey.q1\":3,\"survey.q2\":4,\"survey.q4\":3,\"survey.q5\":4,\"survey.q6\":5,\"survey.q7\":3,\"survey.q9\":3,\"survey.q10\":4},\"mc_q11\":\"survey.mc_b\",\"open_q12\":\"ddd\",\"open_q13\":\"asdasd\",\"open_q14\":\"dsada\"}",
+    "created_at": "2026-03-07T11:59:52.300Z"
+  },
+  {
+    "id": 3,
+    "session_id": "aaf070fd-d206-4dcc-8350-37c796cf8b82",
+    "response_json": "{\"likert\":{\"survey.q1\":2,\"survey.q2\":4,\"survey.q4\":1,\"survey.q5\":5,\"survey.q6\":3,\"survey.q7\":2,\"survey.q9\":4,\"survey.q10\":3},\"mc_q11\":\"survey.mc_a\",\"open_q12\":\"ffff\",\"open_q13\":\"wre\",\"open_q14\":\"cxc\"}",
+    "created_at": "2026-03-09T09:32:06.460Z"
+  },
+  {
+    "id": 6,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":4,\"survey.q10\":3},\"mc_q11\":\"\",\"open_q12\":\"\",\"open_q13\":\"\",\"open_q14\":\"\"}",
+    "created_at": "2026-03-24T07:26:12.254Z"
+  },
+  {
+    "id": 17,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "response_json": "{\"likert\":{\"survey.q1\":4,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":5,\"survey.q10\":1},\"mc_q11\":\"\",\"open_q12\":\"主题分析\",\"open_q13\":\"\",\"open_q14\":\"时间可能需要再长一些\"}",
+    "created_at": "2026-03-24T07:33:24.300Z"
+  },
+  {
+    "id": 4,
+    "session_id": "bb906bfc-3f63-483f-9cc9-01e5c012c071",
+    "response_json": "{\"likert\":{\"survey.q1\":4,\"survey.q2\":4,\"survey.q4\":4,\"survey.q7\":4,\"survey.q10\":4},\"mc_q11\":\"\",\"open_q12\":\"\",\"open_q13\":\"\",\"open_q14\":\"\"}",
+    "created_at": "2026-03-24T06:19:34.250Z"
+  },
+  {
+    "id": 7,
+    "session_id": "c59b4fe7-6bc4-45d3-be0d-6a9928077a4b",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":4,\"survey.q4\":5,\"survey.q7\":4,\"survey.q10\":3},\"mc_q11\":\"\",\"open_q12\":\"coding, annotations\",\"open_q13\":\"\",\"open_q14\":\"Perfect, tremendous\"}",
+    "created_at": "2026-03-24T07:26:25.287Z"
+  },
+  {
+    "id": 8,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":5,\"survey.q10\":5},\"mc_q11\":\"\",\"open_q12\":\"\",\"open_q13\":\"\",\"open_q14\":\"\"}",
+    "created_at": "2026-03-24T07:27:17.865Z"
+  },
+  {
+    "id": 18,
+    "session_id": "c716df01-ff8e-43fe-ae4c-09745841029f",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":4,\"survey.q4\":5,\"survey.q7\":5,\"survey.q10\":3},\"mc_q11\":\"\",\"open_q12\":\"\",\"open_q13\":\"\",\"open_q14\":\"\"}",
+    "created_at": "2026-03-24T07:33:55.710Z"
+  },
+  {
+    "id": 11,
+    "session_id": "d295e0a1-1461-46ed-9293-648b8936cf05",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":4,\"survey.q10\":4},\"mc_q11\":\"\",\"open_q12\":\"\",\"open_q13\":\"\",\"open_q14\":\"\"}",
+    "created_at": "2026-03-24T07:27:43.490Z"
+  },
+  {
+    "id": 14,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":3,\"survey.q10\":4},\"mc_q11\":\"\",\"open_q12\":\"Like a peer to support me in evaluating and rethinking my initial coding.\",\"open_q13\":\"\",\"open_q14\":\"Thank you! The explanation is clear and the instruction is easy to follow Good that Prof Jionghao has highlighted issues about Relatability and data privacy\"}",
+    "created_at": "2026-03-24T07:29:18.546Z"
+  },
+  {
+    "id": 10,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":5,\"survey.q10\":4},\"mc_q11\":\"\",\"open_q12\":\"关键词抓取；语义识别与分析，帮助提高效率节省时间，减轻人工的工作负荷\",\"open_q13\":\"\",\"open_q14\":\"great！！\"}",
+    "created_at": "2026-03-24T07:27:40.211Z"
+  },
+  {
+    "id": 12,
+    "session_id": "f926b9d8-8191-4748-802c-898cca329240",
+    "response_json": "{\"likert\":{\"survey.q1\":5,\"survey.q2\":5,\"survey.q4\":5,\"survey.q7\":5,\"survey.q10\":5},\"mc_q11\":\"\",\"open_q12\":\"Very convenient\",\"open_q13\":\"\",\"open_q14\":\"The accuracy of labelling needs to be improved. I have gotten the result of labelling “code”, which is not included in the theme list.\"}",
+    "created_at": "2026-03-24T07:27:49.315Z"
+  }
+]

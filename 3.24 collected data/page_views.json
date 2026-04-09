@@ -1,0 +1,4832 @@
+[
+  {
+    "id": 391,
+    "session_id": "060f71c9-769a-428b-8bba-d680044fccdd",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336249239,
+    "left_at_epoch_ms": 1774336256446
+  },
+  {
+    "id": 399,
+    "session_id": "060f71c9-769a-428b-8bba-d680044fccdd",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336256447,
+    "left_at_epoch_ms": 1774336300913
+  },
+  {
+    "id": 110,
+    "session_id": "08e554f6-7eb9-48f8-9969-ef3a90f5a989",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334978921,
+    "left_at_epoch_ms": 1774334981777
+  },
+  {
+    "id": 113,
+    "session_id": "08e554f6-7eb9-48f8-9969-ef3a90f5a989",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774334981778,
+    "left_at_epoch_ms": 1774334987943
+  },
+  {
+    "id": 53,
+    "session_id": "09ad70ff-6213-4caf-bc72-5c456fa080ec",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774332897856,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 57,
+    "session_id": "09ad70ff-6213-4caf-bc72-5c456fa080ec",
+    "page_path": "/",
+    "entered_at_epoch_ms": 1774332906749,
+    "left_at_epoch_ms": 1774332906757
+  },
+  {
+    "id": 56,
+    "session_id": "09ad70ff-6213-4caf-bc72-5c456fa080ec",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774332906757,
+    "left_at_epoch_ms": 1774332909422
+  },
+  {
+    "id": 58,
+    "session_id": "09ad70ff-6213-4caf-bc72-5c456fa080ec",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774332909423,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 62,
+    "session_id": "09ad70ff-6213-4caf-bc72-5c456fa080ec",
+    "page_path": "/",
+    "entered_at_epoch_ms": 1774332923252,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 61,
+    "session_id": "09ad70ff-6213-4caf-bc72-5c456fa080ec",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774332923259,
+    "left_at_epoch_ms": 1774332931672
+  },
+  {
+    "id": 64,
+    "session_id": "09ad70ff-6213-4caf-bc72-5c456fa080ec",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774332931672,
+    "left_at_epoch_ms": 1774332936932
+  },
+  {
+    "id": 111,
+    "session_id": "0cb5b53c-9358-43ab-9246-f56a94b4b10c",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334979516,
+    "left_at_epoch_ms": 1774335166870
+  },
+  {
+    "id": 170,
+    "session_id": "0cb5b53c-9358-43ab-9246-f56a94b4b10c",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335166873,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 124,
+    "session_id": "0d5c3671-4e5b-44c6-a871-3af69c43d1db",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334994913,
+    "left_at_epoch_ms": 1774335294899
+  },
+  {
+    "id": 208,
+    "session_id": "0d5c3671-4e5b-44c6-a871-3af69c43d1db",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335294902,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 349,
+    "session_id": "0d5c3671-4e5b-44c6-a871-3af69c43d1db",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336221205,
+    "left_at_epoch_ms": 1774336565310
+  },
+  {
+    "id": 620,
+    "session_id": "0d5c3671-4e5b-44c6-a871-3af69c43d1db",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336565314,
+    "left_at_epoch_ms": 1774337037185
+  },
+  {
+    "id": 675,
+    "session_id": "0d5c3671-4e5b-44c6-a871-3af69c43d1db",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337037187,
+    "left_at_epoch_ms": 1774337066742
+  },
+  {
+    "id": 676,
+    "session_id": "0d5c3671-4e5b-44c6-a871-3af69c43d1db",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337066744,
+    "left_at_epoch_ms": 1774339715835
+  },
+  {
+    "id": 724,
+    "session_id": "0d5c3671-4e5b-44c6-a871-3af69c43d1db",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774339715839,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 118,
+    "session_id": "0d82891c-9584-4cdf-9d42-f885c980e737",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334990126,
+    "left_at_epoch_ms": 1774335264888
+  },
+  {
+    "id": 199,
+    "session_id": "0d82891c-9584-4cdf-9d42-f885c980e737",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335264889,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 201,
+    "session_id": "0d82891c-9584-4cdf-9d42-f885c980e737",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335268978,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 203,
+    "session_id": "0d82891c-9584-4cdf-9d42-f885c980e737",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335270352,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 256,
+    "session_id": "0d82891c-9584-4cdf-9d42-f885c980e737",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774335384548,
+    "left_at_epoch_ms": 1774335389699
+  },
+  {
+    "id": 257,
+    "session_id": "0d82891c-9584-4cdf-9d42-f885c980e737",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335389699,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 400,
+    "session_id": "0d82891c-9584-4cdf-9d42-f885c980e737",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336256602,
+    "left_at_epoch_ms": 1774336261888
+  },
+  {
+    "id": 119,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334991335,
+    "left_at_epoch_ms": 1774335156231
+  },
+  {
+    "id": 164,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335156232,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 167,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335158317,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 174,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335200948,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 175,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335202034,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 176,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335203766,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 181,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335230765,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 182,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335231507,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 183,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335232279,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 220,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335324746,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 222,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335325222,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 358,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336228232,
+    "left_at_epoch_ms": 1774336230035
+  },
+  {
+    "id": 362,
+    "session_id": "1013ec61-a406-4db5-8467-015dbc5b06d4",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336230036,
+    "left_at_epoch_ms": 1774336236476
+  },
+  {
+    "id": 449,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336312055,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 497,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336356430,
+    "left_at_epoch_ms": 1774336359070
+  },
+  {
+    "id": 503,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336359071,
+    "left_at_epoch_ms": 1774336434814
+  },
+  {
+    "id": 574,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336434815,
+    "left_at_epoch_ms": 1774336653100
+  },
+  {
+    "id": 636,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336653102,
+    "left_at_epoch_ms": 1774336687338
+  },
+  {
+    "id": 645,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336687339,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 686,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337121317,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 757,
+    "session_id": "101dbee7-9de2-45d9-aac5-d221bcdce80d",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774415898432,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 605,
+    "session_id": "10ce0470-45da-4950-a942-56e9247145f6",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336498639,
+    "left_at_epoch_ms": 1774336561311
+  },
+  {
+    "id": 617,
+    "session_id": "10ce0470-45da-4950-a942-56e9247145f6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336561312,
+    "left_at_epoch_ms": 1774336678977
+  },
+  {
+    "id": 641,
+    "session_id": "10ce0470-45da-4950-a942-56e9247145f6",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336678980,
+    "left_at_epoch_ms": 1774337469403
+  },
+  {
+    "id": 704,
+    "session_id": "10ce0470-45da-4950-a942-56e9247145f6",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337469404,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 125,
+    "session_id": "13c92b3a-c22e-48cb-8d02-8ed4b3495c9c",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334997758,
+    "left_at_epoch_ms": 1774335242745
+  },
+  {
+    "id": 187,
+    "session_id": "13c92b3a-c22e-48cb-8d02-8ed4b3495c9c",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335242748,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 189,
+    "session_id": "13c92b3a-c22e-48cb-8d02-8ed4b3495c9c",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335244723,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 190,
+    "session_id": "13c92b3a-c22e-48cb-8d02-8ed4b3495c9c",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335245666,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 191,
+    "session_id": "13c92b3a-c22e-48cb-8d02-8ed4b3495c9c",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335246742,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 268,
+    "session_id": "13c92b3a-c22e-48cb-8d02-8ed4b3495c9c",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335552267,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 355,
+    "session_id": "13c92b3a-c22e-48cb-8d02-8ed4b3495c9c",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336226075,
+    "left_at_epoch_ms": 1774336322725
+  },
+  {
+    "id": 463,
+    "session_id": "13c92b3a-c22e-48cb-8d02-8ed4b3495c9c",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336322729,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 337,
+    "session_id": "13d81eb7-f397-45bd-af93-32c441ca2cc3",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336218748,
+    "left_at_epoch_ms": 1774336220254
+  },
+  {
+    "id": 342,
+    "session_id": "13d81eb7-f397-45bd-af93-32c441ca2cc3",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336220256,
+    "left_at_epoch_ms": 1774336223084
+  },
+  {
+    "id": 123,
+    "session_id": "1ef708fa-683d-46c8-977b-bfb759e8f4bd",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334996056,
+    "left_at_epoch_ms": 1774335117826
+  },
+  {
+    "id": 147,
+    "session_id": "1ef708fa-683d-46c8-977b-bfb759e8f4bd",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335117826,
+    "left_at_epoch_ms": 1774335125623
+  },
+  {
+    "id": 138,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335016719,
+    "left_at_epoch_ms": 1774335141871
+  },
+  {
+    "id": 151,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335141872,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 153,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335144452,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 156,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335145793,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 158,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335147536,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 160,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335148977,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 162,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335150207,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 249,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335357510,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 250,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335358520,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 252,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335360670,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 304,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336200799,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 730,
+    "session_id": "1f122fcc-377e-4d96-835c-19571a146df0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774341383298,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 338,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336219258,
+    "left_at_epoch_ms": 1774336312602
+  },
+  {
+    "id": 450,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336312603,
+    "left_at_epoch_ms": 1774336342619
+  },
+  {
+    "id": 487,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336342620,
+    "left_at_epoch_ms": 1774336369340
+  },
+  {
+    "id": 518,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336369341,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 525,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336378916,
+    "left_at_epoch_ms": 1774336385063
+  },
+  {
+    "id": 534,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336385063,
+    "left_at_epoch_ms": 1774336389224
+  },
+  {
+    "id": 539,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336389225,
+    "left_at_epoch_ms": 1774336394602
+  },
+  {
+    "id": 546,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336394603,
+    "left_at_epoch_ms": 1774336399311
+  },
+  {
+    "id": 550,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336399315,
+    "left_at_epoch_ms": 1774336402107
+  },
+  {
+    "id": 554,
+    "session_id": "2190892e-758e-40b9-b023-abc1adf33356",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336402108,
+    "left_at_epoch_ms": 1774336416519
+  },
+  {
+    "id": 346,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336220702,
+    "left_at_epoch_ms": 1774336332658
+  },
+  {
+    "id": 478,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336332659,
+    "left_at_epoch_ms": 1774336340779
+  },
+  {
+    "id": 486,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336340782,
+    "left_at_epoch_ms": 1774336355425
+  },
+  {
+    "id": 498,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336355427,
+    "left_at_epoch_ms": 1774336680889
+  },
+  {
+    "id": 642,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336680891,
+    "left_at_epoch_ms": 1774336791164
+  },
+  {
+    "id": 651,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336791165,
+    "left_at_epoch_ms": 1774336795741
+  },
+  {
+    "id": 654,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336795743,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 656,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336801281,
+    "left_at_epoch_ms": 1774337134908
+  },
+  {
+    "id": 692,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337134910,
+    "left_at_epoch_ms": 1774337318352
+  },
+  {
+    "id": 699,
+    "session_id": "21cece40-a1aa-4764-895a-a29554b2e3a4",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337318353,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 466,
+    "session_id": "24bd8d32-68ee-46fd-b5bb-dd34b7dc8130",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336323940,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 580,
+    "session_id": "24bd8d32-68ee-46fd-b5bb-dd34b7dc8130",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336449671,
+    "left_at_epoch_ms": 1774336458529
+  },
+  {
+    "id": 583,
+    "session_id": "24bd8d32-68ee-46fd-b5bb-dd34b7dc8130",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336458531,
+    "left_at_epoch_ms": 1774336463322
+  },
+  {
+    "id": 586,
+    "session_id": "24bd8d32-68ee-46fd-b5bb-dd34b7dc8130",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336463325,
+    "left_at_epoch_ms": 1774336466515
+  },
+  {
+    "id": 588,
+    "session_id": "24bd8d32-68ee-46fd-b5bb-dd34b7dc8130",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336466518,
+    "left_at_epoch_ms": 1774336485741
+  },
+  {
+    "id": 579,
+    "session_id": "276d7255-f52e-47c3-8d72-fb766194ab4f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336448285,
+    "left_at_epoch_ms": 1774336476650
+  },
+  {
+    "id": 590,
+    "session_id": "276d7255-f52e-47c3-8d72-fb766194ab4f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336476650,
+    "left_at_epoch_ms": 1774336481075
+  },
+  {
+    "id": 592,
+    "session_id": "276d7255-f52e-47c3-8d72-fb766194ab4f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336481076,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 424,
+    "session_id": "28450cde-2982-4aee-8770-5d20e681b626",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336282229,
+    "left_at_epoch_ms": 1774336333719
+  },
+  {
+    "id": 479,
+    "session_id": "28450cde-2982-4aee-8770-5d20e681b626",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336333721,
+    "left_at_epoch_ms": 1774337469481
+  },
+  {
+    "id": 705,
+    "session_id": "28450cde-2982-4aee-8770-5d20e681b626",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337469484,
+    "left_at_epoch_ms": 1774337478415
+  },
+  {
+    "id": 707,
+    "session_id": "28450cde-2982-4aee-8770-5d20e681b626",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337478418,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 519,
+    "session_id": "29ffdfd2-55ee-4d1b-a1c9-860dfb9a9281",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336369670,
+    "left_at_epoch_ms": 1774336372723
+  },
+  {
+    "id": 521,
+    "session_id": "29ffdfd2-55ee-4d1b-a1c9-860dfb9a9281",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336372724,
+    "left_at_epoch_ms": 1774336377039
+  },
+  {
+    "id": 523,
+    "session_id": "29ffdfd2-55ee-4d1b-a1c9-860dfb9a9281",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336377041,
+    "left_at_epoch_ms": 1774336380356
+  },
+  {
+    "id": 528,
+    "session_id": "29ffdfd2-55ee-4d1b-a1c9-860dfb9a9281",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336380357,
+    "left_at_epoch_ms": 1774336385385
+  },
+  {
+    "id": 133,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335008340,
+    "left_at_epoch_ms": 1774335269615
+  },
+  {
+    "id": 202,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335269616,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 206,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335273954,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 267,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335497395,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 285,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335755478,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 294,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336187117,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 327,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336212863,
+    "left_at_epoch_ms": 1774336459362
+  },
+  {
+    "id": 584,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336459363,
+    "left_at_epoch_ms": 1774336533267
+  },
+  {
+    "id": 613,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336533268,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 614,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336535059,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 664,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/",
+    "entered_at_epoch_ms": 1774336898353,
+    "left_at_epoch_ms": 1774336898729
+  },
+  {
+    "id": 665,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336898729,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 666,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/",
+    "entered_at_epoch_ms": 1774336906234,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 667,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336906239,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 700,
+    "session_id": "2af3b490-b6e8-40c2-8b85-cfa280ac6905",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337460436,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 397,
+    "session_id": "2e1928bd-3a92-4c28-b5d8-0007e75eefdf",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336254641,
+    "left_at_epoch_ms": 1774336257841
+  },
+  {
+    "id": 403,
+    "session_id": "2e1928bd-3a92-4c28-b5d8-0007e75eefdf",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336257841,
+    "left_at_epoch_ms": 1774336260861
+  },
+  {
+    "id": 405,
+    "session_id": "2e1928bd-3a92-4c28-b5d8-0007e75eefdf",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336260862,
+    "left_at_epoch_ms": 1774336300518
+  },
+  {
+    "id": 435,
+    "session_id": "2e1928bd-3a92-4c28-b5d8-0007e75eefdf",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336300519,
+    "left_at_epoch_ms": 1774336760054
+  },
+  {
+    "id": 650,
+    "session_id": "2e1928bd-3a92-4c28-b5d8-0007e75eefdf",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336760056,
+    "left_at_epoch_ms": 1774336797514
+  },
+  {
+    "id": 655,
+    "session_id": "2e1928bd-3a92-4c28-b5d8-0007e75eefdf",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336797515,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 684,
+    "session_id": "2e1928bd-3a92-4c28-b5d8-0007e75eefdf",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337116603,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 36,
+    "session_id": "2f601dd0-6b8f-459d-90ab-3d4ae9eac4fc",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774328725064,
+    "left_at_epoch_ms": 1774331307565
+  },
+  {
+    "id": 37,
+    "session_id": "2f601dd0-6b8f-459d-90ab-3d4ae9eac4fc",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774331307565,
+    "left_at_epoch_ms": 1774331584289
+  },
+  {
+    "id": 38,
+    "session_id": "2f601dd0-6b8f-459d-90ab-3d4ae9eac4fc",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774331584289,
+    "left_at_epoch_ms": 1774331615466
+  },
+  {
+    "id": 39,
+    "session_id": "2f601dd0-6b8f-459d-90ab-3d4ae9eac4fc",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774331615466,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 40,
+    "session_id": "2f601dd0-6b8f-459d-90ab-3d4ae9eac4fc",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774331619681,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 112,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334979697,
+    "left_at_epoch_ms": 1774335334431
+  },
+  {
+    "id": 236,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335334433,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 281,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335749445,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 282,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335750383,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 283,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335751200,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 284,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335751946,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 290,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336059026,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 291,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336182949,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 292,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336185104,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 295,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336187292,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 305,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336200920,
+    "left_at_epoch_ms": 1774336202859
+  },
+  {
+    "id": 309,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336202860,
+    "left_at_epoch_ms": 1774336208946
+  },
+  {
+    "id": 321,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336208948,
+    "left_at_epoch_ms": 1774336282471
+  },
+  {
+    "id": 425,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336282472,
+    "left_at_epoch_ms": 1774336285666
+  },
+  {
+    "id": 427,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336285668,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 471,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336327880,
+    "left_at_epoch_ms": 1774336364286
+  },
+  {
+    "id": 511,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336364286,
+    "left_at_epoch_ms": 1774336364476
+  },
+  {
+    "id": 512,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336364476,
+    "left_at_epoch_ms": 1774336366218
+  },
+  {
+    "id": 514,
+    "session_id": "30bfee22-9825-4049-8354-d41f225ecfef",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336366219,
+    "left_at_epoch_ms": 1774336369667
+  },
+  {
+    "id": 142,
+    "session_id": "355938bb-de18-4b42-8dc3-3441618c36b7",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335027966,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 301,
+    "session_id": "355938bb-de18-4b42-8dc3-3441618c36b7",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336196021,
+    "left_at_epoch_ms": 1774336207280
+  },
+  {
+    "id": 315,
+    "session_id": "355938bb-de18-4b42-8dc3-3441618c36b7",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336207282,
+    "left_at_epoch_ms": 1774336227988
+  },
+  {
+    "id": 540,
+    "session_id": "3a3eb637-e01c-473b-8f55-b06dff5a9969",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336389327,
+    "left_at_epoch_ms": 1774336393322
+  },
+  {
+    "id": 544,
+    "session_id": "3a3eb637-e01c-473b-8f55-b06dff5a9969",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336393323,
+    "left_at_epoch_ms": 1774336402264
+  },
+  {
+    "id": 122,
+    "session_id": "3cd4cdb7-1fb5-40ae-8a96-e299c7c7ce2f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334995924,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 106,
+    "session_id": "4144dad1-655a-4b37-b2b8-9a99a8175678",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334972539,
+    "left_at_epoch_ms": 1774335259844
+  },
+  {
+    "id": 196,
+    "session_id": "4144dad1-655a-4b37-b2b8-9a99a8175678",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335259846,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 260,
+    "session_id": "4144dad1-655a-4b37-b2b8-9a99a8175678",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335442538,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 296,
+    "session_id": "4144dad1-655a-4b37-b2b8-9a99a8175678",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336192229,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 326,
+    "session_id": "4144dad1-655a-4b37-b2b8-9a99a8175678",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336210964,
+    "left_at_epoch_ms": 1774336212913
+  },
+  {
+    "id": 329,
+    "session_id": "4144dad1-655a-4b37-b2b8-9a99a8175678",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336212913,
+    "left_at_epoch_ms": 1774336220694
+  },
+  {
+    "id": 121,
+    "session_id": "4d9f6aa1-0bd6-4aa7-8b86-69b52129f9fa",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334994332,
+    "left_at_epoch_ms": 1774336210987
+  },
+  {
+    "id": 324,
+    "session_id": "4d9f6aa1-0bd6-4aa7-8b86-69b52129f9fa",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336210989,
+    "left_at_epoch_ms": 1774336217158
+  },
+  {
+    "id": 335,
+    "session_id": "4d9f6aa1-0bd6-4aa7-8b86-69b52129f9fa",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336217159,
+    "left_at_epoch_ms": 1774337140477
+  },
+  {
+    "id": 693,
+    "session_id": "4d9f6aa1-0bd6-4aa7-8b86-69b52129f9fa",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774337140479,
+    "left_at_epoch_ms": 1774337141143
+  },
+  {
+    "id": 695,
+    "session_id": "4d9f6aa1-0bd6-4aa7-8b86-69b52129f9fa",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774337141144,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 742,
+    "session_id": "4d9f6aa1-0bd6-4aa7-8b86-69b52129f9fa",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774404696040,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 412,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336268067,
+    "left_at_epoch_ms": 1774336273367
+  },
+  {
+    "id": 416,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336273368,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 422,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336280908,
+    "left_at_epoch_ms": 1774336281061
+  },
+  {
+    "id": 423,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336281063,
+    "left_at_epoch_ms": 1774336333331
+  },
+  {
+    "id": 477,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336333332,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 481,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336336068,
+    "left_at_epoch_ms": 1774336339771
+  },
+  {
+    "id": 483,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336339773,
+    "left_at_epoch_ms": 1774336356177
+  },
+  {
+    "id": 496,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336356178,
+    "left_at_epoch_ms": 1774336358643
+  },
+  {
+    "id": 502,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336358644,
+    "left_at_epoch_ms": 1774336360871
+  },
+  {
+    "id": 504,
+    "session_id": "4e1346d7-cac4-488f-9ef4-a448a6d0588f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336360872,
+    "left_at_epoch_ms": 1774336363780
+  },
+  {
+    "id": 374,
+    "session_id": "4fa474ba-eab2-46f6-b090-9b3c27e4c73f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336237178,
+    "left_at_epoch_ms": 1774336240392
+  },
+  {
+    "id": 379,
+    "session_id": "4fa474ba-eab2-46f6-b090-9b3c27e4c73f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336240395,
+    "left_at_epoch_ms": 1774336251253
+  },
+  {
+    "id": 393,
+    "session_id": "4fa474ba-eab2-46f6-b090-9b3c27e4c73f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336251258,
+    "left_at_epoch_ms": 1774336256742
+  },
+  {
+    "id": 401,
+    "session_id": "4fa474ba-eab2-46f6-b090-9b3c27e4c73f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336256744,
+    "left_at_epoch_ms": 1774336282225
+  },
+  {
+    "id": 373,
+    "session_id": "560e4b54-c2aa-4bb2-8c9b-812bdfc46c45",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336236478,
+    "left_at_epoch_ms": 1774336241534
+  },
+  {
+    "id": 381,
+    "session_id": "560e4b54-c2aa-4bb2-8c9b-812bdfc46c45",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336241534,
+    "left_at_epoch_ms": 1774336264384
+  },
+  {
+    "id": 385,
+    "session_id": "560e4b54-c2aa-4bb2-8c9b-812bdfc46c45",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336246665,
+    "left_at_epoch_ms": 1774336246881
+  },
+  {
+    "id": 386,
+    "session_id": "560e4b54-c2aa-4bb2-8c9b-812bdfc46c45",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336246882,
+    "left_at_epoch_ms": 1774336356429
+  },
+  {
+    "id": 408,
+    "session_id": "560e4b54-c2aa-4bb2-8c9b-812bdfc46c45",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336264386,
+    "left_at_epoch_ms": 1774336300319
+  },
+  {
+    "id": 434,
+    "session_id": "560e4b54-c2aa-4bb2-8c9b-812bdfc46c45",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336300320,
+    "left_at_epoch_ms": 1774336312054
+  },
+  {
+    "id": 65,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774332935539,
+    "left_at_epoch_ms": 1774332974974
+  },
+  {
+    "id": 67,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774332974974,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 68,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774332978315,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 69,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774332980707,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 75,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333165416,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 76,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333204961,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 77,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333205988,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 78,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333207441,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 79,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333209004,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 80,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333216689,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 81,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333217608,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 82,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333219101,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 83,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333221412,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 84,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333284402,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 85,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333337110,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 86,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333396560,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 88,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/",
+    "entered_at_epoch_ms": 1774334103544,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 87,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774334103560,
+    "left_at_epoch_ms": 1774334114472
+  },
+  {
+    "id": 89,
+    "session_id": "5819505a-95b7-41f3-a930-95b9608e69af",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774334114472,
+    "left_at_epoch_ms": 1774334116919
+  },
+  {
+    "id": 552,
+    "session_id": "58b26523-f80f-4cda-be85-2072c5d667de",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336400550,
+    "left_at_epoch_ms": 1774336412815
+  },
+  {
+    "id": 561,
+    "session_id": "58b26523-f80f-4cda-be85-2072c5d667de",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336412816,
+    "left_at_epoch_ms": 1774336413595
+  },
+  {
+    "id": 562,
+    "session_id": "58b26523-f80f-4cda-be85-2072c5d667de",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336413595,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 563,
+    "session_id": "58b26523-f80f-4cda-be85-2072c5d667de",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336414734,
+    "left_at_epoch_ms": 1774336434315
+  },
+  {
+    "id": 573,
+    "session_id": "58b26523-f80f-4cda-be85-2072c5d667de",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336434316,
+    "left_at_epoch_ms": 1774336441716
+  },
+  {
+    "id": 577,
+    "session_id": "58b26523-f80f-4cda-be85-2072c5d667de",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336441716,
+    "left_at_epoch_ms": 1774336448284
+  },
+  {
+    "id": 442,
+    "session_id": "58fc141e-cf3e-44cb-84ab-37545a74d486",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336305497,
+    "left_at_epoch_ms": 1774336366529
+  },
+  {
+    "id": 515,
+    "session_id": "58fc141e-cf3e-44cb-84ab-37545a74d486",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336366531,
+    "left_at_epoch_ms": 1774337877163
+  },
+  {
+    "id": 716,
+    "session_id": "58fc141e-cf3e-44cb-84ab-37545a74d486",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337877165,
+    "left_at_epoch_ms": 1774337887888
+  },
+  {
+    "id": 718,
+    "session_id": "58fc141e-cf3e-44cb-84ab-37545a74d486",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337887892,
+    "left_at_epoch_ms": 1774342643925
+  },
+  {
+    "id": 731,
+    "session_id": "58fc141e-cf3e-44cb-84ab-37545a74d486",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774342643939,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 429,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336286939,
+    "left_at_epoch_ms": 1774336345521
+  },
+  {
+    "id": 489,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336345522,
+    "left_at_epoch_ms": 1774336617604
+  },
+  {
+    "id": 634,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336617605,
+    "left_at_epoch_ms": 1774337459159
+  },
+  {
+    "id": 701,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337459161,
+    "left_at_epoch_ms": 1774339946448
+  },
+  {
+    "id": 725,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774339946452,
+    "left_at_epoch_ms": 1774339976913
+  },
+  {
+    "id": 726,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774339976915,
+    "left_at_epoch_ms": 1774339979019
+  },
+  {
+    "id": 727,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774339979021,
+    "left_at_epoch_ms": 1774339979448
+  },
+  {
+    "id": 728,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774339979449,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 729,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774339982383,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 743,
+    "session_id": "5b6a51a9-3530-4834-a4a4-a2d7d2e15e2a",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774406027500,
+    "left_at_epoch_ms": 1774406032953
+  },
+  {
+    "id": 547,
+    "session_id": "5fe90772-597b-4c5a-ad3c-2dd2cdef4897",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336395208,
+    "left_at_epoch_ms": 1774336577992
+  },
+  {
+    "id": 622,
+    "session_id": "5fe90772-597b-4c5a-ad3c-2dd2cdef4897",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336577993,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 717,
+    "session_id": "5fe90772-597b-4c5a-ad3c-2dd2cdef4897",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774337880102,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 762,
+    "session_id": "5fe90772-597b-4c5a-ad3c-2dd2cdef4897",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774538181380,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 510,
+    "session_id": "6160db0d-0a05-4196-ae06-0f8430a8dd47",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336363781,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 532,
+    "session_id": "6160db0d-0a05-4196-ae06-0f8430a8dd47",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336384649,
+    "left_at_epoch_ms": 1774336388655
+  },
+  {
+    "id": 538,
+    "session_id": "6160db0d-0a05-4196-ae06-0f8430a8dd47",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336388656,
+    "left_at_epoch_ms": 1774336390722
+  },
+  {
+    "id": 376,
+    "session_id": "61daf14c-0006-44d1-aa48-e6968ae36f33",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336238673,
+    "left_at_epoch_ms": 1774336395563
+  },
+  {
+    "id": 548,
+    "session_id": "61daf14c-0006-44d1-aa48-e6968ae36f33",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336395564,
+    "left_at_epoch_ms": 1774336544903
+  },
+  {
+    "id": 616,
+    "session_id": "61daf14c-0006-44d1-aa48-e6968ae36f33",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336544904,
+    "left_at_epoch_ms": 1774336580550
+  },
+  {
+    "id": 623,
+    "session_id": "61daf14c-0006-44d1-aa48-e6968ae36f33",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336580551,
+    "left_at_epoch_ms": 1774336583965
+  },
+  {
+    "id": 624,
+    "session_id": "61daf14c-0006-44d1-aa48-e6968ae36f33",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336583967,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 90,
+    "session_id": "690e6f55-5517-4d7c-a3ae-5745796fb6fa",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334116920,
+    "left_at_epoch_ms": 1774334147339
+  },
+  {
+    "id": 91,
+    "session_id": "690e6f55-5517-4d7c-a3ae-5745796fb6fa",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774334147339,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 92,
+    "session_id": "690e6f55-5517-4d7c-a3ae-5745796fb6fa",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774334151671,
+    "left_at_epoch_ms": 1774334215373
+  },
+  {
+    "id": 93,
+    "session_id": "690e6f55-5517-4d7c-a3ae-5745796fb6fa",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774334215373,
+    "left_at_epoch_ms": 1774334226744
+  },
+  {
+    "id": 94,
+    "session_id": "690e6f55-5517-4d7c-a3ae-5745796fb6fa",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774334226744,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 95,
+    "session_id": "690e6f55-5517-4d7c-a3ae-5745796fb6fa",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774334229498,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 96,
+    "session_id": "690e6f55-5517-4d7c-a3ae-5745796fb6fa",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774334230935,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 415,
+    "session_id": "6d3b347c-d2e8-40f4-b640-3240c2ad1f8e",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336273437,
+    "left_at_epoch_ms": 1774336280230
+  },
+  {
+    "id": 420,
+    "session_id": "6d3b347c-d2e8-40f4-b640-3240c2ad1f8e",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336280231,
+    "left_at_epoch_ms": 1774336284048
+  },
+  {
+    "id": 347,
+    "session_id": "6d74f108-42c9-434e-bd30-a8333c2e5512",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336221852,
+    "left_at_epoch_ms": 1774336227304
+  },
+  {
+    "id": 356,
+    "session_id": "6d74f108-42c9-434e-bd30-a8333c2e5512",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336227304,
+    "left_at_epoch_ms": 1774336228376
+  },
+  {
+    "id": 359,
+    "session_id": "6d74f108-42c9-434e-bd30-a8333c2e5512",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336228376,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 394,
+    "session_id": "6d74f108-42c9-434e-bd30-a8333c2e5512",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336253088,
+    "left_at_epoch_ms": 1774336253311
+  },
+  {
+    "id": 396,
+    "session_id": "6d74f108-42c9-434e-bd30-a8333c2e5512",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336253313,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 409,
+    "session_id": "6d74f108-42c9-434e-bd30-a8333c2e5512",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336264445,
+    "left_at_epoch_ms": 1774336270375
+  },
+  {
+    "id": 414,
+    "session_id": "6d74f108-42c9-434e-bd30-a8333c2e5512",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336270376,
+    "left_at_epoch_ms": 1774336274201
+  },
+  {
+    "id": 417,
+    "session_id": "6d74f108-42c9-434e-bd30-a8333c2e5512",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336274201,
+    "left_at_epoch_ms": 1774336302940
+  },
+  {
+    "id": 148,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335125624,
+    "left_at_epoch_ms": 1774335271260
+  },
+  {
+    "id": 204,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335271262,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 367,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336232523,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 567,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336416660,
+    "left_at_epoch_ms": 1774336437696
+  },
+  {
+    "id": 576,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336437698,
+    "left_at_epoch_ms": 1774336502464
+  },
+  {
+    "id": 607,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336502465,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 619,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336565947,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 630,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336600971,
+    "left_at_epoch_ms": 1774336604105
+  },
+  {
+    "id": 631,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336604106,
+    "left_at_epoch_ms": 1774336606315
+  },
+  {
+    "id": 632,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336606316,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 643,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336685502,
+    "left_at_epoch_ms": 1774336687305
+  },
+  {
+    "id": 644,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336687306,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 646,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336694089,
+    "left_at_epoch_ms": 1774336696750
+  },
+  {
+    "id": 647,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336696752,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 652,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336792587,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 703,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774337469083,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 709,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774337499818,
+    "left_at_epoch_ms": 1774337542449
+  },
+  {
+    "id": 711,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774337542450,
+    "left_at_epoch_ms": 1774337609688
+  },
+  {
+    "id": 714,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774337609691,
+    "left_at_epoch_ms": 1774337613130
+  },
+  {
+    "id": 715,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774337613131,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 732,
+    "session_id": "73516e68-a9c0-4fe3-b8e4-a77daa61d4b1",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774343334857,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 357,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336227990,
+    "left_at_epoch_ms": 1774336298520
+  },
+  {
+    "id": 433,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336298523,
+    "left_at_epoch_ms": 1774336304638
+  },
+  {
+    "id": 439,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336304640,
+    "left_at_epoch_ms": 1774336305231
+  },
+  {
+    "id": 441,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336305234,
+    "left_at_epoch_ms": 1774336310507
+  },
+  {
+    "id": 447,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336310509,
+    "left_at_epoch_ms": 1774336310941
+  },
+  {
+    "id": 448,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336310943,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 589,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336475560,
+    "left_at_epoch_ms": 1774336479325
+  },
+  {
+    "id": 591,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336479327,
+    "left_at_epoch_ms": 1774336535745
+  },
+  {
+    "id": 615,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336535748,
+    "left_at_epoch_ms": 1774336749095
+  },
+  {
+    "id": 649,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336749099,
+    "left_at_epoch_ms": 1774337123100
+  },
+  {
+    "id": 687,
+    "session_id": "7355251d-990d-4bd5-a322-90a3e725fe6b",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337123104,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 679,
+    "session_id": "73648333-f8e7-459b-b9fd-f75d6b161609",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774337080091,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 116,
+    "session_id": "7515f6ea-089f-4bbc-9c4a-760dbc5611bb",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334987126,
+    "left_at_epoch_ms": 1774335212940
+  },
+  {
+    "id": 177,
+    "session_id": "7515f6ea-089f-4bbc-9c4a-760dbc5611bb",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335212941,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 178,
+    "session_id": "7515f6ea-089f-4bbc-9c4a-760dbc5611bb",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335215648,
+    "left_at_epoch_ms": 1774335218485
+  },
+  {
+    "id": 179,
+    "session_id": "7515f6ea-089f-4bbc-9c4a-760dbc5611bb",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335218486,
+    "left_at_epoch_ms": 1774335218901
+  },
+  {
+    "id": 180,
+    "session_id": "7515f6ea-089f-4bbc-9c4a-760dbc5611bb",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335218901,
+    "left_at_epoch_ms": 1774335313126
+  },
+  {
+    "id": 211,
+    "session_id": "7515f6ea-089f-4bbc-9c4a-760dbc5611bb",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335313127,
+    "left_at_epoch_ms": 1774335317211
+  },
+  {
+    "id": 390,
+    "session_id": "76d5c527-f3aa-4615-81c3-fd1c0db5af42",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336248543,
+    "left_at_epoch_ms": 1774336255333
+  },
+  {
+    "id": 398,
+    "session_id": "76d5c527-f3aa-4615-81c3-fd1c0db5af42",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336255334,
+    "left_at_epoch_ms": 1774336266074
+  },
+  {
+    "id": 410,
+    "session_id": "76d5c527-f3aa-4615-81c3-fd1c0db5af42",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336266075,
+    "left_at_epoch_ms": 1774336269480
+  },
+  {
+    "id": 413,
+    "session_id": "76d5c527-f3aa-4615-81c3-fd1c0db5af42",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336269481,
+    "left_at_epoch_ms": 1774336286938
+  },
+  {
+    "id": 212,
+    "session_id": "77af0f4f-f482-4258-b1c8-6f20f1011488",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335317213,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 380,
+    "session_id": "77af0f4f-f482-4258-b1c8-6f20f1011488",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336240724,
+    "left_at_epoch_ms": 1774336241880
+  },
+  {
+    "id": 382,
+    "session_id": "77af0f4f-f482-4258-b1c8-6f20f1011488",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336241880,
+    "left_at_epoch_ms": 1774336245745
+  },
+  {
+    "id": 140,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335023123,
+    "left_at_epoch_ms": 1774335638440
+  },
+  {
+    "id": 272,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335638440,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 273,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335647486,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 274,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335649969,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 275,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335660278,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 334,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336217152,
+    "left_at_epoch_ms": 1774336608683
+  },
+  {
+    "id": 633,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336608684,
+    "left_at_epoch_ms": 1774337158252
+  },
+  {
+    "id": 697,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337158272,
+    "left_at_epoch_ms": 1774338047963
+  },
+  {
+    "id": 720,
+    "session_id": "78b7a1c5-7dca-49b0-af44-edaf200d1e04",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774338047965,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 368,
+    "session_id": "7dc8583d-1afd-4590-8f72-4aad11bbaa63",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336233285,
+    "left_at_epoch_ms": 1774336262098
+  },
+  {
+    "id": 407,
+    "session_id": "7dc8583d-1afd-4590-8f72-4aad11bbaa63",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336262099,
+    "left_at_epoch_ms": 1774336268065
+  },
+  {
+    "id": 366,
+    "session_id": "7fd86570-7499-4f1a-9a8a-cfd57b64fc10",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336232180,
+    "left_at_epoch_ms": 1774336266414
+  },
+  {
+    "id": 411,
+    "session_id": "7fd86570-7499-4f1a-9a8a-cfd57b64fc10",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336266415,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 114,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334982374,
+    "left_at_epoch_ms": 1774335187047
+  },
+  {
+    "id": 172,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335187048,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 173,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335188854,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 251,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335359517,
+    "left_at_epoch_ms": 1774335360630
+  },
+  {
+    "id": 253,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335360633,
+    "left_at_epoch_ms": 1774335361131
+  },
+  {
+    "id": 254,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335361131,
+    "left_at_epoch_ms": 1774335362528
+  },
+  {
+    "id": 255,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335362530,
+    "left_at_epoch_ms": 1774335435526
+  },
+  {
+    "id": 258,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774335435527,
+    "left_at_epoch_ms": 1774335436920
+  },
+  {
+    "id": 259,
+    "session_id": "816750da-2886-4174-b5f3-ff215e08c473",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335436920,
+    "left_at_epoch_ms": 1774335440367
+  },
+  {
+    "id": 100,
+    "session_id": "842ee7fd-ab34-4cd6-9a32-0d5ec4115234",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334936452,
+    "left_at_epoch_ms": 1774334937863
+  },
+  {
+    "id": 101,
+    "session_id": "842ee7fd-ab34-4cd6-9a32-0d5ec4115234",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774334937865,
+    "left_at_epoch_ms": 1774334943510
+  },
+  {
+    "id": 136,
+    "session_id": "84d37ee9-8688-469d-a4da-ef2b8928b963",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335014869,
+    "left_at_epoch_ms": 1774335266016
+  },
+  {
+    "id": 200,
+    "session_id": "84d37ee9-8688-469d-a4da-ef2b8928b963",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335266018,
+    "left_at_epoch_ms": 1774335837099
+  },
+  {
+    "id": 286,
+    "session_id": "84d37ee9-8688-469d-a4da-ef2b8928b963",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335837103,
+    "left_at_epoch_ms": 1774335837594
+  },
+  {
+    "id": 287,
+    "session_id": "84d37ee9-8688-469d-a4da-ef2b8928b963",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335837595,
+    "left_at_epoch_ms": 1774335837797
+  },
+  {
+    "id": 288,
+    "session_id": "84d37ee9-8688-469d-a4da-ef2b8928b963",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335837798,
+    "left_at_epoch_ms": 1774335840834
+  },
+  {
+    "id": 102,
+    "session_id": "87762031-aa5a-41e8-b82f-3233d57ca85b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334967601,
+    "left_at_epoch_ms": 1774335273541
+  },
+  {
+    "id": 205,
+    "session_id": "87762031-aa5a-41e8-b82f-3233d57ca85b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335273543,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 298,
+    "session_id": "87762031-aa5a-41e8-b82f-3233d57ca85b",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336193803,
+    "left_at_epoch_ms": 1774336201677
+  },
+  {
+    "id": 307,
+    "session_id": "87762031-aa5a-41e8-b82f-3233d57ca85b",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336201678,
+    "left_at_epoch_ms": 1774336207512
+  },
+  {
+    "id": 672,
+    "session_id": "8c97eb44-822c-4396-83cb-c7afb6c98d07",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774337027184,
+    "left_at_epoch_ms": 1774337030372
+  },
+  {
+    "id": 673,
+    "session_id": "8c97eb44-822c-4396-83cb-c7afb6c98d07",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774337030373,
+    "left_at_epoch_ms": 1774337031791
+  },
+  {
+    "id": 674,
+    "session_id": "8c97eb44-822c-4396-83cb-c7afb6c98d07",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774337031791,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 473,
+    "session_id": "8d287daf-05b5-4e0c-b56f-68d0d7ec6d95",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336330013,
+    "left_at_epoch_ms": 1774336354269
+  },
+  {
+    "id": 491,
+    "session_id": "8d287daf-05b5-4e0c-b56f-68d0d7ec6d95",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336354270,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 505,
+    "session_id": "8d287daf-05b5-4e0c-b56f-68d0d7ec6d95",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336361606,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 524,
+    "session_id": "8d287daf-05b5-4e0c-b56f-68d0d7ec6d95",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336378012,
+    "left_at_epoch_ms": 1774336379177
+  },
+  {
+    "id": 526,
+    "session_id": "8d287daf-05b5-4e0c-b56f-68d0d7ec6d95",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336379178,
+    "left_at_epoch_ms": 1774336389325
+  },
+  {
+    "id": 107,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334975276,
+    "left_at_epoch_ms": 1774335312844
+  },
+  {
+    "id": 210,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335312846,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 213,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335317663,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 214,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335319389,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 215,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335320227,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 216,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335320900,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 217,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335321544,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 218,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335322410,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 226,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335327954,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 227,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335328703,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 230,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335332384,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 231,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335332750,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 233,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335333465,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 235,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335333967,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 240,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335339792,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 241,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335340476,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 242,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335341056,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 243,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335341683,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 269,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335595052,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 270,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335598465,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 271,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335599595,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 392,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336250310,
+    "left_at_epoch_ms": 1774336257366
+  },
+  {
+    "id": 402,
+    "session_id": "8fc8a9b4-c0ec-4683-b599-f038469f4515",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336257367,
+    "left_at_epoch_ms": 1774336260555
+  },
+  {
+    "id": 428,
+    "session_id": "91403af4-aa94-4c6f-9946-13f08a670bb7",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336287261,
+    "left_at_epoch_ms": 1774336304876
+  },
+  {
+    "id": 440,
+    "session_id": "91403af4-aa94-4c6f-9946-13f08a670bb7",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336304877,
+    "left_at_epoch_ms": 1774336320351
+  },
+  {
+    "id": 104,
+    "session_id": "9170a8f4-a57b-4ee6-af19-3a173885911d",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334943511,
+    "left_at_epoch_ms": 1774335136730
+  },
+  {
+    "id": 168,
+    "session_id": "9170a8f4-a57b-4ee6-af19-3a173885911d",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335136733,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 169,
+    "session_id": "9170a8f4-a57b-4ee6-af19-3a173885911d",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335139301,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 261,
+    "session_id": "9170a8f4-a57b-4ee6-af19-3a173885911d",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335416472,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 308,
+    "session_id": "9170a8f4-a57b-4ee6-af19-3a173885911d",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336175102,
+    "left_at_epoch_ms": 1774336388802
+  },
+  {
+    "id": 565,
+    "session_id": "9170a8f4-a57b-4ee6-af19-3a173885911d",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336388803,
+    "left_at_epoch_ms": 1774337157974
+  },
+  {
+    "id": 698,
+    "session_id": "9170a8f4-a57b-4ee6-af19-3a173885911d",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337157975,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 126,
+    "session_id": "91feb35d-62a6-4df1-b6f6-a7c90da5f1e8",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334998689,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 436,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336300914,
+    "left_at_epoch_ms": 1774336414733
+  },
+  {
+    "id": 469,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/",
+    "entered_at_epoch_ms": 1774336326827,
+    "left_at_epoch_ms": 1774336326837
+  },
+  {
+    "id": 470,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336326837,
+    "left_at_epoch_ms": 1774336339258
+  },
+  {
+    "id": 482,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336339259,
+    "left_at_epoch_ms": 1774336354412
+  },
+  {
+    "id": 492,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336354412,
+    "left_at_epoch_ms": 1774336355782
+  },
+  {
+    "id": 494,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336355782,
+    "left_at_epoch_ms": 1774336364591
+  },
+  {
+    "id": 513,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336364592,
+    "left_at_epoch_ms": 1774336367948
+  },
+  {
+    "id": 516,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336367949,
+    "left_at_epoch_ms": 1774336531409
+  },
+  {
+    "id": 531,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336383728,
+    "left_at_epoch_ms": 1774336386947
+  },
+  {
+    "id": 536,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336386949,
+    "left_at_epoch_ms": 1774336395930
+  },
+  {
+    "id": 549,
+    "session_id": "94f32dee-8198-4513-8731-fdaa984236c0",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336395930,
+    "left_at_epoch_ms": 1774336400550
+  },
+  {
+    "id": 132,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335007841,
+    "left_at_epoch_ms": 1774335334911
+  },
+  {
+    "id": 238,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335334913,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 239,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335337543,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 262,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335469538,
+    "left_at_epoch_ms": 1774335471496
+  },
+  {
+    "id": 263,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335471497,
+    "left_at_epoch_ms": 1774335471858
+  },
+  {
+    "id": 264,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335471859,
+    "left_at_epoch_ms": 1774335472669
+  },
+  {
+    "id": 265,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335472670,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 320,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336208598,
+    "left_at_epoch_ms": 1774336210353
+  },
+  {
+    "id": 322,
+    "session_id": "9a0655e5-4ef1-4c03-bdc8-54069d1cebfb",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336210353,
+    "left_at_epoch_ms": 1774336219256
+  },
+  {
+    "id": 341,
+    "session_id": "9cad3b18-0c16-436c-b659-04ae1ea211de",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336219963,
+    "left_at_epoch_ms": 1774336325855
+  },
+  {
+    "id": 468,
+    "session_id": "9cad3b18-0c16-436c-b659-04ae1ea211de",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336325856,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 430,
+    "session_id": "a3710593-cf24-4f1e-9e04-d0e2a23c64fc",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336293642,
+    "left_at_epoch_ms": 1774336297092
+  },
+  {
+    "id": 431,
+    "session_id": "a3710593-cf24-4f1e-9e04-d0e2a23c64fc",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336297093,
+    "left_at_epoch_ms": 1774336307560
+  },
+  {
+    "id": 350,
+    "session_id": "a8629afd-18d1-43bb-ba02-23b64d30faef",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336223086,
+    "left_at_epoch_ms": 1774336223783
+  },
+  {
+    "id": 351,
+    "session_id": "a8629afd-18d1-43bb-ba02-23b64d30faef",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336223785,
+    "left_at_epoch_ms": 1774336224610
+  },
+  {
+    "id": 352,
+    "session_id": "a8629afd-18d1-43bb-ba02-23b64d30faef",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336224611,
+    "left_at_epoch_ms": 1774336229445
+  },
+  {
+    "id": 360,
+    "session_id": "a8629afd-18d1-43bb-ba02-23b64d30faef",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336229447,
+    "left_at_epoch_ms": 1774336232177
+  },
+  {
+    "id": 43,
+    "session_id": "a8e9236a-4e78-48a4-8fc6-c9fcbbc722da",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774331829732,
+    "left_at_epoch_ms": 1774331906209
+  },
+  {
+    "id": 49,
+    "session_id": "a8e9236a-4e78-48a4-8fc6-c9fcbbc722da",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774331906210,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 50,
+    "session_id": "a8e9236a-4e78-48a4-8fc6-c9fcbbc722da",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774331912574,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 51,
+    "session_id": "a8e9236a-4e78-48a4-8fc6-c9fcbbc722da",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774332848011,
+    "left_at_epoch_ms": 1774332863592
+  },
+  {
+    "id": 52,
+    "session_id": "a8e9236a-4e78-48a4-8fc6-c9fcbbc722da",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774332863592,
+    "left_at_epoch_ms": 1774332897853
+  },
+  {
+    "id": 377,
+    "session_id": "a99c176c-63a6-4752-8d39-3167a9bbf0d5",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336238921,
+    "left_at_epoch_ms": 1774336245418
+  },
+  {
+    "id": 383,
+    "session_id": "a99c176c-63a6-4752-8d39-3167a9bbf0d5",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336245419,
+    "left_at_epoch_ms": 1774336253171
+  },
+  {
+    "id": 426,
+    "session_id": "ac18488f-2ae7-43c3-8a40-0ebeed7a9bf3",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336284051,
+    "left_at_epoch_ms": 1774336297617
+  },
+  {
+    "id": 432,
+    "session_id": "ac18488f-2ae7-43c3-8a40-0ebeed7a9bf3",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336297618,
+    "left_at_epoch_ms": 1774336305493
+  },
+  {
+    "id": 372,
+    "session_id": "addb0910-11de-486a-b379-1e7b43055cb8",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336236388,
+    "left_at_epoch_ms": 1774336239007
+  },
+  {
+    "id": 378,
+    "session_id": "addb0910-11de-486a-b379-1e7b43055cb8",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336239009,
+    "left_at_epoch_ms": 1774336248542
+  },
+  {
+    "id": 99,
+    "session_id": "af3e8b8f-3f7c-42a3-8515-e22725b964bf",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334961983,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 279,
+    "session_id": "af3e8b8f-3f7c-42a3-8515-e22725b964bf",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335717693,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 677,
+    "session_id": "af3e8b8f-3f7c-42a3-8515-e22725b964bf",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774337072316,
+    "left_at_epoch_ms": 1774337073511
+  },
+  {
+    "id": 678,
+    "session_id": "af3e8b8f-3f7c-42a3-8515-e22725b964bf",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774337073511,
+    "left_at_epoch_ms": 1774337080089
+  },
+  {
+    "id": 234,
+    "session_id": "b1f005c6-fc6b-45ce-a74b-1762bba0c31b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335333870,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 117,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334987944,
+    "left_at_epoch_ms": 1774335249583
+  },
+  {
+    "id": 192,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335249584,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 194,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335258554,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 266,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335485797,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 313,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336205630,
+    "left_at_epoch_ms": 1774336593376
+  },
+  {
+    "id": 627,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336593376,
+    "left_at_epoch_ms": 1774337006569
+  },
+  {
+    "id": 671,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337006569,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 680,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337106474,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 685,
+    "session_id": "b1f1ca7b-3e68-4ffa-99d8-b3bc29124882",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337120340,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 319,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336208263,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 445,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336308224,
+    "left_at_epoch_ms": 1774336310006
+  },
+  {
+    "id": 446,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336310008,
+    "left_at_epoch_ms": 1774336340935
+  },
+  {
+    "id": 485,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336340940,
+    "left_at_epoch_ms": 1774336356789
+  },
+  {
+    "id": 500,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336356791,
+    "left_at_epoch_ms": 1774336368260
+  },
+  {
+    "id": 517,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336368264,
+    "left_at_epoch_ms": 1774336393855
+  },
+  {
+    "id": 545,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336393857,
+    "left_at_epoch_ms": 1774337551059
+  },
+  {
+    "id": 712,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337551061,
+    "left_at_epoch_ms": 1774337557241
+  },
+  {
+    "id": 713,
+    "session_id": "b4241dc0-dd0f-476f-b703-0db1e54d326b",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337557244,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 120,
+    "session_id": "b433fac4-d49f-4ee8-ab2b-efd51f399b86",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334994713,
+    "left_at_epoch_ms": 1774335145263
+  },
+  {
+    "id": 154,
+    "session_id": "b433fac4-d49f-4ee8-ab2b-efd51f399b86",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335145264,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 161,
+    "session_id": "b433fac4-d49f-4ee8-ab2b-efd51f399b86",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335149172,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 184,
+    "session_id": "b433fac4-d49f-4ee8-ab2b-efd51f399b86",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335235945,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 361,
+    "session_id": "b433fac4-d49f-4ee8-ab2b-efd51f399b86",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336229992,
+    "left_at_epoch_ms": 1774336235284
+  },
+  {
+    "id": 370,
+    "session_id": "b433fac4-d49f-4ee8-ab2b-efd51f399b86",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336235284,
+    "left_at_epoch_ms": 1774336238919
+  },
+  {
+    "id": 336,
+    "session_id": "b53479f7-2a8e-43ee-b8e0-7ca5ecec7da0",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336218575,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 353,
+    "session_id": "b53479f7-2a8e-43ee-b8e0-7ca5ecec7da0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336225733,
+    "left_at_epoch_ms": 1774336225886
+  },
+  {
+    "id": 354,
+    "session_id": "b53479f7-2a8e-43ee-b8e0-7ca5ecec7da0",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336225896,
+    "left_at_epoch_ms": 1774336376982
+  },
+  {
+    "id": 522,
+    "session_id": "b53479f7-2a8e-43ee-b8e0-7ca5ecec7da0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336376985,
+    "left_at_epoch_ms": 1774336460715
+  },
+  {
+    "id": 585,
+    "session_id": "b53479f7-2a8e-43ee-b8e0-7ca5ecec7da0",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336460718,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 108,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334975917,
+    "left_at_epoch_ms": 1774335140696
+  },
+  {
+    "id": 150,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335140699,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 152,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335143475,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 155,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335145738,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 157,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335146871,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 159,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335148289,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 163,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335155455,
+    "left_at_epoch_ms": 1774335157420
+  },
+  {
+    "id": 165,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335157426,
+    "left_at_epoch_ms": 1774335157891
+  },
+  {
+    "id": 166,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335157895,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 246,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335352088,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 247,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335354368,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 248,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335355523,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 297,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336193800,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 300,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336195772,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 302,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336197102,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 311,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336204277,
+    "left_at_epoch_ms": 1774336206500
+  },
+  {
+    "id": 314,
+    "session_id": "b6259e9b-3065-4651-9a60-deaf3158dbb6",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336206503,
+    "left_at_epoch_ms": 1774336218567
+  },
+  {
+    "id": 733,
+    "session_id": "b74791d6-56db-42c6-8627-334bf28562bc",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774343840406,
+    "left_at_epoch_ms": 1774343888227
+  },
+  {
+    "id": 734,
+    "session_id": "b74791d6-56db-42c6-8627-334bf28562bc",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774343888228,
+    "left_at_epoch_ms": 1774343930350
+  },
+  {
+    "id": 735,
+    "session_id": "b74791d6-56db-42c6-8627-334bf28562bc",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774343930351,
+    "left_at_epoch_ms": 1774343930870
+  },
+  {
+    "id": 736,
+    "session_id": "b74791d6-56db-42c6-8627-334bf28562bc",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774343930871,
+    "left_at_epoch_ms": 1774343931171
+  },
+  {
+    "id": 737,
+    "session_id": "b74791d6-56db-42c6-8627-334bf28562bc",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774343931172,
+    "left_at_epoch_ms": 1774343931727
+  },
+  {
+    "id": 738,
+    "session_id": "b74791d6-56db-42c6-8627-334bf28562bc",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774343931728,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 66,
+    "session_id": "bb906bfc-3f63-483f-9cc9-01e5c012c071",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774332936933,
+    "left_at_epoch_ms": 1774333016941
+  },
+  {
+    "id": 70,
+    "session_id": "bb906bfc-3f63-483f-9cc9-01e5c012c071",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774333016942,
+    "left_at_epoch_ms": 1774333140968
+  },
+  {
+    "id": 72,
+    "session_id": "bb906bfc-3f63-483f-9cc9-01e5c012c071",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774333140969,
+    "left_at_epoch_ms": 1774333153488
+  },
+  {
+    "id": 73,
+    "session_id": "bb906bfc-3f63-483f-9cc9-01e5c012c071",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774333153489,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 74,
+    "session_id": "bb906bfc-3f63-483f-9cc9-01e5c012c071",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774333163625,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 406,
+    "session_id": "c2848b46-f089-4bc1-99a7-15517d94533e",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336261890,
+    "left_at_epoch_ms": 1774336307319
+  },
+  {
+    "id": 443,
+    "session_id": "c2848b46-f089-4bc1-99a7-15517d94533e",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336307320,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 452,
+    "session_id": "c2848b46-f089-4bc1-99a7-15517d94533e",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336314987,
+    "left_at_epoch_ms": 1774336333167
+  },
+  {
+    "id": 566,
+    "session_id": "c59b4fe7-6bc4-45d3-be0d-6a9928077a4b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336416521,
+    "left_at_epoch_ms": 1774336444520
+  },
+  {
+    "id": 578,
+    "session_id": "c59b4fe7-6bc4-45d3-be0d-6a9928077a4b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336444521,
+    "left_at_epoch_ms": 1774336501900
+  },
+  {
+    "id": 606,
+    "session_id": "c59b4fe7-6bc4-45d3-be0d-6a9928077a4b",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336501903,
+    "left_at_epoch_ms": 1774337112814
+  },
+  {
+    "id": 682,
+    "session_id": "c59b4fe7-6bc4-45d3-be0d-6a9928077a4b",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337112816,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 289,
+    "session_id": "c6bdcaeb-eeaf-4dff-8120-684462595d43",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335840835,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 330,
+    "session_id": "c6bdcaeb-eeaf-4dff-8120-684462595d43",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336214685,
+    "left_at_epoch_ms": 1774336216161
+  },
+  {
+    "id": 332,
+    "session_id": "c6bdcaeb-eeaf-4dff-8120-684462595d43",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336216162,
+    "left_at_epoch_ms": 1774336218742
+  },
+  {
+    "id": 535,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336385387,
+    "left_at_epoch_ms": 1774336388032
+  },
+  {
+    "id": 537,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336388033,
+    "left_at_epoch_ms": 1774336390375
+  },
+  {
+    "id": 542,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336390377,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 596,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336486650,
+    "left_at_epoch_ms": 1774336488577
+  },
+  {
+    "id": 598,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336488578,
+    "left_at_epoch_ms": 1774336491357
+  },
+  {
+    "id": 601,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336491359,
+    "left_at_epoch_ms": 1774336515764
+  },
+  {
+    "id": 611,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336515766,
+    "left_at_epoch_ms": 1774336655865
+  },
+  {
+    "id": 637,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336655868,
+    "left_at_epoch_ms": 1774336860025
+  },
+  {
+    "id": 662,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336860026,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 663,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336861786,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 681,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337107317,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 689,
+    "session_id": "c70e5be2-b601-4eb6-99bd-6d7e998e7c0b",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337125201,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 331,
+    "session_id": "c716df01-ff8e-43fe-ae4c-09745841029f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336215637,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 461,
+    "session_id": "c716df01-ff8e-43fe-ae4c-09745841029f",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336322075,
+    "left_at_epoch_ms": 1774336322238
+  },
+  {
+    "id": 462,
+    "session_id": "c716df01-ff8e-43fe-ae4c-09745841029f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336322240,
+    "left_at_epoch_ms": 1774336453233
+  },
+  {
+    "id": 582,
+    "session_id": "c716df01-ff8e-43fe-ae4c-09745841029f",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336453234,
+    "left_at_epoch_ms": 1774337488383
+  },
+  {
+    "id": 708,
+    "session_id": "c716df01-ff8e-43fe-ae4c-09745841029f",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337488384,
+    "left_at_epoch_ms": 1774337531452
+  },
+  {
+    "id": 710,
+    "session_id": "c716df01-ff8e-43fe-ae4c-09745841029f",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337531453,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 444,
+    "session_id": "c8f546a2-0fab-4a94-af00-3a8237ccdada",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336307562,
+    "left_at_epoch_ms": 1774336317421
+  },
+  {
+    "id": 455,
+    "session_id": "c8f546a2-0fab-4a94-af00-3a8237ccdada",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336317422,
+    "left_at_epoch_ms": 1774336320352
+  },
+  {
+    "id": 458,
+    "session_id": "c8f546a2-0fab-4a94-af00-3a8237ccdada",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336320354,
+    "left_at_epoch_ms": 1774336322967
+  },
+  {
+    "id": 465,
+    "session_id": "c8f546a2-0fab-4a94-af00-3a8237ccdada",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336322967,
+    "left_at_epoch_ms": 1774336330011
+  },
+  {
+    "id": 384,
+    "session_id": "ca8bd538-9e3f-4cb6-a502-2470f42dd1d9",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336245746,
+    "left_at_epoch_ms": 1774336248465
+  },
+  {
+    "id": 388,
+    "session_id": "ca8bd538-9e3f-4cb6-a502-2470f42dd1d9",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336248465,
+    "left_at_epoch_ms": 1774336254639
+  },
+  {
+    "id": 476,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336333168,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 506,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336361889,
+    "left_at_epoch_ms": 1774336362104
+  },
+  {
+    "id": 507,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336362105,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 568,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336421368,
+    "left_at_epoch_ms": 1774336421520
+  },
+  {
+    "id": 569,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336421521,
+    "left_at_epoch_ms": 1774336433885
+  },
+  {
+    "id": 571,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336433885,
+    "left_at_epoch_ms": 1774336434034
+  },
+  {
+    "id": 572,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336434034,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 575,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336435210,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 608,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336508276,
+    "left_at_epoch_ms": 1774336508447
+  },
+  {
+    "id": 609,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336508448,
+    "left_at_epoch_ms": 1774336660902
+  },
+  {
+    "id": 638,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336660903,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 706,
+    "session_id": "cc276354-92fd-437f-b288-0d67aee94258",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774337475414,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 105,
+    "session_id": "ce7f1d00-5429-4c2d-8e97-3d08840f31a3",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334971520,
+    "left_at_epoch_ms": 1774335185245
+  },
+  {
+    "id": 171,
+    "session_id": "ce7f1d00-5429-4c2d-8e97-3d08840f31a3",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335185247,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 339,
+    "session_id": "ce7f1d00-5429-4c2d-8e97-3d08840f31a3",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336219724,
+    "left_at_epoch_ms": 1774336231340
+  },
+  {
+    "id": 364,
+    "session_id": "ce7f1d00-5429-4c2d-8e97-3d08840f31a3",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336231341,
+    "left_at_epoch_ms": 1774336237174
+  },
+  {
+    "id": 115,
+    "session_id": "d0c03a15-0b20-4be1-9e50-6e0cf7f87099",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334983976,
+    "left_at_epoch_ms": 1774335111927
+  },
+  {
+    "id": 145,
+    "session_id": "d0c03a15-0b20-4be1-9e50-6e0cf7f87099",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335111929,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 146,
+    "session_id": "d0c03a15-0b20-4be1-9e50-6e0cf7f87099",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335114752,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 149,
+    "session_id": "d27f2015-39f2-4cc9-8f15-38751e8678c5",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335133380,
+    "left_at_epoch_ms": 1774337880101
+  },
+  {
+    "id": 509,
+    "session_id": "d27f2015-39f2-4cc9-8f15-38751e8678c5",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336363625,
+    "left_at_epoch_ms": 1774336382412
+  },
+  {
+    "id": 530,
+    "session_id": "d27f2015-39f2-4cc9-8f15-38751e8678c5",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336382413,
+    "left_at_epoch_ms": 1774336395206
+  },
+  {
+    "id": 543,
+    "session_id": "d295e0a1-1461-46ed-9293-648b8936cf05",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336390724,
+    "left_at_epoch_ms": 1774336510210
+  },
+  {
+    "id": 610,
+    "session_id": "d295e0a1-1461-46ed-9293-648b8936cf05",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336510211,
+    "left_at_epoch_ms": 1774337125721
+  },
+  {
+    "id": 690,
+    "session_id": "d295e0a1-1461-46ed-9293-648b8936cf05",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337125727,
+    "left_at_epoch_ms": 1774337154051
+  },
+  {
+    "id": 696,
+    "session_id": "d295e0a1-1461-46ed-9293-648b8936cf05",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337154052,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 739,
+    "session_id": "d295e0a1-1461-46ed-9293-648b8936cf05",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774345547923,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 363,
+    "session_id": "d37032ad-54a0-46b7-a4a5-8466441b492f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336230246,
+    "left_at_epoch_ms": 1774336237459
+  },
+  {
+    "id": 375,
+    "session_id": "d37032ad-54a0-46b7-a4a5-8466441b492f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336237460,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 387,
+    "session_id": "d37032ad-54a0-46b7-a4a5-8466441b492f",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336248427,
+    "left_at_epoch_ms": 1774336248637
+  },
+  {
+    "id": 389,
+    "session_id": "d37032ad-54a0-46b7-a4a5-8466441b492f",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336248640,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 418,
+    "session_id": "d37032ad-54a0-46b7-a4a5-8466441b492f",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336274309,
+    "left_at_epoch_ms": 1774336276104
+  },
+  {
+    "id": 419,
+    "session_id": "d37032ad-54a0-46b7-a4a5-8466441b492f",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336276104,
+    "left_at_epoch_ms": 1774336287259
+  },
+  {
+    "id": 564,
+    "session_id": "d410c4b2-abee-4160-8269-1cfaa8679b2a",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336416028,
+    "left_at_epoch_ms": 1774336452678
+  },
+  {
+    "id": 581,
+    "session_id": "d410c4b2-abee-4160-8269-1cfaa8679b2a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336452679,
+    "left_at_epoch_ms": 1774336593802
+  },
+  {
+    "id": 628,
+    "session_id": "d410c4b2-abee-4160-8269-1cfaa8679b2a",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336593803,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 669,
+    "session_id": "d410c4b2-abee-4160-8269-1cfaa8679b2a",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336955651,
+    "left_at_epoch_ms": 1774336962456
+  },
+  {
+    "id": 670,
+    "session_id": "d410c4b2-abee-4160-8269-1cfaa8679b2a",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336962456,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 141,
+    "session_id": "d5fa2e44-89d8-4bb5-91af-f69c44548baf",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335024809,
+    "left_at_epoch_ms": 1774335244675
+  },
+  {
+    "id": 188,
+    "session_id": "d5fa2e44-89d8-4bb5-91af-f69c44548baf",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335244676,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 303,
+    "session_id": "d5fa2e44-89d8-4bb5-91af-f69c44548baf",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336198797,
+    "left_at_epoch_ms": 1774336220811
+  },
+  {
+    "id": 345,
+    "session_id": "d5fa2e44-89d8-4bb5-91af-f69c44548baf",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336220812,
+    "left_at_epoch_ms": 1774336230243
+  },
+  {
+    "id": 131,
+    "session_id": "d6f0ba4f-71ea-4257-87bb-62d84c429fa7",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335007797,
+    "left_at_epoch_ms": 1774335349176
+  },
+  {
+    "id": 244,
+    "session_id": "d6f0ba4f-71ea-4257-87bb-62d84c429fa7",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335349177,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 245,
+    "session_id": "d6f0ba4f-71ea-4257-87bb-62d84c429fa7",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335352663,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 312,
+    "session_id": "d6f0ba4f-71ea-4257-87bb-62d84c429fa7",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336205318,
+    "left_at_epoch_ms": 1774336211750
+  },
+  {
+    "id": 325,
+    "session_id": "d6f0ba4f-71ea-4257-87bb-62d84c429fa7",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336211751,
+    "left_at_epoch_ms": 1774336221851
+  },
+  {
+    "id": 103,
+    "session_id": "db4a19ec-dc9a-4c8c-a255-cec56b6dd049",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334968343,
+    "left_at_epoch_ms": 1774335239379
+  },
+  {
+    "id": 185,
+    "session_id": "db4a19ec-dc9a-4c8c-a255-cec56b6dd049",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335239380,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 186,
+    "session_id": "db4a19ec-dc9a-4c8c-a255-cec56b6dd049",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335241615,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 221,
+    "session_id": "db4a19ec-dc9a-4c8c-a255-cec56b6dd049",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335324997,
+    "left_at_epoch_ms": 1774335326529
+  },
+  {
+    "id": 223,
+    "session_id": "db4a19ec-dc9a-4c8c-a255-cec56b6dd049",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335326532,
+    "left_at_epoch_ms": 1774335326938
+  },
+  {
+    "id": 224,
+    "session_id": "db4a19ec-dc9a-4c8c-a255-cec56b6dd049",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335326938,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 340,
+    "session_id": "db4a19ec-dc9a-4c8c-a255-cec56b6dd049",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336219952,
+    "left_at_epoch_ms": 1774336853195
+  },
+  {
+    "id": 661,
+    "session_id": "db4a19ec-dc9a-4c8c-a255-cec56b6dd049",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336853196,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 348,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336222557,
+    "left_at_epoch_ms": 1774336302736
+  },
+  {
+    "id": 437,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336302737,
+    "left_at_epoch_ms": 1774336322880
+  },
+  {
+    "id": 464,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336322883,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 472,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336329046,
+    "left_at_epoch_ms": 1774336331276
+  },
+  {
+    "id": 474,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336331276,
+    "left_at_epoch_ms": 1774336358316
+  },
+  {
+    "id": 501,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336358317,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 527,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336380065,
+    "left_at_epoch_ms": 1774336399966
+  },
+  {
+    "id": 551,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336399966,
+    "left_at_epoch_ms": 1774336407761
+  },
+  {
+    "id": 558,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336407761,
+    "left_at_epoch_ms": 1774336494863
+  },
+  {
+    "id": 602,
+    "session_id": "dc32906a-db46-479e-9ec7-f90afd624b52",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336494864,
+    "left_at_epoch_ms": 1774336498637
+  },
+  {
+    "id": 460,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336320353,
+    "left_at_epoch_ms": 1774336334674
+  },
+  {
+    "id": 480,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336334675,
+    "left_at_epoch_ms": 1774336340338
+  },
+  {
+    "id": 484,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336340339,
+    "left_at_epoch_ms": 1774336344778
+  },
+  {
+    "id": 488,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336344779,
+    "left_at_epoch_ms": 1774336356070
+  },
+  {
+    "id": 495,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336356071,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 529,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336380936,
+    "left_at_epoch_ms": 1774336385027
+  },
+  {
+    "id": 533,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336385027,
+    "left_at_epoch_ms": 1774336389495
+  },
+  {
+    "id": 541,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336389497,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 593,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336483980,
+    "left_at_epoch_ms": 1774336488074
+  },
+  {
+    "id": 597,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336488075,
+    "left_at_epoch_ms": 1774336489434
+  },
+  {
+    "id": 600,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336489436,
+    "left_at_epoch_ms": 1774336573007
+  },
+  {
+    "id": 621,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336573008,
+    "left_at_epoch_ms": 1774336794234
+  },
+  {
+    "id": 653,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336794235,
+    "left_at_epoch_ms": 1774336808618
+  },
+  {
+    "id": 657,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336808619,
+    "left_at_epoch_ms": 1774336811156
+  },
+  {
+    "id": 658,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336811157,
+    "left_at_epoch_ms": 1774336816123
+  },
+  {
+    "id": 659,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774336816124,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 683,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337114102,
+    "left_at_epoch_ms": 1774337936430
+  },
+  {
+    "id": 719,
+    "session_id": "dd155df8-b2a8-4887-b69b-983f06270d37",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337936431,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 98,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334960755,
+    "left_at_epoch_ms": 1774335091718
+  },
+  {
+    "id": 144,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335091719,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 207,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335285428,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 209,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335307300,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 293,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336185273,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 343,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336220626,
+    "left_at_epoch_ms": 1774336464724
+  },
+  {
+    "id": 587,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336464726,
+    "left_at_epoch_ms": 1774337123294
+  },
+  {
+    "id": 688,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337123295,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 740,
+    "session_id": "dd207896-13fb-4910-a317-06e43a3ad64a",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774345895517,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 594,
+    "session_id": "e09c71ba-2028-4890-9b63-4d41081798d4",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336485744,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 97,
+    "session_id": "e2e99e85-36a2-4eb7-b61c-d3b18fc67f08",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334954541,
+    "left_at_epoch_ms": 1774335330432
+  },
+  {
+    "id": 229,
+    "session_id": "e2e99e85-36a2-4eb7-b61c-d3b18fc67f08",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335330434,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 237,
+    "session_id": "e2e99e85-36a2-4eb7-b61c-d3b18fc67f08",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335334751,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 299,
+    "session_id": "e2e99e85-36a2-4eb7-b61c-d3b18fc67f08",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336194172,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 310,
+    "session_id": "e2e99e85-36a2-4eb7-b61c-d3b18fc67f08",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336203067,
+    "left_at_epoch_ms": 1774336210624
+  },
+  {
+    "id": 323,
+    "session_id": "e2e99e85-36a2-4eb7-b61c-d3b18fc67f08",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336210624,
+    "left_at_epoch_ms": 1774336215634
+  },
+  {
+    "id": 395,
+    "session_id": "e3ae7c4a-0dbf-4c6c-9ec3-ce817997360d",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336253173,
+    "left_at_epoch_ms": 1774336280733
+  },
+  {
+    "id": 421,
+    "session_id": "e3ae7c4a-0dbf-4c6c-9ec3-ce817997360d",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336280734,
+    "left_at_epoch_ms": 1774336293640
+  },
+  {
+    "id": 109,
+    "session_id": "e4850710-5599-4593-981f-284fde9a4ee6",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334976776,
+    "left_at_epoch_ms": 1774335002542
+  },
+  {
+    "id": 130,
+    "session_id": "e4850710-5599-4593-981f-284fde9a4ee6",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335002543,
+    "left_at_epoch_ms": 1774335016718
+  },
+  {
+    "id": 134,
+    "session_id": "e57001ac-8e42-443e-a431-208cb2a477d0",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335012031,
+    "left_at_epoch_ms": 1774335253632
+  },
+  {
+    "id": 193,
+    "session_id": "e57001ac-8e42-443e-a431-208cb2a477d0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335253633,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 195,
+    "session_id": "e57001ac-8e42-443e-a431-208cb2a477d0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335258773,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 197,
+    "session_id": "e57001ac-8e42-443e-a431-208cb2a477d0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335261259,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 198,
+    "session_id": "e57001ac-8e42-443e-a431-208cb2a477d0",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335264357,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 306,
+    "session_id": "e57001ac-8e42-443e-a431-208cb2a477d0",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336201480,
+    "left_at_epoch_ms": 1774336207568
+  },
+  {
+    "id": 316,
+    "session_id": "e57001ac-8e42-443e-a431-208cb2a477d0",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336207569,
+    "left_at_epoch_ms": 1774336222555
+  },
+  {
+    "id": 612,
+    "session_id": "e7aad394-bc94-441e-acaa-5f16263da80e",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336531410,
+    "left_at_epoch_ms": 1774336735695
+  },
+  {
+    "id": 648,
+    "session_id": "e7aad394-bc94-441e-acaa-5f16263da80e",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336735696,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 328,
+    "session_id": "eb55b00a-882c-4f78-a1ea-8aa0c09e60fc",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336213197,
+    "left_at_epoch_ms": 1774336231611
+  },
+  {
+    "id": 365,
+    "session_id": "eb55b00a-882c-4f78-a1ea-8aa0c09e60fc",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336231613,
+    "left_at_epoch_ms": 1774336238671
+  },
+  {
+    "id": 139,
+    "session_id": "eeaa6c37-e447-4b1d-97fe-4af1e90a1925",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335018231,
+    "left_at_epoch_ms": 1774338394195
+  },
+  {
+    "id": 721,
+    "session_id": "eeaa6c37-e447-4b1d-97fe-4af1e90a1925",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774338394197,
+    "left_at_epoch_ms": 1774338490066
+  },
+  {
+    "id": 722,
+    "session_id": "eeaa6c37-e447-4b1d-97fe-4af1e90a1925",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774338490067,
+    "left_at_epoch_ms": 1774338493606
+  },
+  {
+    "id": 723,
+    "session_id": "eeaa6c37-e447-4b1d-97fe-4af1e90a1925",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774338493606,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 556,
+    "session_id": "eedef376-efca-4064-8582-5337bc9b70dc",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336404924,
+    "left_at_epoch_ms": 1774336829053
+  },
+  {
+    "id": 660,
+    "session_id": "eedef376-efca-4064-8582-5337bc9b70dc",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336829054,
+    "left_at_epoch_ms": 1774336952708
+  },
+  {
+    "id": 668,
+    "session_id": "eedef376-efca-4064-8582-5337bc9b70dc",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336952709,
+    "left_at_epoch_ms": 1774337465238
+  },
+  {
+    "id": 702,
+    "session_id": "eedef376-efca-4064-8582-5337bc9b70dc",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337465239,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 475,
+    "session_id": "f145b45d-6f69-43e2-b726-84a8d49467b7",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336331943,
+    "left_at_epoch_ms": 1774336355493
+  },
+  {
+    "id": 493,
+    "session_id": "f145b45d-6f69-43e2-b726-84a8d49467b7",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336355494,
+    "left_at_epoch_ms": 1774336356723
+  },
+  {
+    "id": 499,
+    "session_id": "f145b45d-6f69-43e2-b726-84a8d49467b7",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336356724,
+    "left_at_epoch_ms": 1774336363084
+  },
+  {
+    "id": 508,
+    "session_id": "f145b45d-6f69-43e2-b726-84a8d49467b7",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336363085,
+    "left_at_epoch_ms": 1774336370474
+  },
+  {
+    "id": 520,
+    "session_id": "f145b45d-6f69-43e2-b726-84a8d49467b7",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336370475,
+    "left_at_epoch_ms": 1774336402051
+  },
+  {
+    "id": 553,
+    "session_id": "f145b45d-6f69-43e2-b726-84a8d49467b7",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336402051,
+    "left_at_epoch_ms": 1774336406894
+  },
+  {
+    "id": 557,
+    "session_id": "f145b45d-6f69-43e2-b726-84a8d49467b7",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336406894,
+    "left_at_epoch_ms": 1774336410999
+  },
+  {
+    "id": 560,
+    "session_id": "f145b45d-6f69-43e2-b726-84a8d49467b7",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336410999,
+    "left_at_epoch_ms": 1774336432506
+  },
+  {
+    "id": 278,
+    "session_id": "f205e706-8703-471c-b8fb-c1062c5eb123",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335696554,
+    "left_at_epoch_ms": 1774335733786
+  },
+  {
+    "id": 280,
+    "session_id": "f205e706-8703-471c-b8fb-c1062c5eb123",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335733787,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 318,
+    "session_id": "f205e706-8703-471c-b8fb-c1062c5eb123",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336207475,
+    "left_at_epoch_ms": 1774336233455
+  },
+  {
+    "id": 369,
+    "session_id": "f205e706-8703-471c-b8fb-c1062c5eb123",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336233455,
+    "left_at_epoch_ms": 1774336236386
+  },
+  {
+    "id": 143,
+    "session_id": "f3ee5c11-8b83-48ce-975b-300d775174d6",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335029224,
+    "left_at_epoch_ms": 1774336383727
+  },
+  {
+    "id": 344,
+    "session_id": "f3ee5c11-8b83-48ce-975b-300d775174d6",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336220499,
+    "left_at_epoch_ms": 1774336236131
+  },
+  {
+    "id": 371,
+    "session_id": "f3ee5c11-8b83-48ce-975b-300d775174d6",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336236132,
+    "left_at_epoch_ms": 1774336249237
+  },
+  {
+    "id": 317,
+    "session_id": "f4a42f12-31bb-41f2-a22d-77e8ae92fedb",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336207514,
+    "left_at_epoch_ms": 1774336216731
+  },
+  {
+    "id": 333,
+    "session_id": "f4a42f12-31bb-41f2-a22d-77e8ae92fedb",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336216732,
+    "left_at_epoch_ms": 1774336233284
+  },
+  {
+    "id": 127,
+    "session_id": "f4f102d2-791b-4766-b3df-ceaad7c1c653",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774334999598,
+    "left_at_epoch_ms": 1774335000823
+  },
+  {
+    "id": 128,
+    "session_id": "f4f102d2-791b-4766-b3df-ceaad7c1c653",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335000824,
+    "left_at_epoch_ms": 1774335007796
+  },
+  {
+    "id": 570,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336432506,
+    "left_at_epoch_ms": 1774336486520
+  },
+  {
+    "id": 595,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336486522,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 599,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336488943,
+    "left_at_epoch_ms": 1774336495832
+  },
+  {
+    "id": 603,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336495833,
+    "left_at_epoch_ms": 1774336498078
+  },
+  {
+    "id": 604,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336498079,
+    "left_at_epoch_ms": 1774336564758
+  },
+  {
+    "id": 618,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336564759,
+    "left_at_epoch_ms": 1774336645887
+  },
+  {
+    "id": 635,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336645889,
+    "left_at_epoch_ms": 1774336672940
+  },
+  {
+    "id": 639,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336672940,
+    "left_at_epoch_ms": 1774336677411
+  },
+  {
+    "id": 640,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336677413,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 741,
+    "session_id": "f4fdd9a6-79b8-4dec-9eff-3fe3f8a0e31e",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774349685449,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 129,
+    "session_id": "f54682c8-eace-47d6-8cc0-ae2b702ca85b",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774335001729,
+    "left_at_epoch_ms": 1774335324412
+  },
+  {
+    "id": 219,
+    "session_id": "f54682c8-eace-47d6-8cc0-ae2b702ca85b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335324413,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 225,
+    "session_id": "f54682c8-eace-47d6-8cc0-ae2b702ca85b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335327568,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 228,
+    "session_id": "f54682c8-eace-47d6-8cc0-ae2b702ca85b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335329052,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 232,
+    "session_id": "f54682c8-eace-47d6-8cc0-ae2b702ca85b",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774335332925,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 276,
+    "session_id": "f54682c8-eace-47d6-8cc0-ae2b702ca85b",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774335663630,
+    "left_at_epoch_ms": 1774335674801
+  },
+  {
+    "id": 277,
+    "session_id": "f54682c8-eace-47d6-8cc0-ae2b702ca85b",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774335674801,
+    "left_at_epoch_ms": 1774335696553
+  },
+  {
+    "id": 555,
+    "session_id": "f6ecb86f-59aa-40ca-a871-32a69e77afb4",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336402267,
+    "left_at_epoch_ms": 1774336409628
+  },
+  {
+    "id": 559,
+    "session_id": "f6ecb86f-59aa-40ca-a871-32a69e77afb4",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336409629,
+    "left_at_epoch_ms": 1774336416026
+  },
+  {
+    "id": 404,
+    "session_id": "f926b9d8-8191-4748-802c-898cca329240",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336260557,
+    "left_at_epoch_ms": 1774336347818
+  },
+  {
+    "id": 490,
+    "session_id": "f926b9d8-8191-4748-802c-898cca329240",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336347820,
+    "left_at_epoch_ms": 1774336590842
+  },
+  {
+    "id": 625,
+    "session_id": "f926b9d8-8191-4748-802c-898cca329240",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336590843,
+    "left_at_epoch_ms": 1774336591501
+  },
+  {
+    "id": 626,
+    "session_id": "f926b9d8-8191-4748-802c-898cca329240",
+    "page_path": "/user/normal/llm",
+    "entered_at_epoch_ms": 1774336591502,
+    "left_at_epoch_ms": 1774336594251
+  },
+  {
+    "id": 629,
+    "session_id": "f926b9d8-8191-4748-802c-898cca329240",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774336594253,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 691,
+    "session_id": "f926b9d8-8191-4748-802c-898cca329240",
+    "page_path": "/user/visualization",
+    "entered_at_epoch_ms": 1774337126665,
+    "left_at_epoch_ms": 1774337141090
+  },
+  {
+    "id": 694,
+    "session_id": "f926b9d8-8191-4748-802c-898cca329240",
+    "page_path": "/user/survey",
+    "entered_at_epoch_ms": 1774337141102,
+    "left_at_epoch_ms": null
+  },
+  {
+    "id": 438,
+    "session_id": "ff3b7a24-998b-4c02-8218-e7cd6cd65518",
+    "page_path": "/user/normal/manual",
+    "entered_at_epoch_ms": 1774336302941,
+    "left_at_epoch_ms": 1774336314225
+  },
+  {
+    "id": 451,
+    "session_id": "ff3b7a24-998b-4c02-8218-e7cd6cd65518",
+    "page_path": "/welcome",
+    "entered_at_epoch_ms": 1774336314227,
+    "left_at_epoch_ms": 1774336318264
+  },
+  {
+    "id": 457,
+    "session_id": "ff3b7a24-998b-4c02-8218-e7cd6cd65518",
+    "page_path": "/user/start",
+    "entered_at_epoch_ms": 1774336318264,
+    "left_at_epoch_ms": 1774336331941
+  }
+]

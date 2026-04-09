@@ -1,0 +1,520 @@
+[
+  {
+    "unit_id": "essay0001_sentence01",
+    "unit_text": "AI literacy refers to the set of competencies that enable individuals to critically evaluate, effectively communicate with, and responsibly use artificial intelligence technologies.",
+    "label": "EXPLANATION",
+    "annotator_count": 72,
+    "pct": 90
+  },
+  {
+    "unit_id": "essay0001_sentence01",
+    "unit_text": "AI literacy refers to the set of competencies that enable individuals to critically evaluate, effectively communicate with, and responsibly use artificial intelligence technologies.",
+    "label": "EVALUATION",
+    "annotator_count": 6,
+    "pct": 7.5
+  },
+  {
+    "unit_id": "essay0001_sentence01",
+    "unit_text": "AI literacy refers to the set of competencies that enable individuals to critically evaluate, effectively communicate with, and responsibly use artificial intelligence technologies.",
+    "label": "IMPLICATION",
+    "annotator_count": 1,
+    "pct": 1.3
+  },
+  {
+    "unit_id": "essay0001_sentence01",
+    "unit_text": "AI literacy refers to the set of competencies that enable individuals to critically evaluate, effectively communicate with, and responsibly use artificial intelligence technologies.",
+    "label": "APPLICATION",
+    "annotator_count": 1,
+    "pct": 1.3
+  },
+  {
+    "unit_id": "essay0001_sentence02",
+    "unit_text": "Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.",
+    "label": "EXPLANATION",
+    "annotator_count": 42,
+    "pct": 56.8
+  },
+  {
+    "unit_id": "essay0001_sentence02",
+    "unit_text": "Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.",
+    "label": "APPLICATION",
+    "annotator_count": 17,
+    "pct": 23
+  },
+  {
+    "unit_id": "essay0001_sentence02",
+    "unit_text": "Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.",
+    "label": "EVALUATION",
+    "annotator_count": 9,
+    "pct": 12.2
+  },
+  {
+    "unit_id": "essay0001_sentence02",
+    "unit_text": "Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 4,
+    "pct": 5.4
+  },
+  {
+    "unit_id": "essay0001_sentence02",
+    "unit_text": "Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.",
+    "label": "IMPLICATION",
+    "annotator_count": 2,
+    "pct": 2.7
+  },
+  {
+    "unit_id": "essay0001_sentence03",
+    "unit_text": "Educational institutions should integrate AI literacy into their core curriculum starting from middle school.",
+    "label": "APPLICATION",
+    "annotator_count": 52,
+    "pct": 71.2
+  },
+  {
+    "unit_id": "essay0001_sentence03",
+    "unit_text": "Educational institutions should integrate AI literacy into their core curriculum starting from middle school.",
+    "label": "EXPLANATION",
+    "annotator_count": 7,
+    "pct": 9.6
+  },
+  {
+    "unit_id": "essay0001_sentence03",
+    "unit_text": "Educational institutions should integrate AI literacy into their core curriculum starting from middle school.",
+    "label": "EVALUATION",
+    "annotator_count": 6,
+    "pct": 8.2
+  },
+  {
+    "unit_id": "essay0001_sentence03",
+    "unit_text": "Educational institutions should integrate AI literacy into their core curriculum starting from middle school.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 5,
+    "pct": 6.8
+  },
+  {
+    "unit_id": "essay0001_sentence03",
+    "unit_text": "Educational institutions should integrate AI literacy into their core curriculum starting from middle school.",
+    "label": "IMPLICATION",
+    "annotator_count": 3,
+    "pct": 4.1
+  },
+  {
+    "unit_id": "essay0001_sentence04",
+    "unit_text": "Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.",
+    "label": "EVALUATION",
+    "annotator_count": 49,
+    "pct": 67.1
+  },
+  {
+    "unit_id": "essay0001_sentence04",
+    "unit_text": "Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.",
+    "label": "APPLICATION",
+    "annotator_count": 11,
+    "pct": 15.1
+  },
+  {
+    "unit_id": "essay0001_sentence04",
+    "unit_text": "Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 7,
+    "pct": 9.6
+  },
+  {
+    "unit_id": "essay0001_sentence04",
+    "unit_text": "Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.",
+    "label": "EXPLANATION",
+    "annotator_count": 4,
+    "pct": 5.5
+  },
+  {
+    "unit_id": "essay0001_sentence04",
+    "unit_text": "Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.",
+    "label": "IMPLICATION",
+    "annotator_count": 2,
+    "pct": 2.7
+  },
+  {
+    "unit_id": "essay0001_sentence05",
+    "unit_text": "As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",
+    "label": "IMPLICATION",
+    "annotator_count": 43,
+    "pct": 58.9
+  },
+  {
+    "unit_id": "essay0001_sentence05",
+    "unit_text": "As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",
+    "label": "EVALUATION",
+    "annotator_count": 10,
+    "pct": 13.7
+  },
+  {
+    "unit_id": "essay0001_sentence05",
+    "unit_text": "As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 9,
+    "pct": 12.3
+  },
+  {
+    "unit_id": "essay0001_sentence05",
+    "unit_text": "As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",
+    "label": "APPLICATION",
+    "annotator_count": 8,
+    "pct": 11
+  },
+  {
+    "unit_id": "essay0001_sentence05",
+    "unit_text": "As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",
+    "label": "EXPLANATION",
+    "annotator_count": 3,
+    "pct": 4.1
+  },
+  {
+    "unit_id": "essay0002_sentence01",
+    "unit_text": "Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.",
+    "label": "EXPLANATION",
+    "annotator_count": 51,
+    "pct": 75
+  },
+  {
+    "unit_id": "essay0002_sentence01",
+    "unit_text": "Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.",
+    "label": "EVALUATION",
+    "annotator_count": 11,
+    "pct": 16.2
+  },
+  {
+    "unit_id": "essay0002_sentence01",
+    "unit_text": "Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 3,
+    "pct": 4.4
+  },
+  {
+    "unit_id": "essay0002_sentence01",
+    "unit_text": "Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.",
+    "label": "IMPLICATION",
+    "annotator_count": 2,
+    "pct": 2.9
+  },
+  {
+    "unit_id": "essay0002_sentence01",
+    "unit_text": "Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.",
+    "label": "APPLICATION",
+    "annotator_count": 1,
+    "pct": 1.5
+  },
+  {
+    "unit_id": "essay0002_sentence02",
+    "unit_text": "While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",
+    "label": "EVALUATION",
+    "annotator_count": 32,
+    "pct": 48.5
+  },
+  {
+    "unit_id": "essay0002_sentence02",
+    "unit_text": "While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",
+    "label": "EXPLANATION",
+    "annotator_count": 13,
+    "pct": 19.7
+  },
+  {
+    "unit_id": "essay0002_sentence02",
+    "unit_text": "While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",
+    "label": "APPLICATION",
+    "annotator_count": 8,
+    "pct": 12.1
+  },
+  {
+    "unit_id": "essay0002_sentence02",
+    "unit_text": "While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",
+    "label": "IMPLICATION",
+    "annotator_count": 7,
+    "pct": 10.6
+  },
+  {
+    "unit_id": "essay0002_sentence02",
+    "unit_text": "While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 6,
+    "pct": 9.1
+  },
+  {
+    "unit_id": "essay0002_sentence03",
+    "unit_text": "Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.",
+    "label": "EVALUATION",
+    "annotator_count": 36,
+    "pct": 54.5
+  },
+  {
+    "unit_id": "essay0002_sentence03",
+    "unit_text": "Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 11,
+    "pct": 16.7
+  },
+  {
+    "unit_id": "essay0002_sentence03",
+    "unit_text": "Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.",
+    "label": "APPLICATION",
+    "annotator_count": 10,
+    "pct": 15.2
+  },
+  {
+    "unit_id": "essay0002_sentence03",
+    "unit_text": "Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.",
+    "label": "EXPLANATION",
+    "annotator_count": 5,
+    "pct": 7.6
+  },
+  {
+    "unit_id": "essay0002_sentence03",
+    "unit_text": "Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.",
+    "label": "IMPLICATION",
+    "annotator_count": 4,
+    "pct": 6.1
+  },
+  {
+    "unit_id": "essay0002_sentence04",
+    "unit_text": "Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 35,
+    "pct": 53.8
+  },
+  {
+    "unit_id": "essay0002_sentence04",
+    "unit_text": "Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.",
+    "label": "APPLICATION",
+    "annotator_count": 10,
+    "pct": 15.4
+  },
+  {
+    "unit_id": "essay0002_sentence04",
+    "unit_text": "Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.",
+    "label": "EVALUATION",
+    "annotator_count": 9,
+    "pct": 13.8
+  },
+  {
+    "unit_id": "essay0002_sentence04",
+    "unit_text": "Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.",
+    "label": "IMPLICATION",
+    "annotator_count": 8,
+    "pct": 12.3
+  },
+  {
+    "unit_id": "essay0002_sentence04",
+    "unit_text": "Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.",
+    "label": "EXPLANATION",
+    "annotator_count": 3,
+    "pct": 4.6
+  },
+  {
+    "unit_id": "essay0002_sentence05",
+    "unit_text": "The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.",
+    "label": "APPLICATION",
+    "annotator_count": 39,
+    "pct": 60
+  },
+  {
+    "unit_id": "essay0002_sentence05",
+    "unit_text": "The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.",
+    "label": "IMPLICATION",
+    "annotator_count": 13,
+    "pct": 20
+  },
+  {
+    "unit_id": "essay0002_sentence05",
+    "unit_text": "The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.",
+    "label": "EVALUATION",
+    "annotator_count": 6,
+    "pct": 9.2
+  },
+  {
+    "unit_id": "essay0002_sentence05",
+    "unit_text": "The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 5,
+    "pct": 7.7
+  },
+  {
+    "unit_id": "essay0002_sentence05",
+    "unit_text": "The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.",
+    "label": "EXPLANATION",
+    "annotator_count": 2,
+    "pct": 3.1
+  },
+  {
+    "unit_id": "essay0003_sentence01",
+    "unit_text": "Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 41,
+    "pct": 64.1
+  },
+  {
+    "unit_id": "essay0003_sentence01",
+    "unit_text": "Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",
+    "label": "EXPLANATION",
+    "annotator_count": 10,
+    "pct": 15.6
+  },
+  {
+    "unit_id": "essay0003_sentence01",
+    "unit_text": "Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",
+    "label": "EVALUATION",
+    "annotator_count": 8,
+    "pct": 12.5
+  },
+  {
+    "unit_id": "essay0003_sentence01",
+    "unit_text": "Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",
+    "label": "IMPLICATION",
+    "annotator_count": 3,
+    "pct": 4.7
+  },
+  {
+    "unit_id": "essay0003_sentence01",
+    "unit_text": "Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",
+    "label": "APPLICATION",
+    "annotator_count": 2,
+    "pct": 3.1
+  },
+  {
+    "unit_id": "essay0003_sentence02",
+    "unit_text": "Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",
+    "label": "EVALUATION",
+    "annotator_count": 31,
+    "pct": 48.4
+  },
+  {
+    "unit_id": "essay0003_sentence02",
+    "unit_text": "Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",
+    "label": "EXPLANATION",
+    "annotator_count": 10,
+    "pct": 15.6
+  },
+  {
+    "unit_id": "essay0003_sentence02",
+    "unit_text": "Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",
+    "label": "IMPLICATION",
+    "annotator_count": 9,
+    "pct": 14.1
+  },
+  {
+    "unit_id": "essay0003_sentence02",
+    "unit_text": "Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 8,
+    "pct": 12.5
+  },
+  {
+    "unit_id": "essay0003_sentence02",
+    "unit_text": "Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",
+    "label": "APPLICATION",
+    "annotator_count": 6,
+    "pct": 9.4
+  },
+  {
+    "unit_id": "essay0003_sentence03",
+    "unit_text": "Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.",
+    "label": "EXPLANATION",
+    "annotator_count": 43,
+    "pct": 68.3
+  },
+  {
+    "unit_id": "essay0003_sentence03",
+    "unit_text": "Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.",
+    "label": "EVALUATION",
+    "annotator_count": 8,
+    "pct": 12.7
+  },
+  {
+    "unit_id": "essay0003_sentence03",
+    "unit_text": "Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 5,
+    "pct": 7.9
+  },
+  {
+    "unit_id": "essay0003_sentence03",
+    "unit_text": "Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.",
+    "label": "APPLICATION",
+    "annotator_count": 5,
+    "pct": 7.9
+  },
+  {
+    "unit_id": "essay0003_sentence03",
+    "unit_text": "Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.",
+    "label": "IMPLICATION",
+    "annotator_count": 2,
+    "pct": 3.2
+  },
+  {
+    "unit_id": "essay0003_sentence04",
+    "unit_text": "Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.",
+    "label": "APPLICATION",
+    "annotator_count": 37,
+    "pct": 58.7
+  },
+  {
+    "unit_id": "essay0003_sentence04",
+    "unit_text": "Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.",
+    "label": "EVALUATION",
+    "annotator_count": 9,
+    "pct": 14.3
+  },
+  {
+    "unit_id": "essay0003_sentence04",
+    "unit_text": "Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 8,
+    "pct": 12.7
+  },
+  {
+    "unit_id": "essay0003_sentence04",
+    "unit_text": "Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.",
+    "label": "EXPLANATION",
+    "annotator_count": 5,
+    "pct": 7.9
+  },
+  {
+    "unit_id": "essay0003_sentence04",
+    "unit_text": "Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.",
+    "label": "IMPLICATION",
+    "annotator_count": 4,
+    "pct": 6.3
+  },
+  {
+    "unit_id": "essay0003_sentence05",
+    "unit_text": "Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",
+    "label": "IMPLICATION",
+    "annotator_count": 37,
+    "pct": 58.7
+  },
+  {
+    "unit_id": "essay0003_sentence05",
+    "unit_text": "Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",
+    "label": "EVALUATION",
+    "annotator_count": 10,
+    "pct": 15.9
+  },
+  {
+    "unit_id": "essay0003_sentence05",
+    "unit_text": "Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",
+    "label": "RESPONSIBILITY",
+    "annotator_count": 7,
+    "pct": 11.1
+  },
+  {
+    "unit_id": "essay0003_sentence05",
+    "unit_text": "Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",
+    "label": "APPLICATION",
+    "annotator_count": 5,
+    "pct": 7.9
+  },
+  {
+    "unit_id": "essay0003_sentence05",
+    "unit_text": "Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",
+    "label": "EXPLANATION",
+    "annotator_count": 4,
+    "pct": 6.3
+  }
+]

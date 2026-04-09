@@ -42,16 +42,6 @@ export function UserActiveLlmPage() {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<ActiveLlmItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [labels, setLabels] = useState<Array<{ label: string }>>([]);
-  const [overrideUnitId, setOverrideUnitId] = useState<string | null>(null);
-  const [localOverrides, setLocalOverrides] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    api.getTaxonomy().then((tax) => {
-      const HIDDEN = new Set(["CODE", "UNKNOWN"]);
-      setLabels(tax.labels.filter((l: { label: string }) => !HIDDEN.has(l.label)));
-    }).catch(() => {});
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -60,6 +50,12 @@ export function UserActiveLlmPage() {
       setLoading(true);
       setError(null);
       try {
+        const status = await api.getSessionStatus(sessionId);
+        if (!cancelled && !status.gates.can_enter_active_manual) {
+          if (status.gates.can_enter_normal_llm) nav("/user/normal/llm");
+          else nav("/user/normal/manual");
+          return;
+        }
         await api.ensureActiveLlmResults(sessionId).catch(() => {});
         let data: { items?: ActiveLlmItem[] } = await api.getActiveLlmResults(sessionId);
         if (!cancelled) setItems(data.items ?? []);
@@ -132,7 +128,7 @@ export function UserActiveLlmPage() {
       ) : (
         items.map((item, idx) => {
           const meta = getEssaySentenceMeta(item.unit_id);
-          const displayLabel = localOverrides[item.unit_id] ?? item.label;
+          const displayLabel = item.label;
           const hasLabel = !!displayLabel;
           const difficulty = getDifficulty(item.reason, item.score);
           return (
@@ -174,53 +170,26 @@ export function UserActiveLlmPage() {
                     </div>
                   </div>
                 )}
-                {hasLabel && (
-                  <button
-                    type="button"
-                    className="btn"
-                    style={{ padding: "4px 12px", fontSize: 12, marginLeft: "auto" }}
-                    onClick={() => setOverrideUnitId(item.unit_id)}
-                  >
-                    ✎ {t("flow.changeLabel")}
-                  </button>
-                )}
               </div>
             </div>
           );
         })
       )}
 
-      <button
-        className="btn primary full-width lg"
-        style={{ marginTop: 8, marginBottom: 32 }}
-        onClick={() => nav("/user/survey")}
-      >
-        {t("survey.goToSurvey")} →
-      </button>
-
-      {overrideUnitId && labels.length > 0 && (
-        <>
-          <div className="bottom-sheet-overlay" onClick={() => setOverrideUnitId(null)} />
-          <div className="bottom-sheet">
-            <div className="bottom-sheet-handle" />
-            <div className="bottom-sheet-title">{t("flow.overrideTitle")}</div>
-            <div className="label-grid">
-              {labels.map((l) => (
-                <button
-                  key={l.label}
-                  className="label-btn"
-                  onClick={() => {
-                    setLocalOverrides((prev) => ({ ...prev, [overrideUnitId]: l.label }));
-                    setOverrideUnitId(null);
-                  }}
-                >
-                  {labelText(l.label)}
-                </button>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
+      <div style={{ marginTop: 8, marginBottom: 32, display: "flex", flexDirection: "column", gap: 10 }}>
+        <button
+          className="btn full-width lg"
+          onClick={() => nav("/user/active/manual")}
+        >
+          {t("flow.backToActiveLearning")}
+        </button>
+        <button
+          className="btn primary full-width lg"
+          onClick={() => nav("/user/survey")}
+        >
+          {t("survey.goToSurvey")} →
+        </button>
+      </div>
     </div>
   );
 }

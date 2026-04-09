@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api, type LlmMode, type AttemptPayload } from "../../lib/api";
+import { ENABLE_ACTIVE_LEARNING } from "../../lib/featureFlags";
 import { useI18n } from "../../lib/i18n";
 import { DeadLetterBanner } from "../../components/DeadLetterBanner";
 import { EssayDisplay } from "../../components/EssayDisplay";
@@ -76,14 +77,16 @@ export function UserNormalLlmPage() {
   const [_progress, setProgress] = useState({ done: 0, total: 0 });
   const [done, setDone] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [phaseLocked, setPhaseLocked] = useState(false);
   const [undoRankingInProgress, setUndoRankingInProgress] = useState(false);
   const [runEssayLoading, setRunEssayLoading] = useState(false);
   const [accepting, setAccepting] = useState(false);
   const [activeMode, setActiveMode] = useState<LlmMode>("prompt1");
+  const [customPromptText, setCustomPromptText] = useState("");
 
   const [currentEssayIndex, setCurrentEssayIndex] = useState<number | null>(null);
   const [currentUnitId, setCurrentUnitId] = useState<string>("");
-  const [essaySentences, setEssaySentences] = useState<Array<{ unit_id: string; text: string; manual_label: string; llm_label: string | null }>>([]);
+  const [essaySentences, setEssaySentences] = useState<Array<{ unit_id: string; text: string; manual_label: string | null; llm_label: string | null }>>([]);
   const [llmLabelsByUnitId, setLlmLabelsByUnitId] = useState<Record<string, string>>({});
   const [acceptedUnitIds, setAcceptedUnitIds] = useState<Set<string>>(new Set());
   const [overrideUnitId, setOverrideUnitId] = useState<string | null>(null);
@@ -134,6 +137,11 @@ export function UserNormalLlmPage() {
     setLoadError(null);
     try {
       const status = await api.getSessionStatus(sessionId);
+      if (status.locks?.lock_llm) {
+        setPhaseLocked(true);
+        return;
+      }
+      setPhaseLocked(false);
       if (!status.gates.can_enter_normal_llm) { nav("/user/normal/manual"); return; }
       setProgress({ done: status.normal_llm?.done ?? 0, total: status.normal_llm?.total ?? 0 });
 
@@ -177,7 +185,8 @@ export function UserNormalLlmPage() {
       const res = await api.runLlmEssay({
         session_id: sessionId,
         essay_index: currentEssay.essayIndex,
-        mode: activeMode
+        mode: activeMode,
+        ...(activeMode === "custom" && customPromptText.trim() ? { custom_prompt_text: customPromptText.trim() } : {})
       });
       const next = { ...llmLabelsByUnitId };
       for (const r of res.results) next[r.unit_id] = r.predicted_label;
@@ -257,6 +266,19 @@ export function UserNormalLlmPage() {
 
   if (!sessionId) return null;
 
+  if (phaseLocked) {
+    return (
+      <div className="page" style={{ justifyContent: "center" }}>
+        <div className="card" style={{ textAlign: "center", padding: "48px 24px" }}>
+          <div style={{ fontSize: 56, marginBottom: 16 }}>🔒</div>
+          <h2>{t("lock.taskLocked")}</h2>
+          <p style={{ color: "var(--color-text-muted)", margin: "12px 0 24px" }}>{t("lock.taskLockedDesc")}</p>
+          <button className="btn primary" onClick={() => window.location.reload()}>{t("lock.refresh")}</button>
+        </div>
+      </div>
+    );
+  }
+
   if (loadError) {
     return (
       <div className="page">
@@ -276,7 +298,7 @@ export function UserNormalLlmPage() {
         <div className="card" style={{ textAlign: "center", padding: "40px 24px" }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
           <h2>{t("flow.doneNormal")}</h2>
-          <p style={{ margin: "12px 0 24px" }}>{t("flow.canContinueActive")}</p>
+          <p style={{ margin: "12px 0 24px" }}>{t(ENABLE_ACTIVE_LEARNING ? "flow.canContinueActive" : "flow.canContinueToViz")}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {lastRankedEssayIndex != null && (
               <button
@@ -290,9 +312,6 @@ export function UserNormalLlmPage() {
             )}
             <button className="btn primary lg full-width" onClick={() => nav("/user/visualization")}>
               {t("viz.title")} →
-            </button>
-            <button type="button" className="btn lg full-width" onClick={() => nav("/user/normal/manual")}>
-              {t("ranking.backToRanking")}
             </button>
           </div>
         </div>
@@ -313,7 +332,7 @@ export function UserNormalLlmPage() {
       <DeadLetterBanner />
 
       {currentEssay && (
-        <EssayDisplay essay={currentEssay} currentUnitId={currentUnitId} labelsByUnitId={llmLabelsByUnitId} />
+        <EssayDisplay essay={currentEssay} currentUnitId={currentUnitId} labelsByUnitId={llmLabelsByUnitId} highlightAllLabeled />
       )}
 
       {currentEssay && essaySentences.length > 0 && (
@@ -332,11 +351,22 @@ export function UserNormalLlmPage() {
             ))}
           </div>
 
+          {activeMode === "custom" && (
+            <textarea
+              rows={4}
+              value={customPromptText}
+              onChange={(e) => setCustomPromptText(e.target.value)}
+              placeholder={t("flow.customPromptPlaceholder")}
+              style={{ width: "100%", marginBottom: 12, fontSize: 13, resize: "vertical" }}
+              disabled={runEssayLoading}
+            />
+          )}
+
           <button
             type="button"
             className="btn primary full-width"
             onClick={handleRunEssay}
-            disabled={runEssayLoading}
+            disabled={runEssayLoading || (activeMode === "custom" && !customPromptText.trim())}
           >
             {runEssayLoading ? (
               <><span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> {t("flow.runningEllipsis")}</>

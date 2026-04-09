@@ -1,0 +1,155 @@
+[
+  {
+    "session_id": "1e80ba75-4491-48e5-bb97-620129395b29",
+    "unit_id": "essay0001_sentence01",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 4,
+    "created_at": "2026-03-23T07:40:57.211Z",
+    "updated_at": "2026-03-23T07:41:07.315Z"
+  },
+  {
+    "session_id": "35540577-7073-44d6-a20c-b2378db5cf73",
+    "unit_id": "essay0001_sentence02",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-11T03:27:56.137Z",
+    "updated_at": "2026-03-11T03:27:56.137Z"
+  },
+  {
+    "session_id": "a9220884-4f54-4f7f-b5a8-be431c4569fb",
+    "unit_id": "essay0001_sentence02",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-07T11:52:53.248Z",
+    "updated_at": "2026-03-07T11:52:53.248Z"
+  },
+  {
+    "session_id": "a9220884-4f54-4f7f-b5a8-be431c4569fb",
+    "unit_id": "essay0001_sentence03",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-07T11:53:01.634Z",
+    "updated_at": "2026-03-07T11:53:01.634Z"
+  },
+  {
+    "session_id": "aaf070fd-d206-4dcc-8350-37c796cf8b82",
+    "unit_id": "essay0001_sentence01",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-09T09:22:01.198Z",
+    "updated_at": "2026-03-09T09:22:01.198Z"
+  },
+  {
+    "session_id": "aaf070fd-d206-4dcc-8350-37c796cf8b82",
+    "unit_id": "essay0001_sentence02",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 2,
+    "created_at": "2026-03-09T09:22:19.639Z",
+    "updated_at": "2026-03-09T09:22:26.046Z"
+  },
+  {
+    "session_id": "aaf070fd-d206-4dcc-8350-37c796cf8b82",
+    "unit_id": "essay0001_sentence03",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-09T09:22:39.204Z",
+    "updated_at": "2026-03-09T09:22:39.204Z"
+  },
+  {
+    "session_id": "aaf070fd-d206-4dcc-8350-37c796cf8b82",
+    "unit_id": "essay0001_sentence04",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-09T09:22:51.232Z",
+    "updated_at": "2026-03-09T09:22:51.232Z"
+  },
+  {
+    "session_id": "ba87e65f-3bc9-4fd5-b606-cb9d20d0b973",
+    "unit_id": "essay0001_sentence02",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-05T14:18:41.076Z",
+    "updated_at": "2026-03-05T14:18:41.076Z"
+  },
+  {
+    "session_id": "ba87e65f-3bc9-4fd5-b606-cb9d20d0b973",
+    "unit_id": "essay0001_sentence03",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-05T14:18:46.721Z",
+    "updated_at": "2026-03-05T14:18:46.721Z"
+  },
+  {
+    "session_id": "ba87e65f-3bc9-4fd5-b606-cb9d20d0b973",
+    "unit_id": "essay0001_sentence04",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-05T14:18:55.275Z",
+    "updated_at": "2026-03-05T14:18:55.275Z"
+  },
+  {
+    "session_id": "ba87e65f-3bc9-4fd5-b606-cb9d20d0b973",
+    "unit_id": "essay0001_sentence05",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-05T14:18:59.395Z",
+    "updated_at": "2026-03-05T14:18:59.395Z"
+  },
+  {
+    "session_id": "ba87e65f-3bc9-4fd5-b606-cb9d20d0b973",
+    "unit_id": "essay0002_sentence01",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-05T14:19:14.756Z",
+    "updated_at": "2026-03-05T14:19:14.756Z"
+  },
+  {
+    "session_id": "ba87e65f-3bc9-4fd5-b606-cb9d20d0b973",
+    "unit_id": "essay0002_sentence02",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 2,
+    "created_at": "2026-03-05T14:19:18.984Z",
+    "updated_at": "2026-03-05T14:19:21.280Z"
+  },
+  {
+    "session_id": "d295cede-c3de-45d3-80d0-b828d9de8034",
+    "unit_id": "essay0001_sentence01",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-05T17:43:24.674Z",
+    "updated_at": "2026-03-05T17:43:24.674Z"
+  },
+  {
+    "session_id": "f93ff14b-c33b-4c91-8733-eb1265bdab2e",
+    "unit_id": "essay0001_sentence03",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-10T06:56:02.639Z",
+    "updated_at": "2026-03-10T06:56:02.639Z"
+  },
+  {
+    "session_id": "f93ff14b-c33b-4c91-8733-eb1265bdab2e",
+    "unit_id": "essay0001_sentence04",
+    "phase": "normal",
+    "mode": "custom",
+    "run_count": 1,
+    "created_at": "2026-03-10T06:56:32.457Z",
+    "updated_at": "2026-03-10T06:56:32.457Z"
+  }
+]

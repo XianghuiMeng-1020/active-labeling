@@ -19,6 +19,7 @@ import { json, nowIso, validateAttempt, extractLabel, buildLlmInstruction } from
 import type { AttemptPayload, Env, LlmMode, Phase } from "./types";
 import { StatsHub } from "./statsHub";
 import { QwenRateLimiter } from "./qwenRateLimiter";
+import { AlRunner } from "./alRunner";
 
 const BUILD_ID = "2026-03-01-v2";
 const CUSTOM_PROMPT_MAX = 5;
@@ -89,43 +90,46 @@ app.use("/api/*", async (c, next) => {
   let limit = 0;
   if (path.includes("session/start")) {
     pathKey = "session_start";
-    limit = 50; // 30+ users starting in same minute
+    limit = 300; // 100+ users starting in same minute (same-IP campus scenario)
   } else if (path.includes("labels/manual") || path.includes("labels/undo")) {
     pathKey = "labels";
-    limit = 500; // 30×15=450
+    limit = 6000; // 100×15=1500 per user, burst from same IP
   } else if (path.includes("llm/run")) {
     pathKey = "llm_run";
-    limit = 300; // 30×15 in ~2 min
+    limit = 4000; // 100×15 LLM calls, same IP
   } else if (path.includes("llm/accept")) {
     pathKey = "llm_accept";
-    limit = 500; // 30×15=450
+    limit = 6000; // matches labels
   } else if (path.includes("client/errors")) {
     pathKey = "client_errors";
-    limit = 30;
+    limit = 300;
   } else if (path.includes("share/stats") || path.includes("share/stream")) {
     pathKey = "share";
-    limit = 60;
+    limit = 500;
   } else if (path.includes("session/reset")) {
     pathKey = "session_reset";
-    limit = 20;
+    limit = 120;
   } else if (path.includes("ranking/submit") || path.includes("ranking/reopen") || path.includes("ranking/undo")) {
     pathKey = "ranking";
-    limit = 100; // 30×3=90, headroom
+    limit = 1000; // 100×3=300 + large headroom
   } else if (path.includes("survey/submit")) {
     pathKey = "survey";
-    limit = 10;
+    limit = 200;
   } else if (path.includes("active/llm/ensure")) {
     pathKey = "active_llm_ensure";
-    limit = 12; // per minute per IP (U4 ensure + retries)
+    limit = 150; // 100 users, ensure + retries
   } else if (path.includes("stats/visualization")) {
     pathKey = "viz";
-    limit = 200; // 30 users, headroom
+    limit = 2000; // 100 users + headroom
   } else if (path.includes("page-view")) {
     pathKey = "page_view";
-    limit = 300; // 30 users, multiple pages
+    limit = 3000; // 100 users, multiple pages
+  } else if (path.includes("phase-locks")) {
+    pathKey = "read";
+    limit = 8000;
   } else if (path.includes("session/status") || path.includes("units/next") || path.includes("taxonomy") || path.includes("prompts") || path.includes("ranking/status") || path.includes("session/labeled-essays") || path.includes("active/llm/results") || path.includes("stats/label-difference") || path.includes("stats/informativeness") || path.includes("essay-labels")) {
     pathKey = "read";
-    limit = 600; // 30 users × ~20+ read/user
+    limit = 8000; // 100 users × 30+ reads each, same-IP campus
   }
   if (pathKey && limit) {
     const over = await checkRateLimit(c.env, c, pathKey, limit);
@@ -283,7 +287,15 @@ async function assignUnits(env: Env, sessionId: string, normalN: number, activeM
   });
   if (stmts.length > 0) await env.DB.batch(stmts);
 
-  // Active phase: 主动学习只选一篇 — 选信息量最高的那一篇，按难度（Hard 优先）再按 score 排序
+  // Active phase: deferred to /api/active/ensure-assignments (just-in-time)
+  // Only pre-assign if al_scores already has data (admin ran AL before session was created)
+  const alScoreCount = await env.DB.prepare("SELECT COUNT(*) as c FROM al_scores").first<{ c: number }>();
+  if ((alScoreCount?.c ?? 0) > 0) {
+    await assignActiveFromScores(env, sessionId, activeM);
+  }
+}
+
+async function assignActiveFromScores(env: Env, sessionId: string, activeM: number) {
   const allWithScores = await env.DB.prepare(
     `SELECT u.unit_id, COALESCE(s.score, 0) AS score, s.reason AS reason
      FROM units u
@@ -320,14 +332,14 @@ async function assignUnits(env: Env, sessionId: string, normalN: number, activeM
         db = difficultyOrder(o.difficulty_llm);
       }
     } catch { /* ignore */ }
-    if (db !== da) return db - da; // Hard first
+    if (db !== da) return db - da;
     return b.score - a.score || a.unit_id.localeCompare(b.unit_id);
   });
   const activeIds = sorted.slice(0, activeM).map((u) => u.unit_id);
 
   const activeStmts = activeIds.map((unitId, idx) =>
     env.DB.prepare(
-      "INSERT INTO assignments(session_id, unit_id, phase, task, status, ordering) VALUES (?, ?, 'active', 'manual', 'todo', ?)"
+      "INSERT OR IGNORE INTO assignments(session_id, unit_id, phase, task, status, ordering) VALUES (?, ?, 'active', 'manual', 'todo', ?)"
     ).bind(sessionId, unitId, idx)
   );
   if (activeStmts.length > 0) await env.DB.batch(activeStmts);
@@ -446,7 +458,7 @@ app.post("/api/llm/ping", async (c) => {
 });
 
 app.post("/api/session/start", async (c) => {
-  const body = (await c.req.json<{ user_id?: string }>().catch(() => null)) ?? {};
+  const body = (await c.req.json<{ user_id?: string; has_consent?: boolean }>().catch(() => null)) ?? {};
   const cfgRows = await c.env.DB.prepare(
     "SELECT key, value FROM config WHERE key IN ('normal_n', 'active_m')"
   ).all<{ key: string; value: string }>();
@@ -455,14 +467,14 @@ app.post("/api/session/start", async (c) => {
   const normalN = Math.min(SESSION_NORMAL_MAX, Math.max(1, cfgMap.normal_n));
   const activeM = Math.min(SESSION_ACTIVE_MAX, Math.max(0, cfgMap.active_m));
   const userId = (body.user_id?.trim() ?? "").slice(0, 128) || `user_${crypto.randomUUID().slice(0, 8)}`;
+  const hasConsent = body.has_consent !== false ? 1 : 0;
   const sessionId = crypto.randomUUID();
   const resetToken = crypto.randomUUID();
   const now = nowIso();
-  // Requires migration 0005 (reset_token column). Deploy migration before this code.
   await c.env.DB.prepare(
-    "INSERT INTO sessions(session_id, user_id, created_at, reset_token) VALUES (?, ?, ?, ?)"
+    "INSERT INTO sessions(session_id, user_id, created_at, reset_token, has_consent) VALUES (?, ?, ?, ?, ?)"
   )
-    .bind(sessionId, userId, now, resetToken)
+    .bind(sessionId, userId, now, resetToken, hasConsent)
     .run();
   await assignUnits(c.env, sessionId, normalN, activeM);
   return json({ session_id: sessionId, reset_token: resetToken });
@@ -509,16 +521,42 @@ app.post("/api/session/reset", async (c) => {
 app.get("/api/session/status", async (c) => {
   const sessionId = c.req.query("session_id");
   if (!sessionId) return json({ error: "session_id required" }, 400);
-  const { normal_manual: normalManual, normal_llm: normalLlm, active_manual: activeManual } = await getSessionProgressAll(c.env, sessionId);
+  const [progress, locks] = await Promise.all([
+    getSessionProgressAll(c.env, sessionId),
+    getPhaseLocks(c.env)
+  ]);
+  const { normal_manual: normalManual, normal_llm: normalLlm, active_manual: activeManual } = progress;
   return json({
     normal_manual: normalManual,
     normal_llm: normalLlm,
     active_manual: activeManual,
     gates: {
       can_enter_normal_llm: normalManual.total > 0 && normalManual.done === normalManual.total,
-      can_enter_active_manual: normalLlm.total > 0 && normalLlm.done === normalLlm.total
-    }
+      can_enter_active_manual: normalLlm.total > 0 && normalLlm.done === normalLlm.total && activeManual.total > 0
+    },
+    locks
   });
+});
+
+app.post("/api/active/ensure-assignments", async (c) => {
+  const body = (await c.req.json<{ session_id?: string }>().catch(() => null)) ?? {};
+  const sessionId = body.session_id?.trim();
+  if (!sessionId) return json({ error: "session_id required" }, 400);
+
+  const existing = await c.env.DB.prepare(
+    "SELECT COUNT(*) as c FROM assignments WHERE session_id=? AND phase='active'"
+  ).bind(sessionId).first<{ c: number }>();
+  if ((existing?.c ?? 0) > 0) return json({ ok: true, status: "already_assigned" });
+
+  const scoreCount = await c.env.DB.prepare("SELECT COUNT(*) as c FROM al_scores").first<{ c: number }>();
+  if ((scoreCount?.c ?? 0) === 0) {
+    return json({ ok: false, status: "al_not_ready", detail: "Active Learning algorithm has not been run yet." }, 400);
+  }
+
+  const cfgRow = await c.env.DB.prepare("SELECT value FROM config WHERE key='active_m'").first<{ value: string }>();
+  const activeM = Math.min(SESSION_ACTIVE_MAX, Math.max(1, Number(cfgRow?.value ?? "4")));
+  await assignActiveFromScores(c.env, sessionId, activeM);
+  return json({ ok: true, status: "assigned" });
 });
 
 const VALID_PHASES: Phase[] = ["normal", "active"];
@@ -851,6 +889,13 @@ app.post("/api/llm/run", async (c) => {
         ? (body?.custom_prompt_text ?? "")
         : await getPrompt(c.env, mode);
 
+    if (mode !== "custom" && !prompt?.trim()) {
+      return json(
+        { error: "prompt_not_configured", detail: "对应提示词策略未配置，请在管理后台配置 Prompt 1 / Prompt 2。" },
+        400
+      );
+    }
+
     await qwenAcquire(c.env);
     const startMs = Date.now();
     let llm: Awaited<ReturnType<typeof runLlm>>;
@@ -905,7 +950,7 @@ app.post("/api/llm/run", async (c) => {
 
 // ─── LLM run-essay: run LLM for all units in an essay (predicted only, no accept) ───
 
-type LlmRunEssayBody = { session_id?: string; essay_index?: number; mode?: LlmMode };
+type LlmRunEssayBody = { session_id?: string; essay_index?: number; mode?: LlmMode; custom_prompt_text?: string };
 
 app.post("/api/llm/run-essay", async (c) => {
   const raw = (await c.req.json<LlmRunEssayBody>().catch(() => null)) ?? ({} as LlmRunEssayBody);
@@ -930,7 +975,21 @@ app.post("/api/llm/run-essay", async (c) => {
   }
 
   const taxonomy = await getTaxonomyValues(c.env);
-  const prompt = await getPrompt(c.env, mode);
+  let prompt: string;
+  if (mode === "custom") {
+    prompt = raw.custom_prompt_text?.trim() ?? "";
+    if (!prompt) {
+      return json({ error: "custom_prompt_empty", detail: "Please enter a custom prompt." }, 400);
+    }
+  } else {
+    prompt = await getPrompt(c.env, mode) ?? "";
+    if (!prompt.trim()) {
+      return json(
+        { error: "prompt_not_configured", detail: "对应提示词策略未配置，请在管理后台配置 Prompt 1 / Prompt 2。" },
+        400
+      );
+    }
+  }
   const results: Array<{ unit_id: string; predicted_label: string }> = [];
 
   for (const unitId of unitIds) {
@@ -1413,12 +1472,36 @@ app.get("/api/stats/label-difference", async (c) => {
 app.get("/api/essay-labels", async (c) => {
   const sessionId = c.req.query("session_id");
   const essayIndexParam = c.req.query("essay_index");
+  const phaseParam = (c.req.query("phase") ?? "normal") as string;
   if (!sessionId?.trim()) return json({ error: "session_id required" }, 400);
   const essayIndex = essayIndexParam ? parseInt(essayIndexParam, 10) : NaN;
   if (!Number.isFinite(essayIndex) || essayIndex < 1 || essayIndex > 100) {
     return json({ error: "essay_index (1–100) required" }, 400);
   }
   const pattern = `essay${String(essayIndex).padStart(4, "0")}_sentence%`;
+
+  if (phaseParam === "active") {
+    const rows = await c.env.DB.prepare(
+      `SELECT u.unit_id AS unit_id, u.text AS text, m.label AS manual_label, s.reason AS al_reason, s.score AS al_score
+       FROM units u
+       LEFT JOIN manual_labels m ON m.unit_id = u.unit_id AND m.session_id = ? AND m.phase = 'active'
+       LEFT JOIN al_scores s ON s.unit_id = u.unit_id
+       WHERE u.unit_id LIKE ?
+       ORDER BY u.unit_id`
+    )
+      .bind(sessionId.trim(), pattern)
+      .all<{ unit_id: string; text: string; manual_label: string | null; al_reason: string | null; al_score: number | null }>();
+    const sentences = (rows.results ?? []).map((r) => ({
+      unit_id: r.unit_id,
+      text: r.text,
+      manual_label: r.manual_label ?? null,
+      llm_label: null as string | null,
+      al_reason: r.al_reason ?? null,
+      al_score: r.al_score ?? null
+    }));
+    return json({ essay_index: essayIndex, sentences });
+  }
+
   const rows = await c.env.DB.prepare(
     `SELECT
        m.unit_id AS unit_id,
@@ -1991,6 +2074,45 @@ app.post("/api/admin/prompts/set", async (c) => {
   return json({ ok: true });
 });
 
+// ─── Phase locks (teacher-controlled) ─────────────────────────────────────────
+
+const LOCK_KEYS = ["lock_manual", "lock_llm", "lock_active", "lock_survey"] as const;
+type LockKey = (typeof LOCK_KEYS)[number];
+
+async function getPhaseLocks(env: Env): Promise<Record<LockKey, boolean>> {
+  const rows = await env.DB.prepare(
+    "SELECT key, value FROM config WHERE key IN ('lock_manual', 'lock_llm', 'lock_active', 'lock_survey')"
+  ).all<{ key: string; value: string }>();
+  const defaults: Record<LockKey, boolean> = { lock_manual: false, lock_llm: true, lock_active: true, lock_survey: true };
+  for (const r of rows.results ?? []) {
+    if (LOCK_KEYS.includes(r.key as LockKey)) defaults[r.key as LockKey] = r.value === "1";
+  }
+  return defaults;
+}
+
+app.get("/api/phase-locks", async (c) => {
+  const locks = await getPhaseLocks(c.env);
+  return json(locks);
+});
+
+app.post("/api/admin/phase-locks/set", async (c) => {
+  if (!(await checkAdmin(c))) return json({ error: "unauthorized" }, 401);
+  const body = (await c.req.json<Record<string, boolean>>().catch(() => null)) ?? {};
+  const now = nowIso();
+  const stmts: ReturnType<typeof c.env.DB.prepare>[] = [];
+  for (const key of LOCK_KEYS) {
+    if (typeof body[key] === "boolean") {
+      stmts.push(
+        c.env.DB.prepare(
+          "INSERT INTO config(key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at"
+        ).bind(key, body[key] ? "1" : "0", now)
+      );
+    }
+  }
+  if (stmts.length) await c.env.DB.batch(stmts);
+  return json({ ok: true, ...(await getPhaseLocks(c.env)) });
+});
+
 // ─── Admin: session config (normal_n / active_m) ─────────────────────────────
 
 app.get("/api/admin/config/session", async (c) => {
@@ -2150,145 +2272,256 @@ type EdAlParams = {
   seed: number;
 };
 
-async function executeEdAlRun(env: Env, runId: string, params: EdAlParams) {
-  const { candidateK, topH, sampleN, activeM, temperature, seed } = params;
-  await env.DB.prepare("UPDATE al_runs SET status='running' WHERE run_id=?").bind(runId).run();
+type AlRunPhase = "scoring" | "selecting" | "difficulty" | "active_llm";
+
+type AlRunState = {
+  phase: AlRunPhase;
+  config: EdAlParams;
+  candidate_ids: string[];
+  scored: Array<{ unit_id: string; entropy: number; topLabels: Record<string, number> }>;
+  scoring_idx: number;
+  selected_ids: string[];
+  difficulty: Record<string, string>;
+  difficulty_idx: number;
+  active_llm_idx: number;
+};
+
+function scoringBatchSize(sampleN: number): number {
+  const perCandidateSec = sampleN * 3 + Math.max(0, sampleN - 1) * 0.3 + 0.2;
+  return Math.max(1, Math.floor(22 / perCandidateSec));
+}
+
+async function executeAlStep(env: Env, runId: string, state: AlRunState): Promise<AlRunState> {
   const log = (msg: string) => console.log(`[ED-AL v1] ${runId.slice(0, 8)} ${msg}`);
+  const { config } = state;
+  const taxonomy = await getTaxonomyValues(env);
 
-  try {
-    const taxonomy = await getTaxonomyValues(env);
-    const prompt2 = await getPrompt(env, "prompt2");
-    const prompt1 = await getPrompt(env, "prompt1");
+  switch (state.phase) {
+    case "scoring": {
+      const prompt2 = await getPrompt(env, "prompt2");
+      const batchSize = scoringBatchSize(config.sampleN);
+      const end = Math.min(state.scoring_idx + batchSize, state.candidate_ids.length);
+      const batchIds = state.candidate_ids.slice(state.scoring_idx, end);
 
-    log(`candidateK=${candidateK}, topH=${topH}, sampleN=${sampleN}, activeM=${activeM}, temp=${temperature}`);
+      log(`Scoring [${state.scoring_idx}..${end}) of ${state.candidate_ids.length}, batch=${batchSize}`);
 
-    // Step 1: Sample candidate pool
-    const candidates = await env.DB.prepare(
-      "SELECT unit_id, text, meta_json FROM units ORDER BY RANDOM() LIMIT ?"
-    ).bind(candidateK).all<{ unit_id: string; text: string; meta_json: string | null }>();
+      for (const unitId of batchIds) {
+        const unit = await env.DB.prepare("SELECT text FROM units WHERE unit_id = ?")
+          .bind(unitId).first<{ text: string }>();
+        if (!unit) continue;
 
-    const candidateList = candidates.results ?? [];
-    log(`Got ${candidateList.length} candidates`);
+        const labels: string[] = [];
+        for (let i = 0; i < config.sampleN; i++) {
+          const rid = `${runId.slice(0, 8)}-s${i}-${unitId.slice(0, 6)}`;
+          await qwenAcquire(env);
+          const t0 = Date.now();
+          try {
+            const label = await callQwenSampling(env, unit.text, prompt2, taxonomy, config.temperature, rid);
+            await qwenRelease(env, 200, Date.now() - t0, 0);
+            labels.push(label);
+          } catch (e: any) {
+            await qwenRelease(env, e?.status ?? 500, Date.now() - t0, e?.retryCount ?? 0);
+            labels.push("UNKNOWN");
+          }
+          if (i < config.sampleN - 1) await new Promise(r => setTimeout(r, 300));
+        }
 
-    // Step 2: Compute entropy via n samples at given temperature (few-shot prompt2)
-    type ScoredUnit = { unit_id: string; text: string; entropy: number; topLabels: Record<string, number> };
-    const scored: ScoredUnit[] = [];
+        const entropy = shannonEntropy(labels, taxonomy.length);
+        const freq: Record<string, number> = {};
+        for (const l of labels) freq[l] = (freq[l] ?? 0) + 1;
+        state.scored.push({ unit_id: unitId, entropy, topLabels: freq });
+        log(`  ${unitId.slice(0, 12)}: entropy=${entropy.toFixed(4)} labels=[${labels.join(",")}]`);
+        if (unitId !== batchIds[batchIds.length - 1]) await new Promise(r => setTimeout(r, 200));
+      }
 
-    for (const unit of candidateList) {
-      const labels: string[] = [];
-      for (let i = 0; i < sampleN; i++) {
-        const rid = `${runId.slice(0, 8)}-s${i}-${unit.unit_id.slice(0, 6)}`;
-        await qwenAcquire(env);
+      state.scoring_idx = end;
+      if (state.scoring_idx >= state.candidate_ids.length) {
+        state.phase = "selecting";
+      }
+      break;
+    }
+
+    case "selecting": {
+      state.scored.sort((a, b) => b.entropy - a.entropy);
+      const topCount = Math.min(config.topH, state.scored.length);
+      const topScored = state.scored.slice(0, topCount);
+      const topIds = topScored.map(s => s.unit_id);
+
+      const textResults = await env.DB.batch(
+        topIds.map(id => env.DB.prepare("SELECT text FROM units WHERE unit_id = ?").bind(id))
+      );
+      const texts = textResults.map(r => ((r.results?.[0] as any)?.text as string) ?? "");
+
+      const vectors = buildTfIdfVectors(texts);
+      const items = topIds.map((id, i) => ({ id, vec: vectors[i] }));
+      state.selected_ids = kCenterGreedy(items, config.activeM, config.seed);
+      log(`k-center selected ${state.selected_ids.length} diverse units from top ${topCount}`);
+
+      state.phase = "difficulty";
+      state.difficulty_idx = 0;
+      state.difficulty = {};
+      break;
+    }
+
+    case "difficulty": {
+      const batchSize = 5;
+      const end = Math.min(state.difficulty_idx + batchSize, state.selected_ids.length);
+      const batchIds = state.selected_ids.slice(state.difficulty_idx, end);
+
+      log(`Difficulty [${state.difficulty_idx}..${end}) of ${state.selected_ids.length}`);
+
+      for (const unitId of batchIds) {
+        const unit = await env.DB.prepare("SELECT text FROM units WHERE unit_id = ?")
+          .bind(unitId).first<{ text: string }>();
+        if (!unit) continue;
         const t0 = Date.now();
-        let label: string;
         try {
-          label = await callQwenSampling(env, unit.text, prompt2, taxonomy, temperature, rid);
+          await qwenAcquire(env);
+          const diff = await getDifficultyFromLlm(env, unit.text, `al-diff-${unitId.slice(0, 12)}`);
           await qwenRelease(env, 200, Date.now() - t0, 0);
+          state.difficulty[unitId] = diff;
+          log(`  difficulty ${unitId.slice(0, 12)}: ${diff}`);
+          await new Promise(r => setTimeout(r, 200));
         } catch (e: any) {
           await qwenRelease(env, e?.status ?? 500, Date.now() - t0, e?.retryCount ?? 0);
+          log(`  difficulty FAILED ${unitId.slice(0, 12)}`);
+        }
+      }
+
+      state.difficulty_idx = end;
+      if (state.difficulty_idx >= state.selected_ids.length) {
+        const now = nowIso();
+        const selectedSet = new Set(state.selected_ids);
+        const stmts = state.scored.map((unit, i) => {
+          const reasonObj: Record<string, unknown> = {
+            method: "ed_al_v1",
+            entropy: Number(unit.entropy.toFixed(6)),
+            top_labels: unit.topLabels,
+            diversity_rank: selectedSet.has(unit.unit_id) ? i + 1 : null,
+            selected: selectedSet.has(unit.unit_id)
+          };
+          if (state.difficulty[unit.unit_id]) reasonObj.difficulty_llm = state.difficulty[unit.unit_id];
+          const reason = JSON.stringify(reasonObj);
+          return env.DB.prepare(
+            `INSERT INTO al_scores(unit_id, score, reason, updated_at)
+             VALUES (?, ?, ?, ?)
+             ON CONFLICT(unit_id) DO UPDATE SET score=excluded.score, reason=excluded.reason, updated_at=excluded.updated_at`
+          ).bind(unit.unit_id, Number(unit.entropy.toFixed(6)), reason, now);
+        });
+        if (stmts.length > 0) await env.DB.batch(stmts);
+        log("al_scores written");
+
+        state.phase = "active_llm";
+        state.active_llm_idx = 0;
+      }
+      break;
+    }
+
+    case "active_llm": {
+      const prompt1 = await getPrompt(env, "prompt1");
+      const prompt2 = await getPrompt(env, "prompt2");
+      const batchSize = 2;
+      const end = Math.min(state.active_llm_idx + batchSize, state.selected_ids.length);
+      const batchIds = state.selected_ids.slice(state.active_llm_idx, end);
+
+      log(`Active LLM [${state.active_llm_idx}..${end}) of ${state.selected_ids.length}`);
+
+      for (const unitId of batchIds) {
+        const unit = await env.DB.prepare("SELECT text FROM units WHERE unit_id = ?")
+          .bind(unitId).first<{ text: string }>();
+        if (!unit) continue;
+
+        await qwenAcquire(env);
+        const t1 = Date.now();
+        let r1: Awaited<ReturnType<typeof runLlmWithRetry>>;
+        try {
+          r1 = await runLlmWithRetry(env, { text: unit.text, prompt: prompt1, taxonomy, mode: "prompt1" });
+          await qwenRelease(env, 200, Date.now() - t1, 0);
+        } catch (e: any) {
+          await qwenRelease(env, e?.status ?? 500, Date.now() - t1, e?.retryCount ?? 0);
           throw e;
         }
-        labels.push(label);
-        if (i < sampleN - 1) await new Promise((r) => setTimeout(r, 600));
-      }
-      const entropy = shannonEntropy(labels, taxonomy.length);
-      const freq: Record<string, number> = {};
-      for (const l of labels) freq[l] = (freq[l] ?? 0) + 1;
-      scored.push({ unit_id: unit.unit_id, text: unit.text, entropy, topLabels: freq });
-      log(`  ${unit.unit_id.slice(0, 12)}: entropy=${entropy.toFixed(4)} labels=[${labels.join(",")}]`);
-      await new Promise((r) => setTimeout(r, 500));
-    }
+        await new Promise(r => setTimeout(r, 500));
 
-    // Step 3: Take top_h by entropy for diversity selection
-    scored.sort((a, b) => b.entropy - a.entropy);
-    const topCandidates = scored.slice(0, Math.min(topH, scored.length));
-    log(`Top ${topCandidates.length} by entropy selected for diversity pass`);
-
-    // Step 4: Build TF-IDF + k-center greedy to choose activeM diverse units
-    const vectors = buildTfIdfVectors(topCandidates.map((u) => u.text));
-    const items = topCandidates.map((u, i) => ({ id: u.unit_id, vec: vectors[i] }));
-    const selectedIds = new Set(kCenterGreedy(items, activeM, seed));
-    log(`k-center greedy selected ${selectedIds.size} diverse units`);
-
-    // Step 5: LLM difficulty for selected units (for display and ordering), then write al_scores
-    const difficultyByUnit = new Map<string, "Easy" | "Medium" | "Hard">();
-    for (const unit of topCandidates) {
-      if (!selectedIds.has(unit.unit_id)) continue;
-      const t0 = Date.now();
-      try {
         await qwenAcquire(env);
-        const difficulty = await getDifficultyFromLlm(env, unit.text, `al-diff-${unit.unit_id.slice(0, 12)}`);
-        await qwenRelease(env, 200, Date.now() - t0, 0);
-        difficultyByUnit.set(unit.unit_id, difficulty);
-        log(`  difficulty_llm ${unit.unit_id.slice(0, 12)}: ${difficulty}`);
-        await new Promise((r) => setTimeout(r, 400));
-      } catch (e: any) {
-        await qwenRelease(env, e?.status ?? 500, Date.now() - t0, e?.retryCount ?? 0);
-        console.warn("[ED-AL] getDifficultyFromLlm failed for", unit.unit_id, e);
+        const t2 = Date.now();
+        let r2: Awaited<ReturnType<typeof runLlmWithRetry>>;
+        try {
+          r2 = await runLlmWithRetry(env, { text: unit.text, prompt: prompt2, taxonomy, mode: "prompt2" });
+          await qwenRelease(env, 200, Date.now() - t2, 0);
+        } catch (e: any) {
+          await qwenRelease(env, e?.status ?? 500, Date.now() - t2, e?.retryCount ?? 0);
+          throw e;
+        }
+
+        await runActiveLlmBatch(env, unitId, r1, r2);
+        if (unitId !== batchIds[batchIds.length - 1]) await new Promise(r => setTimeout(r, 500));
       }
+
+      state.active_llm_idx = end;
+      break;
     }
-    const now = nowIso();
-    const alScoreStmts = topCandidates.map((unit, i) => {
-      const diversityRank = selectedIds.has(unit.unit_id) ? i + 1 : null;
-      const reasonObj: Record<string, unknown> = {
-        method: "ed_al_v1",
-        entropy: Number(unit.entropy.toFixed(6)),
-        top_labels: unit.topLabels,
-        diversity_rank: diversityRank,
-        selected: selectedIds.has(unit.unit_id)
-      };
-      const difficultyLlm = difficultyByUnit.get(unit.unit_id);
-      if (difficultyLlm) reasonObj.difficulty_llm = difficultyLlm;
-      const reason = JSON.stringify(reasonObj);
-      return env.DB.prepare(
-        `INSERT INTO al_scores(unit_id, score, reason, updated_at)
-         VALUES (?, ?, ?, ?)
-         ON CONFLICT(unit_id) DO UPDATE SET score=excluded.score, reason=excluded.reason, updated_at=excluded.updated_at`
-      ).bind(unit.unit_id, Number(unit.entropy.toFixed(6)), reason, now);
-    });
-    if (alScoreStmts.length > 0) await env.DB.batch(alScoreStmts);
-    log("al_scores written");
-
-    // Step 6: Run Active LLM (Prompt1 + Prompt2) on selected diverse units; persist in one batch per unit
-    const activeUnits = candidateList.filter((u) => selectedIds.has(u.unit_id));
-    for (const unit of activeUnits) {
-      await qwenAcquire(env);
-      const t1 = Date.now();
-      let r1: Awaited<ReturnType<typeof runLlmWithRetry>>;
-      try {
-        r1 = await runLlmWithRetry(env, { text: unit.text, prompt: prompt1, taxonomy, mode: "prompt1" });
-        await qwenRelease(env, 200, Date.now() - t1, 0);
-      } catch (e: any) {
-        await qwenRelease(env, e?.status ?? 500, Date.now() - t1, e?.retryCount ?? 0);
-        throw e;
-      }
-      await new Promise((r) => setTimeout(r, 900));
-
-      await qwenAcquire(env);
-      const t2 = Date.now();
-      let r2: Awaited<ReturnType<typeof runLlmWithRetry>>;
-      try {
-        r2 = await runLlmWithRetry(env, { text: unit.text, prompt: prompt2, taxonomy, mode: "prompt2" });
-        await qwenRelease(env, 200, Date.now() - t2, 0);
-      } catch (e: any) {
-        await qwenRelease(env, e?.status ?? 500, Date.now() - t2, e?.retryCount ?? 0);
-        throw e;
-      }
-      await runActiveLlmBatch(env, unit.unit_id, r1, r2);
-      await new Promise((r) => setTimeout(r, 900));
-    }
-
-    await env.DB.prepare("UPDATE al_runs SET status='done', detail_json=? WHERE run_id=?")
-      .bind(JSON.stringify({ strategy: "ed_al_v1", candidateK, topH, sampleN, activeM, temperature, seed, scored: scored.length, selected: activeUnits.length }), runId)
-      .run();
-    await broadcastStats(env);
-    log(`Done! selected=${activeUnits.length}`);
-  } catch (error: any) {
-    console.error("[ED-AL v1] run error", error);
-    await env.DB.prepare("UPDATE al_runs SET status='error', detail_json=? WHERE run_id=?")
-      .bind(JSON.stringify({ error: String(error) }), runId).run();
   }
+
+  return state;
 }
+
+function isAlRunDone(state: AlRunState): boolean {
+  return state.phase === "active_llm" && state.active_llm_idx >= state.selected_ids.length;
+}
+
+app.post("/api/internal/al/step", async (c) => {
+  const secret = c.req.query("secret");
+  if (!secret || secret !== c.env.ADMIN_TOKEN) return json({ error: "forbidden" }, 403);
+
+  const runId = c.req.query("run_id");
+  if (!runId) return json({ error: "run_id required" }, 400);
+
+  const row = await c.env.DB.prepare("SELECT status, detail_json FROM al_runs WHERE run_id = ?")
+    .bind(runId).first<{ status: string; detail_json: string }>();
+  if (!row || row.status !== "running") return json({ error: "run not active" }, 400);
+
+  let state: AlRunState;
+  try {
+    state = JSON.parse(row.detail_json) as AlRunState;
+    if (!state.phase) throw new Error("no phase");
+  } catch {
+    await c.env.DB.prepare("UPDATE al_runs SET status='error', detail_json=? WHERE run_id=?")
+      .bind(JSON.stringify({ error: "Invalid run state" }), runId).run();
+    return json({ error: "invalid state" }, 500);
+  }
+
+  try {
+    state = await executeAlStep(c.env, runId, state);
+
+    if (isAlRunDone(state)) {
+      await c.env.DB.prepare("UPDATE al_runs SET status='done', detail_json=? WHERE run_id=?")
+        .bind(JSON.stringify({
+          strategy: "ed_al_v1",
+          candidateK: state.config.candidateK,
+          topH: state.config.topH,
+          sampleN: state.config.sampleN,
+          activeM: state.config.activeM,
+          temperature: state.config.temperature,
+          seed: state.config.seed,
+          scored: state.scored.length,
+          selected: state.selected_ids.length
+        }), runId).run();
+      await broadcastStats(c.env);
+      console.log(`[ED-AL v1] ${runId.slice(0, 8)} Done! selected=${state.selected_ids.length}`);
+    } else {
+      await c.env.DB.prepare("UPDATE al_runs SET detail_json=? WHERE run_id=?")
+        .bind(JSON.stringify(state), runId).run();
+    }
+
+    return json({ ok: true, phase: state.phase, done: isAlRunDone(state) });
+  } catch (error: any) {
+    console.error("[ED-AL v1] step error:", error);
+    await c.env.DB.prepare("UPDATE al_runs SET status='error', detail_json=? WHERE run_id=?")
+      .bind(JSON.stringify({ error: String(error), last_phase: state.phase, scoring_idx: state.scoring_idx }), runId).run();
+    return json({ error: "step failed" }, 500);
+  }
+});
 
 app.post("/api/admin/al/run", async (c) => {
   if (!(await checkAdmin(c))) return json({ error: "unauthorized" }, 401);
@@ -2316,10 +2549,37 @@ app.post("/api/admin/al/run", async (c) => {
   const temperature = clampF((body as any).temperature, 0, 2, 0.7);
   const seed = clamp((body as any).seed, 0, 99999, Math.floor(Math.random() * 9999));
   const runId = crypto.randomUUID();
+  const origin = new URL(c.req.url).origin;
+
+  const candidates = await c.env.DB.prepare(
+    "SELECT unit_id FROM units ORDER BY RANDOM() LIMIT ?"
+  ).bind(candidateK).all<{ unit_id: string }>();
+  const candidateIds = (candidates.results ?? []).map(r => r.unit_id);
+
+  const initialState: AlRunState = {
+    phase: "scoring",
+    config: { candidateK, topH, sampleN, activeM, temperature, seed },
+    candidate_ids: candidateIds,
+    scored: [],
+    scoring_idx: 0,
+    selected_ids: [],
+    difficulty: {},
+    difficulty_idx: 0,
+    active_llm_idx: 0
+  };
+
   await c.env.DB.prepare(
     "INSERT INTO al_runs(run_id, created_at, status, detail_json) VALUES (?, ?, 'running', ?)"
-  ).bind(runId, nowIso(), "{}").run();
-  c.executionCtx.waitUntil(executeEdAlRun(c.env, runId, { candidateK, topH, sampleN, activeM, temperature, seed }));
+  ).bind(runId, nowIso(), JSON.stringify(initialState)).run();
+
+  const doId = c.env.AL_RUNNER.idFromName(runId);
+  const stub = c.env.AL_RUNNER.get(doId);
+  await stub.fetch("https://al-runner/start", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ runId, origin })
+  });
+
   return json({ ok: true, run_id: runId, status: "running", params: { candidateK, topH, sampleN, activeM, temperature, seed } });
 });
 
@@ -2332,7 +2592,30 @@ app.get("/api/admin/al/status", async (c) => {
   )
     .bind(runId)
     .first<{ status: string; detail_json: string; created_at: string }>();
-  return json({ run_id: runId, status: row?.status ?? "not_found", detail: row?.detail_json, created_at: row?.created_at });
+
+  const result: Record<string, unknown> = {
+    run_id: runId,
+    status: row?.status ?? "not_found",
+    detail: row?.detail_json,
+    created_at: row?.created_at
+  };
+
+  if (row?.status === "running") {
+    try {
+      const st = JSON.parse(row.detail_json) as Partial<AlRunState>;
+      if (st.phase) {
+        result.progress = {
+          phase: st.phase,
+          scoring: `${st.scoring_idx ?? 0}/${st.candidate_ids?.length ?? 0}`,
+          selected: st.selected_ids?.length ?? 0,
+          difficulty: `${st.difficulty_idx ?? 0}/${st.selected_ids?.length ?? 0}`,
+          active_llm: `${st.active_llm_idx ?? 0}/${st.selected_ids?.length ?? 0}`
+        };
+      }
+    } catch { /* ignore */ }
+  }
+
+  return json(result);
 });
 
 // ─── Admin: share link ────────────────────────────────────────────────────────
@@ -2395,4 +2678,4 @@ app.get("/api/share/stream/stats", async (c) => {
 });
 
 export default app;
-export { StatsHub, QwenRateLimiter };
+export { StatsHub, QwenRateLimiter, AlRunner };

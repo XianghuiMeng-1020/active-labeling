@@ -1,0 +1,8 @@
+label,description,ordering
+CODE,Short definition,0
+EXPLANATION,"Explains AI, AI literacy, or related concepts",1
+EVALUATION,"Assesses AI reliability, value, risks, or limitations",2
+RESPONSIBILITY,"Refers to ethical, fair, safe, and accountable AI use",3
+APPLICATION,Describes the use of AI literacy in practical contexts,4
+IMPLICATION,Highlights broader consequences or future significance,5
+UNKNOWN,Fallback label for parser mismatch,6

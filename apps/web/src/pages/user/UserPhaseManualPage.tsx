@@ -79,6 +79,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const navigatingRef = useRef(false);
   const appliedShowRankingRef = useRef(false);
   const [essayLabelsMap, setEssayLabelsMap] = useState<Record<string, string>>({});
+  const [difficultyByUnitId, setDifficultyByUnitId] = useState<Record<string, "Easy" | "Medium" | "Hard">>({});
   const [lastRankedEssayIndex, setLastRankedEssayIndex] = useState<number | null>(null);
   const [undoingRanking, setUndoingRanking] = useState(false);
 
@@ -90,6 +91,8 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const alHint = useMemo(() => parseAlReason(unit?.al_reason, t), [unit?.al_reason, t]);
   const difficultyLabel = useMemo(() => getDifficultyFromReason(unit?.al_reason), [unit?.al_reason]);
 
+  const [phaseLocked, setPhaseLocked] = useState(false);
+
   const load = useCallback(async () => {
     if (!sessionId) { nav("/user/start"); return; }
     setLoading(true);
@@ -97,6 +100,12 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     navigatingRef.current = false;
     try {
       const status = await api.getSessionStatus(sessionId);
+      if (status.locks?.lock_manual) {
+        setPhaseLocked(true);
+        setLoading(false);
+        return;
+      }
+      setPhaseLocked(false);
       if (phase === "active" && !status.gates.can_enter_active_manual) {
         nav("/user/normal/llm");
         return;
@@ -151,13 +160,12 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       }
 
       if (!next.unit) {
-        if (!navigatingRef.current) {
+        if (phase === "normal" && !navigatingRef.current) {
           navigatingRef.current = true;
-          if (phase === "normal") {
-            const lastRankedEssayIndex = rankedEssays.length > 0 ? Math.max(...rankedEssays) : undefined;
-            nav("/user/normal/llm", { state: { lastRankedEssayIndex } });
-          } else nav("/user/active/llm");
+          const lastRankedEssayIndex = rankedEssays.length > 0 ? Math.max(...rankedEssays) : undefined;
+          nav("/user/normal/llm", { state: { lastRankedEssayIndex } });
         }
+        // active phase: do not redirect when no next unit — show "all done" view so "返回主动学习标注" works
         setUnit(null);
       } else {
         setUnit(next.unit);
@@ -191,25 +199,44 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     }
   }, [loading, phase, showRankingForEssay, nav, location.pathname]);
 
-  const essayIndexForLabels = phase === "normal" ? (currentEssay?.essayIndex ?? (showRanking && rankingEssayIndex !== null ? rankingEssayIndex : null)) : null;
+  const essayIndexForLabels = phase === "normal"
+    ? (currentEssay?.essayIndex ?? (showRanking && rankingEssayIndex !== null ? rankingEssayIndex : null))
+    : (currentEssay?.essayIndex ?? null);
   useEffect(() => {
     if (!sessionId || essayIndexForLabels == null) {
       setEssayLabelsMap({});
+      if (phase === "active") setDifficultyByUnitId({});
       return;
     }
     let cancelled = false;
-    api.getEssayLabels(sessionId, essayIndexForLabels).then((res) => {
+    api.getEssayLabels(sessionId, essayIndexForLabels, phase).then((res) => {
       if (cancelled) return;
       const map: Record<string, string> = {};
+      const difficulty: Record<string, "Easy" | "Medium" | "Hard"> = {};
       for (const s of res.sentences) {
-        map[s.unit_id] = s.manual_label;
+        if (s.manual_label) map[s.unit_id] = s.manual_label;
+        if (phase === "active") {
+          const sent = s as { al_reason?: string | null; al_score?: number | null };
+          const d = getDifficultyFromReason(sent.al_reason);
+          if (d) difficulty[s.unit_id] = d;
+          else if (typeof sent.al_score === "number") {
+            const score = sent.al_score;
+            if (score < 0.35) difficulty[s.unit_id] = "Easy";
+            else if (score < 0.65) difficulty[s.unit_id] = "Medium";
+            else difficulty[s.unit_id] = "Hard";
+          }
+        }
       }
       setEssayLabelsMap(map);
+      if (phase === "active") setDifficultyByUnitId(difficulty);
     }).catch(() => {
-      if (!cancelled) setEssayLabelsMap({});
+      if (!cancelled) {
+        setEssayLabelsMap({});
+        if (phase === "active") setDifficultyByUnitId({});
+      }
     });
     return () => { cancelled = true; };
-  }, [sessionId, essayIndexForLabels]);
+  }, [sessionId, essayIndexForLabels, phase]);
 
   useEffect(() => {
     const onOnline = () => { flushOfflineQueue().catch(() => undefined); };
@@ -377,6 +404,19 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
 
   if (!sessionId) return null;
 
+  if (phaseLocked) {
+    return (
+      <div className="page" style={{ justifyContent: "center" }}>
+        <div className="card" style={{ textAlign: "center", padding: "48px 24px" }}>
+          <div style={{ fontSize: 56, marginBottom: 16 }}>🔒</div>
+          <h2>{t("lock.taskLocked")}</h2>
+          <p style={{ color: "var(--color-text-muted)", margin: "12px 0 24px" }}>{t("lock.taskLockedDesc")}</p>
+          <button className="btn primary" onClick={() => window.location.reload()}>{t("lock.refresh")}</button>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="page">
@@ -460,7 +500,10 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
           <h2>{t("flow.activeDoneTitle")}</h2>
           <p style={{ marginTop: 8 }}>{t("flow.allDone")}</p>
           <div style={{ display: "flex", gap: 12, marginTop: 20, flexWrap: "wrap", justifyContent: "center" }}>
-            <button className="btn" style={{ marginTop: 0 }} onClick={() => nav("/user/visualization")}>
+            <button className="btn" style={{ marginTop: 0 }} onClick={() => nav("/user/active/llm")}>
+              {t("flow.viewLlmResults")}
+            </button>
+            <button className="btn" style={{ marginTop: 0 }} onClick={() => nav("/user/visualization", { state: { fromActiveDone: true } })}>
               {t("flow.backToLabelComparison")}
             </button>
             <button className="btn primary lg" style={{ marginTop: 0 }} onClick={() => nav("/user/survey")}>
@@ -488,7 +531,12 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       {unit ? (
         <>
           {currentEssay && (
-            <EssayDisplay essay={currentEssay} currentUnitId={unit.unit_id} labelsByUnitId={essayLabelsMap} />
+            <EssayDisplay
+              essay={currentEssay}
+              currentUnitId={unit.unit_id}
+              labelsByUnitId={essayLabelsMap}
+              difficultyByUnitId={phase === "active" ? difficultyByUnitId : undefined}
+            />
           )}
 
           <div

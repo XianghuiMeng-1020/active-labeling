@@ -49,7 +49,8 @@ async function req(path: string, init?: RequestInit) {
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        const err: any = new Error((data as any)?.error ?? "request failed");
+        const msg = (data as any)?.detail ?? (data as any)?.error ?? "request failed";
+        const err: any = new Error(typeof msg === "string" ? msg : "request failed");
         err.status = response.status;
         err.data = data;
         throw err;
@@ -78,7 +79,7 @@ async function req(path: string, init?: RequestInit) {
 export const api = {
   getTaxonomy: () => req("/api/taxonomy"),
   getPrompts: () => req("/api/prompts"),
-  startSession: async (payload: { user_id?: string; normal_n?: number; active_m?: number }) => {
+  startSession: async (payload: { user_id?: string; normal_n?: number; active_m?: number; has_consent?: boolean }) => {
     try {
       return await req("/api/session/start", {
         method: "POST",
@@ -110,6 +111,12 @@ export const api = {
     req(`/api/active/llm/results?session_id=${encodeURIComponent(sessionId)}`),
   ensureActiveLlmResults: (sessionId: string) =>
     req(`/api/active/llm/ensure?session_id=${encodeURIComponent(sessionId)}`, { method: "POST" }),
+  ensureActiveAssignments: (sessionId: string) =>
+    req("/api/active/ensure-assignments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId })
+    }) as Promise<{ ok: boolean; status: string; detail?: string }>,
   submitManual: (payload: {
     session_id: string;
     unit_id: string;
@@ -141,7 +148,7 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }),
-  runLlmEssay: (payload: { session_id: string; essay_index: number; mode?: LlmMode }) =>
+  runLlmEssay: (payload: { session_id: string; essay_index: number; mode?: LlmMode; custom_prompt_text?: string }) =>
     req("/api/llm/run-essay", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -202,16 +209,18 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     }),
-  getEssayLabels: (sessionId: string, essayIndex: number) =>
+  getEssayLabels: (sessionId: string, essayIndex: number, phase: Phase = "normal") =>
     req(
-      `/api/essay-labels?session_id=${encodeURIComponent(sessionId)}&essay_index=${essayIndex}`
+      `/api/essay-labels?session_id=${encodeURIComponent(sessionId)}&essay_index=${essayIndex}&phase=${phase}`
     ) as Promise<{
       essay_index: number;
       sentences: Array<{
         unit_id: string;
         text: string;
-        manual_label: string;
+        manual_label: string | null;
         llm_label: string | null;
+        al_reason?: string | null;
+        al_score?: number | null;
       }>;
     }>,
   getLabeledEssays: (sessionId: string, phase: Phase = "normal") =>
@@ -255,6 +264,9 @@ export const api = {
       };
       meta: { sessions: number; sentences_per_essay: number; total_essays: number };
     }>,
+
+  getPhaseLocks: () =>
+    req("/api/phase-locks") as Promise<{ lock_manual: boolean; lock_llm: boolean; lock_active: boolean; lock_survey: boolean }>,
 
   // ─── Admin ───────────────────────────────────────────────────────────────
   adminLogin: (adminToken: string) =>
@@ -328,6 +340,12 @@ export const api = {
     req(`/api/admin/al/status?run_id=${encodeURIComponent(run_id)}`, {
       headers: adminHeaders(token)
     }),
+  adminSetPhaseLocks: (locks: { lock_manual?: boolean; lock_llm?: boolean; lock_active?: boolean; lock_survey?: boolean }, token?: string) =>
+    req("/api/admin/phase-locks/set", {
+      method: "POST",
+      headers: adminHeaders(token, { "Content-Type": "application/json" }),
+      body: JSON.stringify(locks)
+    }) as Promise<{ ok: boolean; lock_manual: boolean; lock_llm: boolean; lock_active: boolean; lock_survey: boolean }>,
   adminCreateShare: (token?: string) =>
     req("/api/admin/share/create", { method: "POST", headers: adminHeaders(token) }),
   /** Returns blob and optional X-Export-Meta (count, truncated, hint for pagination). */

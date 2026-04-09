@@ -1,0 +1,83 @@
+{
+  "exported_at": "2026-03-31T11:59:55.753Z",
+  "tables": [
+    {
+      "table": "sessions",
+      "rows": 304
+    },
+    {
+      "table": "units",
+      "rows": 15
+    },
+    {
+      "table": "assignments",
+      "rows": 10910
+    },
+    {
+      "table": "manual_labels",
+      "rows": 3837
+    },
+    {
+      "table": "llm_labels",
+      "rows": 3386
+    },
+    {
+      "table": "label_attempts",
+      "rows": 6248
+    },
+    {
+      "table": "interaction_events",
+      "rows": 15248
+    },
+    {
+      "table": "ranking_submissions",
+      "rows": 316
+    },
+    {
+      "table": "survey_responses",
+      "rows": 22
+    },
+    {
+      "table": "page_views",
+      "rows": 763
+    },
+    {
+      "table": "llm_run_counts",
+      "rows": 17
+    },
+    {
+      "table": "al_scores",
+      "rows": 0
+    },
+    {
+      "table": "taxonomy_labels",
+      "rows": 7
+    },
+    {
+      "table": "prompts",
+      "rows": 2
+    },
+    {
+      "table": "config",
+      "rows": 5
+    },
+    {
+      "table": "labels_merged (enriched)",
+      "rows": 4730
+    },
+    {
+      "table": "timing_analysis (enriched)",
+      "rows": 4844
+    },
+    {
+      "table": "human_vs_llm_agreement (enriched)",
+      "rows": 3354
+    },
+    {
+      "table": "page_time_per_user (enriched)",
+      "rows": 761
+    }
+  ],
+  "database": "labeling_db",
+  "note": "Data collected from AI literacy sentence labeling system, March 2025 workshop session"
+}

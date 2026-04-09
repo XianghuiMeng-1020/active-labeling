@@ -1,0 +1,75 @@
+unit_id,unit_text,label,annotator_count,pct
+essay0001_sentence01,"AI literacy refers to the set of competencies that enable individuals to critically evaluate, effectively communicate with, and responsibly use artificial intelligence technologies.",EXPLANATION,72,90
+essay0001_sentence01,"AI literacy refers to the set of competencies that enable individuals to critically evaluate, effectively communicate with, and responsibly use artificial intelligence technologies.",EVALUATION,6,7.5
+essay0001_sentence01,"AI literacy refers to the set of competencies that enable individuals to critically evaluate, effectively communicate with, and responsibly use artificial intelligence technologies.",IMPLICATION,1,1.3
+essay0001_sentence01,"AI literacy refers to the set of competencies that enable individuals to critically evaluate, effectively communicate with, and responsibly use artificial intelligence technologies.",APPLICATION,1,1.3
+essay0001_sentence02,Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.,EXPLANATION,42,56.8
+essay0001_sentence02,Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.,APPLICATION,17,23
+essay0001_sentence02,Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.,EVALUATION,9,12.2
+essay0001_sentence02,Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.,RESPONSIBILITY,4,5.4
+essay0001_sentence02,Research shows that people with higher AI literacy tend to make better-informed decisions when interacting with AI-powered systems.,IMPLICATION,2,2.7
+essay0001_sentence03,Educational institutions should integrate AI literacy into their core curriculum starting from middle school.,APPLICATION,52,71.2
+essay0001_sentence03,Educational institutions should integrate AI literacy into their core curriculum starting from middle school.,EXPLANATION,7,9.6
+essay0001_sentence03,Educational institutions should integrate AI literacy into their core curriculum starting from middle school.,EVALUATION,6,8.2
+essay0001_sentence03,Educational institutions should integrate AI literacy into their core curriculum starting from middle school.,RESPONSIBILITY,5,6.8
+essay0001_sentence03,Educational institutions should integrate AI literacy into their core curriculum starting from middle school.,IMPLICATION,3,4.1
+essay0001_sentence04,Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.,EVALUATION,49,67.1
+essay0001_sentence04,Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.,APPLICATION,11,15.1
+essay0001_sentence04,Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.,RESPONSIBILITY,7,9.6
+essay0001_sentence04,Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.,EXPLANATION,4,5.5
+essay0001_sentence04,Teachers can leverage AI-powered tools to create personalized learning experiences and adaptive assessments for their students.,IMPLICATION,2,2.7
+essay0001_sentence05,"As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",IMPLICATION,43,58.9
+essay0001_sentence05,"As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",EVALUATION,10,13.7
+essay0001_sentence05,"As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",RESPONSIBILITY,9,12.3
+essay0001_sentence05,"As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",APPLICATION,8,11
+essay0001_sentence05,"As AI continues to advance, the gap between AI-literate and AI-illiterate populations may create new forms of digital inequality.",EXPLANATION,3,4.1
+essay0002_sentence01,Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.,EXPLANATION,51,75
+essay0002_sentence01,Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.,EVALUATION,11,16.2
+essay0002_sentence01,Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.,RESPONSIBILITY,3,4.4
+essay0002_sentence01,Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.,IMPLICATION,2,2.9
+essay0002_sentence01,Machine learning algorithms work by identifying patterns in large datasets and using those patterns to make predictions or decisions.,APPLICATION,1,1.5
+essay0002_sentence02,"While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",EVALUATION,32,48.5
+essay0002_sentence02,"While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",EXPLANATION,13,19.7
+essay0002_sentence02,"While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",APPLICATION,8,12.1
+essay0002_sentence02,"While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",IMPLICATION,7,10.6
+essay0002_sentence02,"While AI chatbots can handle routine customer inquiries efficiently, they often struggle with nuanced or emotionally sensitive conversations.",RESPONSIBILITY,6,9.1
+essay0002_sentence03,Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.,EVALUATION,36,54.5
+essay0002_sentence03,Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.,RESPONSIBILITY,11,16.7
+essay0002_sentence03,Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.,APPLICATION,10,15.2
+essay0002_sentence03,Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.,EXPLANATION,5,7.6
+essay0002_sentence03,Companies must ensure transparency in how they use AI systems to make hiring and promotion decisions.,IMPLICATION,4,6.1
+essay0002_sentence04,Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.,RESPONSIBILITY,35,53.8
+essay0002_sentence04,Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.,APPLICATION,10,15.4
+essay0002_sentence04,Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.,EVALUATION,9,13.8
+essay0002_sentence04,Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.,IMPLICATION,8,12.3
+essay0002_sentence04,Healthcare professionals are using AI-assisted diagnostic tools to detect diseases earlier and improve patient outcomes.,EXPLANATION,3,4.6
+essay0002_sentence05,The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.,APPLICATION,39,60
+essay0002_sentence05,The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.,IMPLICATION,13,20
+essay0002_sentence05,The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.,EVALUATION,6,9.2
+essay0002_sentence05,The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.,RESPONSIBILITY,5,7.7
+essay0002_sentence05,The widespread adoption of AI in creative industries may fundamentally reshape how we define authorship and intellectual property.,EXPLANATION,2,3.1
+essay0003_sentence01,"Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",RESPONSIBILITY,41,64.1
+essay0003_sentence01,"Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",EXPLANATION,10,15.6
+essay0003_sentence01,"Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",EVALUATION,8,12.5
+essay0003_sentence01,"Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",IMPLICATION,3,4.7
+essay0003_sentence01,"Bias in AI systems occurs when training data reflects historical prejudices, leading to unfair or discriminatory outputs.",APPLICATION,2,3.1
+essay0003_sentence02,"Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",EVALUATION,31,48.4
+essay0003_sentence02,"Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",EXPLANATION,10,15.6
+essay0003_sentence02,"Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",IMPLICATION,9,14.1
+essay0003_sentence02,"Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",RESPONSIBILITY,8,12.5
+essay0003_sentence02,"Current AI language models can generate highly convincing text, but they lack genuine understanding of meaning and context.",APPLICATION,6,9.4
+essay0003_sentence03,Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.,EXPLANATION,43,68.3
+essay0003_sentence03,Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.,EVALUATION,8,12.7
+essay0003_sentence03,Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.,RESPONSIBILITY,5,7.9
+essay0003_sentence03,Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.,APPLICATION,5,7.9
+essay0003_sentence03,Developers have an ethical obligation to test their AI systems for bias and to implement safeguards against misuse.,IMPLICATION,2,3.2
+essay0003_sentence04,Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.,APPLICATION,37,58.7
+essay0003_sentence04,Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.,EVALUATION,9,14.3
+essay0003_sentence04,Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.,RESPONSIBILITY,8,12.7
+essay0003_sentence04,Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.,EXPLANATION,5,7.9
+essay0003_sentence04,Citizens can use fact-checking AI tools to verify the accuracy of news articles and social media posts before sharing them.,IMPLICATION,4,6.3
+essay0003_sentence05,"Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",IMPLICATION,37,58.7
+essay0003_sentence05,"Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",EVALUATION,10,15.9
+essay0003_sentence05,"Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",RESPONSIBILITY,7,11.1
+essay0003_sentence05,"Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",APPLICATION,5,7.9
+essay0003_sentence05,"Without proper governance frameworks, the rapid deployment of AI could undermine democratic processes and concentrate power in the hands of a few technology companies.",EXPLANATION,4,6.3

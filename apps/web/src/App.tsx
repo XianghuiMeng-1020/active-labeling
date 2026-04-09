@@ -4,7 +4,8 @@ import "./App.css";
 import { AdminGuard } from "./components/AdminGuard";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { api } from "./lib/api";
-import { getSessionId } from "./lib/storage";
+import { ENABLE_ACTIVE_LEARNING } from "./lib/featureFlags";
+import { getSessionId, getConsent } from "./lib/storage";
 import { AdminConfigPage } from "./pages/admin/AdminConfigPage";
 import { AdminDashboardNormalPage } from "./pages/admin/AdminDashboardNormalPage";
 import { AdminDashboardOverallPage } from "./pages/admin/AdminDashboardOverallPage";
@@ -27,6 +28,7 @@ function App() {
 
   useEffect(() => {
     const onError = (event: ErrorEvent) => {
+      if (!getConsent()) return;
       api.reportClientError({
         message: event.message || "window_error",
         stack: event.error?.stack,
@@ -34,6 +36,7 @@ function App() {
       }).catch(() => undefined);
     };
     const onRejection = (event: PromiseRejectionEvent) => {
+      if (!getConsent()) return;
       const reason = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
       api.reportClientError({
         message: `unhandled_rejection: ${reason.message}`,
@@ -53,7 +56,7 @@ function App() {
   useEffect(() => {
     const sessionId = getSessionId();
     const path = location.pathname;
-    if (!sessionId || !path) return;
+    if (!sessionId || !path || !getConsent()) return;
     const entered = Date.now();
     pathnameRef.current = path;
     api.recordPageViewEnter(sessionId, path, entered).catch(() => undefined);
@@ -76,8 +79,12 @@ function App() {
         <Route path="/user/normal/manual" element={<UserPhaseManualPage phase="normal" />} />
         <Route path="/user/normal/llm" element={<UserNormalLlmPage />} />
         <Route path="/user/visualization" element={<UserVisualizationPage />} />
-        <Route path="/user/active/manual" element={<UserActiveManualPage />} />
-        <Route path="/user/active/llm" element={<UserActiveLlmPage />} />
+        {ENABLE_ACTIVE_LEARNING && (
+          <>
+            <Route path="/user/active/manual" element={<UserActiveManualPage />} />
+            <Route path="/user/active/llm" element={<UserActiveLlmPage />} />
+          </>
+        )}
         <Route path="/user/survey" element={<UserSurveyPage />} />
 
         {/* Admin routes — all protected by AdminGuard */}

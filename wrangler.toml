@@ -8,14 +8,19 @@ compatibility_date = "2025-01-01"
 [vars]
 IDLE_THRESHOLD_MS = "10000"
 MIN_ACTIVE_MS = "800"
-# 30 人同时访问时 LLM 并发数，建议 5–10（过大会易触发 DashScope 429）
-QWEN_MAX_CONCURRENT = "6"
+# LLM 总并发数（Qwen DO 并发上限；付费账户可适当提高）
+QWEN_MAX_CONCURRENT = "20"
+# OpenAI GPT-4o-mini 并发上限（当前 ratio=0，仅作 fallback 备用）
+OPENAI_MAX_CONCURRENT = "15"
+# 随机分配到 OpenAI 的流量比例 (0.0–1.0)；0 = 全部走 Qwen，OpenAI 仅在 Qwen 失败时 fallback
+LLM_OPENAI_RATIO = "0"
 ADMIN_SESSION_TTL_SEC = "28800"
 
 [durable_objects]
 bindings = [
   { name = "STATS_HUB", class_name = "StatsHub" },
-  { name = "QWEN_LIMITER", class_name = "QwenRateLimiter" }
+  { name = "QWEN_LIMITER", class_name = "QwenRateLimiter" },
+  { name = "AL_RUNNER", class_name = "AlRunner" }
 ]
 
 [[migrations]]
@@ -25,6 +30,10 @@ new_sqlite_classes = ["StatsHub"]
 [[migrations]]
 tag = "v2"
 new_sqlite_classes = ["QwenRateLimiter"]
+
+[[migrations]]
+tag = "v3"
+new_sqlite_classes = ["AlRunner"]
 
 [[d1_databases]]
 binding = "DB"

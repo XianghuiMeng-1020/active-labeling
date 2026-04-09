@@ -1,0 +1,27 @@
+[
+  {
+    "key": "normal_n",
+    "value": "15",
+    "updated_at": "2026-03-05 11:52:51"
+  },
+  {
+    "key": "active_m",
+    "value": "15",
+    "updated_at": "2026-03-05 11:52:51"
+  },
+  {
+    "key": "lock_manual",
+    "value": "0",
+    "updated_at": "2026-03-24T06:49:08.886Z"
+  },
+  {
+    "key": "lock_llm",
+    "value": "0",
+    "updated_at": "2026-03-24T07:10:01.002Z"
+  },
+  {
+    "key": "lock_survey",
+    "value": "0",
+    "updated_at": "2026-03-24T07:25:07.825Z"
+  }
+]
