@@ -18,7 +18,8 @@ export type AttemptPayload = {
   events: Array<{ t_perf_ms: number; t_epoch_ms: number; type: string; payload_json?: string }>;
 };
 
-const REQUEST_TIMEOUT_MS = 15_000;
+// 25s default timeout (raised from 15s to tolerate slow networks, e.g. CN cross-border).
+const REQUEST_TIMEOUT_MS = 25_000;
 const EXPORT_TIMEOUT_MS = 60_000;
 
 function adminHeaders(token?: string, extra?: HeadersInit) {
@@ -29,6 +30,8 @@ function adminHeaders(token?: string, extra?: HeadersInit) {
   } as HeadersInit;
 }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 async function req(path: string, init?: RequestInit) {
   if (typeof navigator !== "undefined" && !navigator.onLine) {
     const offlineErr: any = new Error("network offline");
@@ -37,8 +40,17 @@ async function req(path: string, init?: RequestInit) {
   }
 
   const method = (init?.method ?? "GET").toUpperCase();
-  const maxNetworkAttempts = method === "GET" ? 2 : 1;
+  // Retry transient network failures: GETs are idempotent (3 attempts);
+  // mutations are only retried when the caller supplies an idempotency_key.
+  const isMutation = method !== "GET" && method !== "HEAD";
+  const hasIdempotencyKey = isMutation && (() => {
+    const body = init?.body;
+    if (typeof body !== "string") return false;
+    return body.includes("\"idempotency_key\"");
+  })();
+  const maxNetworkAttempts = isMutation ? (hasIdempotencyKey ? 2 : 1) : 3;
 
+  let lastError: any;
   for (let attempt = 1; attempt <= maxNetworkAttempts; attempt += 1) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -57,15 +69,21 @@ async function req(path: string, init?: RequestInit) {
       }
       return response.json();
     } catch (error) {
+      lastError = error;
       if (typeof error === "object" && error && ("status" in error || "data" in error)) {
         throw error;
+      }
+      if (attempt < maxNetworkAttempts) {
+        // Exponential backoff with small jitter (helps with CN intermittent connectivity).
+        const base = 400 * Math.pow(2, attempt - 1);
+        await sleep(base + Math.floor(Math.random() * 200));
+        continue;
       }
       if (error instanceof DOMException && error.name === "AbortError") {
         const timeoutErr: any = new Error("request timeout");
         timeoutErr.code = "REQUEST_TIMEOUT";
         throw timeoutErr;
       }
-      if (attempt < maxNetworkAttempts) continue;
       const networkErr: any = new Error("network unavailable");
       networkErr.code = "NETWORK_ERROR";
       throw networkErr;
@@ -73,25 +91,71 @@ async function req(path: string, init?: RequestInit) {
       clearTimeout(timeout);
     }
   }
-  throw new Error("unreachable");
+  throw lastError ?? new Error("unreachable");
+}
+
+/**
+ * Lightweight connectivity probe used by the startup self-check banner.
+ * Returns latency_ms on success; throws with code/status on failure.
+ * Bypasses the long retry loop so the banner can react quickly.
+ */
+export async function pingHealth(timeoutMs = 8000): Promise<{ ok: boolean; latency_ms: number; status?: number }> {
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    const err: any = new Error("offline");
+    err.code = "NETWORK_OFFLINE";
+    throw err;
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  const startMs = Date.now();
+  try {
+    const r = await fetch(`${API_BASE}/api/health`, {
+      method: "GET",
+      cache: "no-store",
+      signal: controller.signal
+    });
+    if (!r.ok) {
+      const err: any = new Error(`health ${r.status}`);
+      err.status = r.status;
+      throw err;
+    }
+    return { ok: true, latency_ms: Date.now() - startMs, status: r.status };
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "AbortError") {
+      const err: any = new Error("health timeout");
+      err.code = "REQUEST_TIMEOUT";
+      throw err;
+    }
+    throw e;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export const api = {
   getTaxonomy: () => req("/api/taxonomy"),
   getPrompts: () => req("/api/prompts"),
   startSession: async (payload: { user_id?: string; normal_n?: number; active_m?: number; has_consent?: boolean }) => {
+    // Stable idempotency key per logical "start" intent — if the network glitches and
+    // we retry, the server returns the same session instead of creating a duplicate.
+    const idemKey = (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function")
+      ? `start-${crypto.randomUUID()}`
+      : `start-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const bodyJson = JSON.stringify({ ...payload, idempotency_key: idemKey });
     try {
       return await req("/api/session/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: bodyJson
       });
     } catch (e: any) {
       if (e?.code === "NETWORK_ERROR" || e?.code === "REQUEST_TIMEOUT") {
+        // Same idempotency_key → server short-circuits to cached response
+        // if the first call succeeded, otherwise creates the session.
         return req("/api/session/start", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+          body: bodyJson
         });
       }
       throw e;
@@ -266,7 +330,7 @@ export const api = {
     }>,
 
   getPhaseLocks: () =>
-    req("/api/phase-locks") as Promise<{ lock_manual: boolean; lock_llm: boolean; lock_active: boolean; lock_survey: boolean }>,
+    req("/api/phase-locks") as Promise<{ lock_manual: boolean; lock_llm: boolean; lock_active: boolean; lock_survey: boolean; skip_ranking: boolean }>,
 
   // ─── Admin ───────────────────────────────────────────────────────────────
   adminLogin: (adminToken: string) =>
@@ -340,12 +404,12 @@ export const api = {
     req(`/api/admin/al/status?run_id=${encodeURIComponent(run_id)}`, {
       headers: adminHeaders(token)
     }),
-  adminSetPhaseLocks: (locks: { lock_manual?: boolean; lock_llm?: boolean; lock_active?: boolean; lock_survey?: boolean }, token?: string) =>
+  adminSetPhaseLocks: (locks: { lock_manual?: boolean; lock_llm?: boolean; lock_active?: boolean; lock_survey?: boolean; skip_ranking?: boolean }, token?: string) =>
     req("/api/admin/phase-locks/set", {
       method: "POST",
       headers: adminHeaders(token, { "Content-Type": "application/json" }),
       body: JSON.stringify(locks)
-    }) as Promise<{ ok: boolean; lock_manual: boolean; lock_llm: boolean; lock_active: boolean; lock_survey: boolean }>,
+    }) as Promise<{ ok: boolean; lock_manual: boolean; lock_llm: boolean; lock_active: boolean; lock_survey: boolean; skip_ranking: boolean }>,
   adminCreateShare: (token?: string) =>
     req("/api/admin/share/create", { method: "POST", headers: adminHeaders(token) }),
   /** Returns blob and optional X-Export-Meta (count, truncated, hint for pagination). */

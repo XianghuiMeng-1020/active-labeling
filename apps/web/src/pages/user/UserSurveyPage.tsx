@@ -44,15 +44,47 @@ export function UserSurveyPage() {
     }).catch(() => setLockChecked(true));
   }, [sessionId, nav]);
 
+  const draftKey = sessionId ? `labeling_survey_draft_${sessionId}` : null;
+  type SurveyDraft = {
+    likert: Record<string, LikertValue>;
+    mcAnswer: string | null;
+    open12: string;
+    open13: string;
+    open14: string;
+  };
+  const readDraft = (): SurveyDraft | null => {
+    if (!draftKey) return null;
+    try {
+      const raw = localStorage.getItem(draftKey);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw) as Partial<SurveyDraft>;
+      return {
+        likert: { ...Object.fromEntries(LIKERT_QUESTIONS.map((q) => [q, null])), ...(parsed.likert ?? {}) } as Record<string, LikertValue>,
+        mcAnswer: typeof parsed.mcAnswer === "string" ? parsed.mcAnswer : null,
+        open12: typeof parsed.open12 === "string" ? parsed.open12 : "",
+        open13: typeof parsed.open13 === "string" ? parsed.open13 : "",
+        open14: typeof parsed.open14 === "string" ? parsed.open14 : "",
+      };
+    } catch { return null; }
+  };
+
+  const initialDraft = readDraft();
   const [likert, setLikert] = useState<Record<string, LikertValue>>(
-    () => Object.fromEntries(LIKERT_QUESTIONS.map((q) => [q, null]))
+    () => initialDraft?.likert ?? Object.fromEntries(LIKERT_QUESTIONS.map((q) => [q, null]))
   );
-  const [mcAnswer, setMcAnswer] = useState<string | null>(null);
-  const [open12, setOpen12] = useState("");
-  const [open13, setOpen13] = useState("");
-  const [open14, setOpen14] = useState("");
+  const [mcAnswer, setMcAnswer] = useState<string | null>(initialDraft?.mcAnswer ?? null);
+  const [open12, setOpen12] = useState(initialDraft?.open12 ?? "");
+  const [open13, setOpen13] = useState(initialDraft?.open13 ?? "");
+  const [open14, setOpen14] = useState(initialDraft?.open14 ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (!draftKey) return;
+    try {
+      localStorage.setItem(draftKey, JSON.stringify({ likert, mcAnswer, open12, open13, open14 }));
+    } catch { /* quota / security error */ }
+  }, [draftKey, likert, mcAnswer, open12, open13, open14]);
 
   const allLikertAnswered = LIKERT_QUESTIONS.every((q) => likert[q] !== null);
   const canSubmit = allLikertAnswered && (ENABLE_ACTIVE_LEARNING ? mcAnswer !== null : true);
@@ -80,6 +112,9 @@ export function UserSurveyPage() {
         });
       }
       setSubmitted(true);
+      if (draftKey) {
+        try { localStorage.removeItem(draftKey); } catch { /* ignore */ }
+      }
     } catch {
       alert(t("common.error"));
     } finally {

@@ -6,6 +6,7 @@ import { useI18n } from "../../lib/i18n";
 import { DeadLetterBanner } from "../../components/DeadLetterBanner";
 import { EssayDisplay } from "../../components/EssayDisplay";
 import { DifficultyRanking } from "../../components/DifficultyRanking";
+import { NoConsentBanner } from "../../components/NoConsentBanner";
 import { ProgressRing } from "../../components/ProgressRing";
 import { ToastContainer, useToast } from "../../components/Toast";
 import { enqueueManualSubmission, flushOfflineQueue } from "../../lib/offlineQueue";
@@ -92,6 +93,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   const difficultyLabel = useMemo(() => getDifficultyFromReason(unit?.al_reason), [unit?.al_reason]);
 
   const [phaseLocked, setPhaseLocked] = useState(false);
+  const [skipRanking, setSkipRanking] = useState(false);
 
   const load = useCallback(async () => {
     if (!sessionId) { nav("/user/start"); return; }
@@ -106,6 +108,8 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
         return;
       }
       setPhaseLocked(false);
+      const shouldSkipRanking = status.locks?.skip_ranking ?? false;
+      setSkipRanking(shouldSkipRanking);
       if (phase === "active" && !status.gates.can_enter_active_manual) {
         nav("/user/normal/llm");
         return;
@@ -117,7 +121,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
 
       // When navigating from LLM "back to ranking": go straight to ranking view, do not set unit from getNextUnit
       const pendingShowRanking = (location.state as { showRankingForEssay?: number } | null)?.showRankingForEssay;
-      if (phase === "normal" && pendingShowRanking != null && ESSAYS.some((e) => e.essayIndex === pendingShowRanking)) {
+      if (!shouldSkipRanking && phase === "normal" && pendingShowRanking != null && ESSAYS.some((e) => e.essayIndex === pendingShowRanking)) {
         appliedShowRankingRef.current = true;
         setShowRanking(true);
         setRankingEssayIndex(pendingShowRanking);
@@ -135,7 +139,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       if (tax.labels.length > 0) setLabels(tax.labels.filter((l: { label: string }) => !HIDDEN.has(l.label)));
 
       let rankedEssays: number[] = [];
-      if (phase === "normal") {
+      if (phase === "normal" && !shouldSkipRanking) {
         const [labeledRes, rankRes] = await Promise.all([
           api.getLabeledEssays(sessionId, "normal").catch(() => ({ fully_labeled_essays: [] as number[] })),
           api.getRankingStatus(sessionId).catch(() => ({ ranked_essays: [] as number[] }))
@@ -186,6 +190,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
   useEffect(() => {
     if (
       !loading &&
+      !skipRanking &&
       phase === "normal" &&
       showRankingForEssay != null &&
       !appliedShowRankingRef.current &&
@@ -197,7 +202,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
       setUnit(null);
       nav(location.pathname, { replace: true, state: {} });
     }
-  }, [loading, phase, showRankingForEssay, nav, location.pathname]);
+  }, [loading, phase, showRankingForEssay, nav, location.pathname, skipRanking]);
 
   const essayIndexForLabels = phase === "normal"
     ? (currentEssay?.essayIndex ?? (showRanking && rankingEssayIndex !== null ? rankingEssayIndex : null))
@@ -246,7 +251,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
 
   const applySubmitResponse = useCallback((res: any) => {
     if (res.progress) setProgress(res.progress);
-    if (phase === "normal" && res.fully_labeled_essays?.length > 0) {
+    if (!skipRanking && phase === "normal" && res.fully_labeled_essays?.length > 0) {
       const ranked = res.ranked_essays ?? [];
       const unranked = (res.fully_labeled_essays as number[]).find((idx: number) => !ranked.includes(idx));
       if (unranked !== undefined) {
@@ -270,7 +275,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
     } else {
       setUnit(res.next_unit);
     }
-  }, [phase, nav]);
+  }, [phase, nav, skipRanking]);
 
   const submit = async (label: string) => {
     if (!unit || submitting || submittingRef.current) return;
@@ -526,6 +531,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
         {phase === "active" && <span className="badge purple">⚡ Active Learning</span>}
       </div>
 
+      <NoConsentBanner />
       <DeadLetterBanner />
 
       {unit ? (
@@ -557,7 +563,7 @@ export function UserPhaseManualPage({ phase }: { phase: "normal" | "active" }) {
               )}
             </div>
 
-            {alHint && (
+            {phase === "active" && alHint && (
               <div style={{ fontSize: 12, color: "#7c3aed", marginBottom: 10, fontWeight: 600 }}>
                 🔍 {alHint}
               </div>

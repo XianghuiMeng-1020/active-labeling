@@ -5,6 +5,7 @@ import { ENABLE_ACTIVE_LEARNING } from "../../lib/featureFlags";
 import { useI18n } from "../../lib/i18n";
 import { DeadLetterBanner } from "../../components/DeadLetterBanner";
 import { EssayDisplay } from "../../components/EssayDisplay";
+import { NoConsentBanner } from "../../components/NoConsentBanner";
 import { ProgressRing } from "../../components/ProgressRing";
 import { ToastContainer, useToast } from "../../components/Toast";
 import { flushOfflineQueue } from "../../lib/offlineQueue";
@@ -82,7 +83,19 @@ export function UserNormalLlmPage() {
   const [runEssayLoading, setRunEssayLoading] = useState(false);
   const [accepting, setAccepting] = useState(false);
   const [activeMode, setActiveMode] = useState<LlmMode>("prompt1");
-  const [customPromptText, setCustomPromptText] = useState("");
+  const customDraftKey = useMemo(() => sessionId ? `labeling_custom_prompt_draft_${sessionId}` : null, [sessionId]);
+  const [customPromptText, setCustomPromptText] = useState(() => {
+    if (typeof localStorage === "undefined" || !sessionId) return "";
+    try { return localStorage.getItem(`labeling_custom_prompt_draft_${sessionId}`) ?? ""; } catch { return ""; }
+  });
+
+  useEffect(() => {
+    if (!customDraftKey) return;
+    try {
+      if (customPromptText) localStorage.setItem(customDraftKey, customPromptText);
+      else localStorage.removeItem(customDraftKey);
+    } catch { /* quota / security error */ }
+  }, [customPromptText, customDraftKey]);
 
   const [currentEssayIndex, setCurrentEssayIndex] = useState<number | null>(null);
   const [currentUnitId, setCurrentUnitId] = useState<string>("");
@@ -329,6 +342,7 @@ export function UserNormalLlmPage() {
         </div>
       </div>
 
+      <NoConsentBanner />
       <DeadLetterBanner />
 
       {currentEssay && (

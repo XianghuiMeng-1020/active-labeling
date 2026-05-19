@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type Essay, getSentenceText } from "../lib/essayData";
 import { useI18n } from "../lib/i18n";
+import { getSessionId } from "../lib/storage";
 
 interface DifficultyRankingProps {
   essay: Essay;
@@ -11,15 +12,69 @@ interface DifficultyRankingProps {
   labelsByUnitId?: Record<string, string>;
 }
 
+const RANK_DRAFT_PREFIX = "labeling_rank_draft_";
+
+function rankDraftKey(sessionId: string, essayIndex: number): string {
+  return `${RANK_DRAFT_PREFIX}${sessionId}_e${essayIndex}`;
+}
+
+function readRankDraft(sessionId: string, essayIndex: number): string[] | null {
+  if (!sessionId) return null;
+  try {
+    const raw = localStorage.getItem(rankDraftKey(sessionId, essayIndex));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { unitIds?: unknown };
+    if (!Array.isArray(parsed.unitIds) || parsed.unitIds.length === 0) return null;
+    if (!parsed.unitIds.every((v) => typeof v === "string")) return null;
+    return parsed.unitIds as string[];
+  } catch {
+    return null;
+  }
+}
+
+function writeRankDraft(sessionId: string, essayIndex: number, unitIds: string[]): void {
+  if (!sessionId) return;
+  try {
+    localStorage.setItem(
+      rankDraftKey(sessionId, essayIndex),
+      JSON.stringify({ unitIds, savedAt: Date.now() })
+    );
+  } catch { /* quota or security error */ }
+}
+
+export function clearRankDraft(sessionId: string, essayIndex: number): void {
+  if (!sessionId) return;
+  try { localStorage.removeItem(rankDraftKey(sessionId, essayIndex)); } catch { /* ignore */ }
+}
+
 export function DifficultyRanking({ essay, onSubmit, submitting, onBackToLabeling, backToLabelingLabel, labelsByUnitId }: DifficultyRankingProps) {
   const { t, locale, labelText } = useI18n();
-  const [items, setItems] = useState(() =>
-    essay.sentences.map((s) => ({
+  const sessionId = useMemo(() => getSessionId(), []);
+
+  const initialItems = useMemo(() => {
+    const baseItems = essay.sentences.map((s) => ({
       unitId: s.unitId,
       label: `S${s.sentenceIndex}`,
       text: getSentenceText(s, locale)
-    }))
-  );
+    }));
+    const draftOrder = readRankDraft(sessionId, essay.essayIndex);
+    if (!draftOrder) return baseItems;
+    const baseIds = new Set(baseItems.map((i) => i.unitId));
+    if (draftOrder.length !== baseItems.length || !draftOrder.every((id) => baseIds.has(id))) return baseItems;
+    const byId = new Map(baseItems.map((i) => [i.unitId, i] as const));
+    return draftOrder.map((id) => byId.get(id)!).filter(Boolean);
+  }, [essay.essayIndex, essay.sentences, locale, sessionId]);
+
+  const [items, setItems] = useState(initialItems);
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
+
+  useEffect(() => {
+    if (!sessionId || items.length === 0) return;
+    writeRankDraft(sessionId, essay.essayIndex, items.map((i) => i.unitId));
+  }, [items, sessionId, essay.essayIndex]);
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
@@ -198,7 +253,11 @@ export function DifficultyRanking({ essay, onSubmit, submitting, onBackToLabelin
         <button
           className="btn primary full-width lg"
           style={{ marginTop: 0 }}
-          onClick={() => onSubmit(items.map((i) => i.unitId))}
+          onClick={() => {
+            const ordering = items.map((i) => i.unitId);
+            clearRankDraft(sessionId, essay.essayIndex);
+            onSubmit(ordering);
+          }}
           disabled={submitting}
         >
           {submitting ? <span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> : <>{t("ranking.confirm")} →</>}

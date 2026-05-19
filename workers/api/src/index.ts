@@ -148,6 +148,27 @@ app.use("/api/*", async (c, next) => {
   }
 });
 
+// ─── Consent gate ────────────────────────────────────────────────────────────
+// When has_consent=0 the participant has explicitly opted out of data collection.
+// In that case we still let them complete the flow (so they can experience the
+// study) but we DO NOT persist any user-generated data: manual_labels,
+// llm_labels.accepted_label, label_attempts, interaction_events,
+// ranking_submissions, survey_responses, page_views. We DO still update
+// assignments.status so the UI can advance, and we DO still save LLM
+// predictions (which are model outputs, not personal data).
+
+async function hasConsent(env: Env, sessionId: string): Promise<boolean> {
+  if (!sessionId) return true;
+  try {
+    const row = await env.DB.prepare(
+      "SELECT has_consent FROM sessions WHERE session_id = ? LIMIT 1"
+    ).bind(sessionId).first<{ has_consent: number }>();
+    return row?.has_consent !== 0;
+  } catch {
+    return true;
+  }
+}
+
 // ─── Qwen rate limiter (DO) ──────────────────────────────────────────────────
 
 async function qwenAcquire(env: Env): Promise<void> {
@@ -361,22 +382,33 @@ async function getCustomRunCount(
   return row?.run_count ?? 0;
 }
 
-async function incrementCustomRunCount(
+/**
+ * Atomically check-and-increment the custom prompt counter. Returns the new count
+ * if the increment succeeded (i.e. user is allowed to make this attempt), or null
+ * if the limit has already been reached. Using a single SQL statement avoids a
+ * read-then-write race where two concurrent requests could both pass a stale
+ * check and exceed the limit by 1.
+ */
+async function tryIncrementCustomRunCount(
   env: Env,
   sessionId: string,
   unitId: string,
-  phase: string
-): Promise<number> {
+  phase: string,
+  limit: number
+): Promise<number | null> {
   const now = nowIso();
-  await env.DB.prepare(
+  // INSERT a fresh row with count=1, or UPDATE existing row only if still under the limit.
+  const row = await env.DB.prepare(
     `INSERT INTO llm_run_counts(session_id, unit_id, phase, mode, run_count, created_at, updated_at)
      VALUES (?, ?, ?, 'custom', 1, ?, ?)
      ON CONFLICT(session_id, unit_id, phase, mode)
-     DO UPDATE SET run_count = run_count + 1, updated_at = excluded.updated_at`
+     DO UPDATE SET run_count = run_count + 1, updated_at = excluded.updated_at
+       WHERE run_count < ?
+     RETURNING run_count`
   )
-    .bind(sessionId, unitId, phase, now, now)
-    .run();
-  return getCustomRunCount(env, sessionId, unitId, phase);
+    .bind(sessionId, unitId, phase, now, now, limit)
+    .first<{ run_count: number }>();
+  return row?.run_count ?? null;
 }
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
@@ -458,26 +490,50 @@ app.post("/api/llm/ping", async (c) => {
 });
 
 app.post("/api/session/start", async (c) => {
-  const body = (await c.req.json<{ user_id?: string; has_consent?: boolean }>().catch(() => null)) ?? {};
-  const cfgRows = await c.env.DB.prepare(
-    "SELECT key, value FROM config WHERE key IN ('normal_n', 'active_m')"
-  ).all<{ key: string; value: string }>();
-  const cfgMap: Record<string, number> = { normal_n: 6, active_m: 4 };
-  for (const r of cfgRows.results ?? []) cfgMap[r.key] = Number(r.value) || cfgMap[r.key];
-  const normalN = Math.min(SESSION_NORMAL_MAX, Math.max(1, cfgMap.normal_n));
-  const activeM = Math.min(SESSION_ACTIVE_MAX, Math.max(0, cfgMap.active_m));
-  const userId = (body.user_id?.trim() ?? "").slice(0, 128) || `user_${crypto.randomUUID().slice(0, 8)}`;
-  const hasConsent = body.has_consent !== false ? 1 : 0;
-  const sessionId = crypto.randomUUID();
-  const resetToken = crypto.randomUUID();
-  const now = nowIso();
-  await c.env.DB.prepare(
-    "INSERT INTO sessions(session_id, user_id, created_at, reset_token, has_consent) VALUES (?, ?, ?, ?, ?)"
-  )
-    .bind(sessionId, userId, now, resetToken, hasConsent)
-    .run();
-  await assignUnits(c.env, sessionId, normalN, activeM);
-  return json({ session_id: sessionId, reset_token: resetToken });
+  const body = (await c.req.json<{ user_id?: string; has_consent?: boolean; idempotency_key?: string }>().catch(() => null)) ?? {};
+
+  // Idempotency: if client supplied a key, dedupe so network retries don't create
+  // duplicate sessions. Same key returns the cached response.
+  const idemKey = body.idempotency_key?.trim();
+  if (idemKey) {
+    const claim = await claimIdempotency(c.env, idemKey);
+    if (claim === "conflict") return json({ error: "request_in_progress" }, 409);
+    if (claim !== "claimed") {
+      return new Response(claim.body, {
+        status: claim.status,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+  }
+
+  try {
+    const cfgRows = await c.env.DB.prepare(
+      "SELECT key, value FROM config WHERE key IN ('normal_n', 'active_m')"
+    ).all<{ key: string; value: string }>();
+    const cfgMap: Record<string, number> = { normal_n: 6, active_m: 4 };
+    for (const r of cfgRows.results ?? []) cfgMap[r.key] = Number(r.value) || cfgMap[r.key];
+    const normalN = Math.min(SESSION_NORMAL_MAX, Math.max(1, cfgMap.normal_n));
+    const activeM = Math.min(SESSION_ACTIVE_MAX, Math.max(0, cfgMap.active_m));
+    const userId = (body.user_id?.trim() ?? "").slice(0, 128) || `user_${crypto.randomUUID().slice(0, 8)}`;
+    const hasConsent = body.has_consent !== false ? 1 : 0;
+    const sessionId = crypto.randomUUID();
+    const resetToken = crypto.randomUUID();
+    const now = nowIso();
+    await c.env.DB.prepare(
+      "INSERT INTO sessions(session_id, user_id, created_at, reset_token, has_consent) VALUES (?, ?, ?, ?, ?)"
+    )
+      .bind(sessionId, userId, now, resetToken, hasConsent)
+      .run();
+    await assignUnits(c.env, sessionId, normalN, activeM);
+    const payload = { session_id: sessionId, reset_token: resetToken };
+    if (idemKey) await setIdempotency(c.env, idemKey, JSON.stringify(payload), 200);
+    return json(payload);
+  } catch (err) {
+    // Release the idempotency claim so the next legitimate request (different key) succeeds
+    // and a same-key retry can also try again instead of permanent 409.
+    if (idemKey) await releaseIdempotencyClaim(c.env, idemKey);
+    throw err;
+  }
 });
 
 app.post("/api/session/reset", async (c) => {
@@ -521,9 +577,12 @@ app.post("/api/session/reset", async (c) => {
 app.get("/api/session/status", async (c) => {
   const sessionId = c.req.query("session_id");
   if (!sessionId) return json({ error: "session_id required" }, 400);
-  const [progress, locks] = await Promise.all([
+  const [progress, locks, consentRow] = await Promise.all([
     getSessionProgressAll(c.env, sessionId),
-    getPhaseLocks(c.env)
+    getPhaseLocks(c.env),
+    c.env.DB.prepare("SELECT has_consent FROM sessions WHERE session_id = ? LIMIT 1")
+      .bind(sessionId)
+      .first<{ has_consent: number }>()
   ]);
   const { normal_manual: normalManual, normal_llm: normalLlm, active_manual: activeManual } = progress;
   return json({
@@ -534,7 +593,9 @@ app.get("/api/session/status", async (c) => {
       can_enter_normal_llm: normalManual.total > 0 && normalManual.done === normalManual.total,
       can_enter_active_manual: normalLlm.total > 0 && normalLlm.done === normalLlm.total && activeManual.total > 0
     },
-    locks
+    locks,
+    has_consent: consentRow?.has_consent !== 0,
+    session_exists: !!consentRow
   });
 });
 
@@ -588,6 +649,9 @@ app.post("/api/page-view/enter", async (c) => {
   if (!body.session_id?.trim() || !body.page_path?.trim()) {
     return json({ error: "session_id and page_path required" }, 400);
   }
+  if (!(await hasConsent(c.env, body.session_id.trim()))) {
+    return json({ ok: true, skipped: "no_consent" });
+  }
   const entered = typeof body.entered_at_epoch_ms === "number" ? body.entered_at_epoch_ms : Date.now();
   await c.env.DB.prepare(
     "INSERT INTO page_views(session_id, page_path, entered_at_epoch_ms, left_at_epoch_ms) VALUES (?, ?, ?, NULL)"
@@ -601,6 +665,9 @@ app.post("/api/page-view/leave", async (c) => {
   const body = (await c.req.json<{ session_id?: string; page_path?: string; left_at_epoch_ms?: number }>().catch(() => null)) ?? {};
   if (!body.session_id?.trim() || !body.page_path?.trim()) {
     return json({ error: "session_id and page_path required" }, 400);
+  }
+  if (!(await hasConsent(c.env, body.session_id.trim()))) {
+    return json({ ok: true, skipped: "no_consent" });
   }
   const left = typeof body.left_at_epoch_ms === "number" ? body.left_at_epoch_ms : Date.now();
   const row = await c.env.DB.prepare(
@@ -655,6 +722,21 @@ async function setIdempotency(env: Env, key: string, body: string, status: numbe
   }
 }
 
+/**
+ * Release an idempotency claim by deleting it (only if still in CLAIMED state).
+ * Use this on early-return / error paths so the same key can be retried freely
+ * by the client without waiting 24h for natural TTL cleanup.
+ */
+async function releaseIdempotencyClaim(env: Env, key: string): Promise<void> {
+  try {
+    await env.DB.prepare(
+      "DELETE FROM idempotency_keys WHERE idempotency_key = ? AND response_status = ?"
+    )
+      .bind(key, IDEMPOTENCY_CLAIMED)
+      .run();
+  } catch { /* best-effort cleanup */ }
+}
+
 // ─── Manual label submit ──────────────────────────────────────────────────────
 
 app.post("/api/labels/manual", async (c) => {
@@ -689,31 +771,48 @@ app.post("/api/labels/manual", async (c) => {
   const asgn = await c.env.DB.prepare(
     "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
   ).bind(body.session_id.trim(), body.unit_id.trim(), body.phase).first<{ status: string }>();
-  if (!asgn) return json({ error: "assignment_not_found" }, 404);
-  if (asgn.status === "done") return json({ ok: true, already_done: true });
+  if (!asgn) {
+    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+    return json({ error: "assignment_not_found" }, 404);
+  }
+  if (asgn.status === "done") {
+    // Already-done is a legitimate response we want subsequent retries to see,
+    // so cache it (rather than free the claim) — keeps idempotency semantics intact.
+    const payload = { ok: true, already_done: true };
+    if (body.idempotency_key) await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+    return json(payload);
+  }
 
   const valid = validateAttempt(body.attempt, c.env);
   const attemptId = crypto.randomUUID();
-  await runManualLabelBatch(c.env, {
-    sessionId: body.session_id.trim(),
-    unitId: body.unit_id.trim(),
-    phase: body.phase,
-    label,
-    attemptId,
-    attempt: body.attempt ?? {
-      shown_at_epoch_ms: 0,
-      answered_at_epoch_ms: 0,
-      active_ms: 0,
-      hidden_ms: 0,
-      idle_ms: 0,
-      hidden_count: 0,
-      blur_count: 0,
-      had_background: 0,
-      events: []
-    },
-    isValid: valid.isValid,
-    invalidReason: valid.reason
-  });
+  const consented = await hasConsent(c.env, body.session_id.trim());
+  if (consented) {
+    await runManualLabelBatch(c.env, {
+      sessionId: body.session_id.trim(),
+      unitId: body.unit_id.trim(),
+      phase: body.phase,
+      label,
+      attemptId,
+      attempt: body.attempt ?? {
+        shown_at_epoch_ms: 0,
+        answered_at_epoch_ms: 0,
+        active_ms: 0,
+        hidden_ms: 0,
+        idle_ms: 0,
+        hidden_count: 0,
+        blur_count: 0,
+        had_background: 0,
+        events: []
+      },
+      isValid: valid.isValid,
+      invalidReason: valid.reason
+    });
+  } else {
+    // No-consent: only advance the assignment so the UI can move forward.
+    await c.env.DB.prepare(
+      "UPDATE assignments SET status = 'done' WHERE session_id = ? AND unit_id = ? AND phase = ? AND task = 'manual'"
+    ).bind(body.session_id.trim(), body.unit_id.trim(), body.phase).run();
+  }
   const progress = await countProgress(c.env, body.session_id, body.phase, "manual");
   if (body.phase === "normal" && progress.done === progress.total) {
     await updateSessionDoneAt(c.env, body.session_id, "normal_manual_done_at");
@@ -801,8 +900,14 @@ app.post("/api/labels/undo", async (c) => {
   )
     .bind(body.session_id, body.unit_id, body.phase)
     .first<{ status: string }>();
-  if (!asgn) return json({ error: "assignment not found" }, 404);
-  if (asgn.status !== "done") return json({ error: "assignment is not done, nothing to undo" }, 409);
+  if (!asgn) {
+    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+    return json({ error: "assignment not found" }, 404);
+  }
+  if (asgn.status !== "done") {
+    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+    return json({ error: "assignment is not done, nothing to undo" }, 409);
+  }
 
   // Roll back: delete attempts/events, label, and mark assignment todo (atomic)
   await c.env.DB.batch([
@@ -861,15 +966,19 @@ app.post("/api/llm/run", async (c) => {
   const mode: LlmMode = ["prompt1", "prompt2", "custom"].includes(body.mode ?? "") ? body.mode! : "prompt1";
   const phase = "normal" as const;
 
-  // Custom prompt: enforce 5-attempt limit server-side
+  // Custom prompt: enforce 5-attempt limit server-side using an ATOMIC
+  // check-and-increment so two concurrent requests can never both pass a stale
+  // counter check. We increment up-front and refund the slot on LLM failure.
+  let customAttemptCount: number | null = null;
   if (mode === "custom") {
-    const count = await getCustomRunCount(c.env, sessionId, unitId, phase);
-    if (count >= CUSTOM_PROMPT_MAX) {
+    customAttemptCount = await tryIncrementCustomRunCount(c.env, sessionId, unitId, phase, CUSTOM_PROMPT_MAX);
+    if (customAttemptCount === null) {
+      const used = await getCustomRunCount(c.env, sessionId, unitId, phase);
       return json(
         {
           error: "custom_attempt_limit_reached",
           detail: `Custom prompt is limited to ${CUSTOM_PROMPT_MAX} attempts per unit. You have used all ${CUSTOM_PROMPT_MAX}.`,
-          attempts_used: count,
+          attempts_used: used,
           attempts_max: CUSTOM_PROMPT_MAX
         },
         429
@@ -877,12 +986,24 @@ app.post("/api/llm/run", async (c) => {
     }
   }
 
+  const refundCustomAttempt = async () => {
+    if (mode !== "custom") return;
+    try {
+      await c.env.DB.prepare(
+        "UPDATE llm_run_counts SET run_count = run_count - 1 WHERE session_id=? AND unit_id=? AND phase=? AND mode='custom' AND run_count > 0"
+      ).bind(sessionId, unitId, phase).run();
+    } catch { /* best-effort refund */ }
+  };
+
   try {
     const taxonomy = await getTaxonomyValues(c.env);
     const unit = await c.env.DB.prepare("SELECT text FROM units WHERE unit_id = ?")
       .bind(unitId)
       .first<{ text: string }>();
-    if (!unit) return json({ error: "unit not found", request_id: requestId }, 404);
+    if (!unit) {
+      await refundCustomAttempt();
+      return json({ error: "unit not found", request_id: requestId }, 404);
+    }
 
     const prompt =
       mode === "custom"
@@ -904,11 +1025,8 @@ app.post("/api/llm/run", async (c) => {
       await qwenRelease(c.env, 200, Date.now() - startMs, 0);
     } catch (llmErr: any) {
       await qwenRelease(c.env, llmErr?.status ?? 500, Date.now() - startMs, llmErr?.retryCount ?? 0);
+      await refundCustomAttempt();
       throw llmErr;
-    }
-
-    if (mode === "custom") {
-      await incrementCustomRunCount(c.env, sessionId, unitId, phase);
     }
 
     await saveLlmPrediction(c.env, {
@@ -1067,22 +1185,37 @@ app.post("/api/llm/accept", async (c) => {
   const asgn = await c.env.DB.prepare(
     "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase='normal' AND task='llm'"
   ).bind(body.session_id.trim(), body.unit_id.trim()).first<{ status: string }>();
-  if (!asgn) return json({ error: "assignment_not_found" }, 404);
-  if (asgn.status === "done") return json({ ok: true, already_done: true });
+  if (!asgn) {
+    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+    return json({ error: "assignment_not_found" }, 404);
+  }
+  if (asgn.status === "done") {
+    const payload = { ok: true, already_done: true };
+    if (body.idempotency_key) await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+    return json(payload);
+  }
 
   const valid = validateAttempt(attemptPayload, c.env);
-  await runLlmAcceptBatch(c.env, {
-    sessionId: body.session_id.trim(),
-    unitId: body.unit_id.trim(),
-    phase: "normal",
-    mode,
-    acceptedLabel: body.accepted_label.trim(),
-    attemptId: crypto.randomUUID(),
-    attempt: attemptPayload,
-    isValid: valid.isValid,
-    invalidReason: valid.reason
-  });
   const sessionId = body.session_id.trim();
+  const consented = await hasConsent(c.env, sessionId);
+  if (consented) {
+    await runLlmAcceptBatch(c.env, {
+      sessionId,
+      unitId: body.unit_id.trim(),
+      phase: "normal",
+      mode,
+      acceptedLabel: body.accepted_label.trim(),
+      attemptId: crypto.randomUUID(),
+      attempt: attemptPayload,
+      isValid: valid.isValid,
+      invalidReason: valid.reason
+    });
+  } else {
+    // No-consent: only advance the assignment.
+    await c.env.DB.prepare(
+      "UPDATE assignments SET status = 'done' WHERE session_id = ? AND unit_id = ? AND phase = 'normal' AND task = 'llm'"
+    ).bind(sessionId, body.unit_id.trim()).run();
+  }
   const progress = await countProgress(c.env, sessionId, "normal", "llm");
   if (progress.done === progress.total) {
     await updateSessionDoneAt(c.env, sessionId, "normal_llm_done_at");
@@ -1272,6 +1405,9 @@ app.post("/api/ranking/submit", async (c) => {
   if (ordering.length > 50 || !ordering.every((v: unknown) => typeof v === "string" && v.length < 100)) {
     return json({ error: "invalid ordering data" }, 400);
   }
+  if (!(await hasConsent(c.env, sessionId))) {
+    return json({ ok: true, skipped: "no_consent" });
+  }
   await c.env.DB.prepare(
     `INSERT INTO ranking_submissions(session_id, essay_index, ordering, created_at)
      VALUES (?, ?, ?, ?)
@@ -1370,6 +1506,9 @@ app.post("/api/survey/submit", async (c) => {
   if (!sessionId) {
     return json({ error: "session_id required" }, 400);
   }
+  if (!(await hasConsent(c.env, sessionId))) {
+    return json({ ok: true, skipped: "no_consent" });
+  }
   const responseJson = JSON.stringify({
     likert: (body as any).likert ?? {},
     mc_q11: (body as any).mc_q11 ?? "",
@@ -1377,10 +1516,16 @@ app.post("/api/survey/submit", async (c) => {
     open_q13: (body as any).open_q13 ?? "",
     open_q14: (body as any).open_q14 ?? "",
   });
-  await c.env.DB.prepare(
-    `INSERT INTO survey_responses(session_id, response_json, created_at)
-     VALUES (?, ?, ?)`
-  ).bind(sessionId, responseJson, nowIso()).run();
+  // Latest-write-wins per session. The original schema lacks a UNIQUE constraint
+  // on session_id, so a plain INSERT would create duplicate rows on (a) the user
+  // editing their answer and re-submitting, or (b) a network retry. We collapse
+  // both cases by deleting prior submissions for this session in the same batch.
+  await c.env.DB.batch([
+    c.env.DB.prepare("DELETE FROM survey_responses WHERE session_id = ?").bind(sessionId),
+    c.env.DB.prepare(
+      `INSERT INTO survey_responses(session_id, response_json, created_at) VALUES (?, ?, ?)`
+    ).bind(sessionId, responseJson, nowIso())
+  ]);
   return json({ ok: true });
 });
 
@@ -2076,14 +2221,14 @@ app.post("/api/admin/prompts/set", async (c) => {
 
 // ─── Phase locks (teacher-controlled) ─────────────────────────────────────────
 
-const LOCK_KEYS = ["lock_manual", "lock_llm", "lock_active", "lock_survey"] as const;
+const LOCK_KEYS = ["lock_manual", "lock_llm", "lock_active", "lock_survey", "skip_ranking"] as const;
 type LockKey = (typeof LOCK_KEYS)[number];
 
 async function getPhaseLocks(env: Env): Promise<Record<LockKey, boolean>> {
   const rows = await env.DB.prepare(
-    "SELECT key, value FROM config WHERE key IN ('lock_manual', 'lock_llm', 'lock_active', 'lock_survey')"
+    "SELECT key, value FROM config WHERE key IN ('lock_manual', 'lock_llm', 'lock_active', 'lock_survey', 'skip_ranking')"
   ).all<{ key: string; value: string }>();
-  const defaults: Record<LockKey, boolean> = { lock_manual: false, lock_llm: true, lock_active: true, lock_survey: true };
+  const defaults: Record<LockKey, boolean> = { lock_manual: false, lock_llm: true, lock_active: true, lock_survey: true, skip_ranking: false };
   for (const r of rows.results ?? []) {
     if (LOCK_KEYS.includes(r.key as LockKey)) defaults[r.key as LockKey] = r.value === "1";
   }

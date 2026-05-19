@@ -21,6 +21,7 @@ export function AdminConfigPage() {
   const [lockLlm, setLockLlm] = useState(true);
   const [lockActive, setLockActive] = useState(true);
   const [lockSurvey, setLockSurvey] = useState(true);
+  const [skipRanking, setSkipRanking] = useState(false);
   const [savingLocks, setSavingLocks] = useState(false);
   const [, setAlRunId] = useState<string | null>(null);
   const [alStatus, setAlStatus] = useState<"idle" | "running" | "done" | "error">("idle");
@@ -53,6 +54,7 @@ export function AdminConfigPage() {
         setLockLlm(locks.lock_llm);
         setLockActive(locks.lock_active);
         setLockSurvey(locks.lock_survey);
+        setSkipRanking(locks.skip_ranking ?? false);
       }
     })();
   }, [localeTemplates.prompt1, localeTemplates.prompt2]);
@@ -175,9 +177,9 @@ export function AdminConfigPage() {
     showMsg(t("admin.config.templateApplied"));
   };
 
-  const toggleLock = async (key: "lock_manual" | "lock_llm" | "lock_active" | "lock_survey", current: boolean) => {
+  const toggleLock = async (key: "lock_manual" | "lock_llm" | "lock_active" | "lock_survey" | "skip_ranking", current: boolean) => {
     if (savingLocks) return;
-    const setters = { lock_manual: setLockManual, lock_llm: setLockLlm, lock_active: setLockActive, lock_survey: setLockSurvey };
+    const setters: Record<string, (v: boolean) => void> = { lock_manual: setLockManual, lock_llm: setLockLlm, lock_active: setLockActive, lock_survey: setLockSurvey, skip_ranking: setSkipRanking };
     setters[key](!current);
     setSavingLocks(true);
     try {
@@ -186,6 +188,7 @@ export function AdminConfigPage() {
       setLockLlm(res.lock_llm);
       setLockActive(res.lock_active);
       setLockSurvey(res.lock_survey);
+      setSkipRanking(res.skip_ranking ?? false);
       showMsg(t("lock.saved"));
     } catch {
       setters[key](current);
@@ -216,7 +219,7 @@ export function AdminConfigPage() {
               { key: "lock_llm" as const, label: t("lock.task2"), locked: lockLlm },
               { key: "lock_active" as const, label: t("lock.task3"), locked: lockActive },
               { key: "lock_survey" as const, label: t("lock.task4"), locked: lockSurvey },
-            ]).map(({ key, label, locked }) => (
+            ] as const).map(({ key, label, locked }) => (
               <div key={key} style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
                 padding: "12px 16px", borderRadius: 8,
@@ -245,6 +248,37 @@ export function AdminConfigPage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            padding: "12px 16px", borderRadius: 8, marginTop: 12,
+            border: `1px solid ${skipRanking ? "#f59e0b" : "var(--color-border)"}`,
+            background: skipRanking ? "rgba(245, 158, 11, 0.08)" : "var(--color-bg-secondary)"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontSize: 18 }}>{skipRanking ? "⏭️" : "📊"}</span>
+              <div>
+                <span style={{ fontWeight: 600, fontSize: 14 }}>{t("lock.ranking")}</span>
+                <div style={{ fontSize: 11, color: "var(--color-text-muted)", marginTop: 2 }}>{t("lock.rankingHint")}</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{
+                fontSize: 12, fontWeight: 600,
+                color: skipRanking ? "#d97706" : "var(--color-success)"
+              }}>
+                {skipRanking ? t("lock.rankingOff") : t("lock.rankingOn")}
+              </span>
+              <button
+                className={`btn ${skipRanking ? "primary" : ""}`}
+                style={{ padding: "6px 16px", fontSize: 12, minWidth: 72 }}
+                onClick={() => toggleLock("skip_ranking", skipRanking)}
+                disabled={savingLocks}
+              >
+                {skipRanking ? t("lock.rankingEnable") : t("lock.rankingDisable")}
+              </button>
+            </div>
           </div>
         </div>
 

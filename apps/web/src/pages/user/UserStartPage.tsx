@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { EnvDebugPanel } from "../../components/EnvDebugPanel";
 import { api } from "../../lib/api";
 import { ENABLE_ACTIVE_LEARNING } from "../../lib/featureFlags";
@@ -10,6 +10,7 @@ type PhaseLocks = { lock_manual: boolean; lock_llm: boolean; lock_active: boolea
 
 export function UserStartPage() {
   const nav = useNavigate();
+  const location = useLocation();
   const { t } = useI18n();
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,15 +20,47 @@ export function UserStartPage() {
   const [currentSessionId, setCurrentSessionId] = useState(getSessionId());
   const [consent, setConsent] = useState(true);
   const [locks, setLocks] = useState<PhaseLocks | null>(null);
+  const autoResumeAttempted = useRef(false);
+  // Guards against double-click / rapid re-entry: React's setLoading is async so
+  // disabled={loading} doesn't kick in between two same-frame clicks. Without this,
+  // a fast double-tap would issue TWO startSession calls with DIFFERENT idempotency
+  // keys → two sessions created. Refs update synchronously, so they DO catch it.
+  const startInflightRef = useRef(false);
+  const resumeInflightRef = useRef(false);
 
   useEffect(() => {
     api.getPhaseLocks().then(setLocks).catch(() => {});
   }, []);
 
+  useEffect(() => {
+    const autoResume = (location.state as { autoResume?: boolean } | null)?.autoResume;
+    if (!autoResume || autoResumeAttempted.current) return;
+    if (!getSessionId()) return;
+    autoResumeAttempted.current = true;
+    nav(location.pathname, { replace: true, state: {} });
+    void resumeSession();
+  }, [location.state, location.pathname, nav]);
+
   const start = async () => {
+    if (startInflightRef.current) return;
+    startInflightRef.current = true;
     setLoading(true);
     setMessage("");
     try {
+      // Re-check locks RIGHT before starting so the teacher can lock the phase
+      // between the page load and the user clicking "Start" (e.g. across a
+      // 50-person workshop where some users idle on the start page). Without
+      // this, late starters would create sessions that immediately hit the
+      // "task locked" screen on the manual page.
+      const freshLocks = await api.getPhaseLocks().catch(() => null);
+      if (freshLocks) {
+        setLocks(freshLocks);
+        if (freshLocks.lock_manual) {
+          setMessageKind("error");
+          setMessage(t("lock.taskLocked"));
+          return;
+        }
+      }
       storeConsent(consent);
       const data = await api.startSession({
         user_id: userId || undefined,
@@ -47,13 +80,17 @@ export function UserStartPage() {
       }
     } finally {
       setLoading(false);
+      startInflightRef.current = false;
     }
   };
 
   const resumeSession = async () => {
+    if (resumeInflightRef.current) return;
     const sid = getSessionId();
     if (!sid) return;
+    resumeInflightRef.current = true;
     setLoading(true);
+    setMessage("");
     try {
       const status = await api.getSessionStatus(sid);
       setCurrentSessionId(sid);
@@ -75,13 +112,11 @@ export function UserStartPage() {
         if (target === "/user/normal/manual" && status.locks.lock_manual) {
           setMessageKind("error");
           setMessage(t("lock.taskLocked"));
-          setLoading(false);
           return;
         }
         if (target === "/user/normal/llm" && status.locks.lock_llm) {
           setMessageKind("error");
           setMessage(t("lock.taskLocked"));
-          setLoading(false);
           return;
         }
       }
@@ -98,6 +133,7 @@ export function UserStartPage() {
       }
     } finally {
       setLoading(false);
+      resumeInflightRef.current = false;
     }
   };
 
