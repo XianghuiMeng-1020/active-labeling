@@ -768,104 +768,114 @@ app.post("/api/labels/manual", async (c) => {
       });
     }
   }
-  const asgn = await c.env.DB.prepare(
-    "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
-  ).bind(body.session_id.trim(), body.unit_id.trim(), body.phase).first<{ status: string }>();
-  if (!asgn) {
-    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
-    return json({ error: "assignment_not_found" }, 404);
-  }
-  if (asgn.status === "done") {
-    // Already-done is a legitimate response we want subsequent retries to see,
-    // so cache it (rather than free the claim) — keeps idempotency semantics intact.
-    const payload = { ok: true, already_done: true };
-    if (body.idempotency_key) await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
-    return json(payload);
-  }
 
-  const valid = validateAttempt(body.attempt, c.env);
-  const attemptId = crypto.randomUUID();
-  const consented = await hasConsent(c.env, body.session_id.trim());
-  if (consented) {
-    await runManualLabelBatch(c.env, {
-      sessionId: body.session_id.trim(),
-      unitId: body.unit_id.trim(),
-      phase: body.phase,
-      label,
-      attemptId,
-      attempt: body.attempt ?? {
-        shown_at_epoch_ms: 0,
-        answered_at_epoch_ms: 0,
-        active_ms: 0,
-        hidden_ms: 0,
-        idle_ms: 0,
-        hidden_count: 0,
-        blur_count: 0,
-        had_background: 0,
-        events: []
-      },
-      isValid: valid.isValid,
-      invalidReason: valid.reason
-    });
-  } else {
-    // No-consent: only advance the assignment so the UI can move forward.
-    await c.env.DB.prepare(
-      "UPDATE assignments SET status = 'done' WHERE session_id = ? AND unit_id = ? AND phase = ? AND task = 'manual'"
-    ).bind(body.session_id.trim(), body.unit_id.trim(), body.phase).run();
-  }
-  const progress = await countProgress(c.env, body.session_id, body.phase, "manual");
-  if (body.phase === "normal" && progress.done === progress.total) {
-    await updateSessionDoneAt(c.env, body.session_id, "normal_manual_done_at");
-  }
-  if (body.phase === "active" && progress.done === progress.total) {
-    await updateSessionDoneAt(c.env, body.session_id, "active_manual_done_at");
-  }
-  broadcastStats(c.env).catch(() => {});
-
-  const sessionId = body.session_id.trim();
-  const phase = body.phase;
-
-  const nextUnit = await getNextUnit(c.env, sessionId, phase, "manual");
-
-  let fullyLabeledEssays: number[] = [];
-  let rankedEssays: number[] = [];
-  if (phase === "normal") {
-    const [labeledRows, rankRows] = await Promise.all([
-      c.env.DB.prepare(
-        "SELECT unit_id FROM assignments WHERE session_id=? AND phase=? AND task='manual' AND status='done'"
-      ).bind(sessionId, phase).all<{ unit_id: string }>(),
-      c.env.DB.prepare(
-        "SELECT essay_index FROM ranking_submissions WHERE session_id=?"
-      ).bind(sessionId).all<{ essay_index: number }>()
-    ]);
-    const essayCounts: Record<number, number> = {};
-    for (const r of labeledRows.results ?? []) {
-      const m = r.unit_id.match(/^essay(\d+)_sentence/);
-      if (m) {
-        const idx = parseInt(m[1], 10);
-        essayCounts[idx] = (essayCounts[idx] ?? 0) + 1;
-      }
+  // Any unexpected error after claiming MUST release the claim so retries aren't
+  // permanently blocked. Early-return paths (not_found, already_done) are handled
+  // inline; this outer try/catch catches everything else (DB errors, timeouts…).
+  try {
+    const asgn = await c.env.DB.prepare(
+      "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
+    ).bind(body.session_id.trim(), body.unit_id.trim(), body.phase).first<{ status: string }>();
+    if (!asgn) {
+      if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+      return json({ error: "assignment_not_found" }, 404);
     }
-    fullyLabeledEssays = Object.entries(essayCounts)
-      .filter(([, count]) => count >= 5)
-      .map(([idx]) => parseInt(idx, 10))
-      .sort((a, b) => a - b);
-    rankedEssays = (rankRows.results ?? []).map((r) => r.essay_index);
-  }
+    if (asgn.status === "done") {
+      // Already-done is a legitimate response we want subsequent retries to see,
+      // so cache it (rather than free the claim) — keeps idempotency semantics intact.
+      const payload = { ok: true, already_done: true };
+      if (body.idempotency_key) await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+      return json(payload);
+    }
 
-  const payload = {
-    ok: true,
-    is_valid: valid.isValid,
-    invalid_reason: valid.reason,
-    next_unit: nextUnit ?? null,
-    progress,
-    fully_labeled_essays: fullyLabeledEssays,
-    ranked_essays: rankedEssays
-  };
-  if (body.idempotency_key) {
-    await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+    const valid = validateAttempt(body.attempt, c.env);
+    const attemptId = crypto.randomUUID();
+    const consented = await hasConsent(c.env, body.session_id.trim());
+    if (consented) {
+      await runManualLabelBatch(c.env, {
+        sessionId: body.session_id.trim(),
+        unitId: body.unit_id.trim(),
+        phase: body.phase,
+        label,
+        attemptId,
+        attempt: body.attempt ?? {
+          shown_at_epoch_ms: 0,
+          answered_at_epoch_ms: 0,
+          active_ms: 0,
+          hidden_ms: 0,
+          idle_ms: 0,
+          hidden_count: 0,
+          blur_count: 0,
+          had_background: 0,
+          events: []
+        },
+        isValid: valid.isValid,
+        invalidReason: valid.reason
+      });
+    } else {
+      // No-consent: only advance the assignment so the UI can move forward.
+      await c.env.DB.prepare(
+        "UPDATE assignments SET status = 'done' WHERE session_id = ? AND unit_id = ? AND phase = ? AND task = 'manual'"
+      ).bind(body.session_id.trim(), body.unit_id.trim(), body.phase).run();
+    }
+    const progress = await countProgress(c.env, body.session_id, body.phase, "manual");
+    if (body.phase === "normal" && progress.done === progress.total) {
+      await updateSessionDoneAt(c.env, body.session_id, "normal_manual_done_at");
+    }
+    if (body.phase === "active" && progress.done === progress.total) {
+      await updateSessionDoneAt(c.env, body.session_id, "active_manual_done_at");
+    }
+    broadcastStats(c.env).catch(() => {});
+
+    const sessionId = body.session_id.trim();
+    const phase = body.phase;
+
+    const nextUnit = await getNextUnit(c.env, sessionId, phase, "manual");
+
+    let fullyLabeledEssays: number[] = [];
+    let rankedEssays: number[] = [];
+    if (phase === "normal") {
+      const [labeledRows, rankRows] = await Promise.all([
+        c.env.DB.prepare(
+          "SELECT unit_id FROM assignments WHERE session_id=? AND phase=? AND task='manual' AND status='done'"
+        ).bind(sessionId, phase).all<{ unit_id: string }>(),
+        c.env.DB.prepare(
+          "SELECT essay_index FROM ranking_submissions WHERE session_id=?"
+        ).bind(sessionId).all<{ essay_index: number }>()
+      ]);
+      const essayCounts: Record<number, number> = {};
+      for (const r of labeledRows.results ?? []) {
+        const m = r.unit_id.match(/^essay(\d+)_sentence/);
+        if (m) {
+          const idx = parseInt(m[1], 10);
+          essayCounts[idx] = (essayCounts[idx] ?? 0) + 1;
+        }
+      }
+      fullyLabeledEssays = Object.entries(essayCounts)
+        .filter(([, count]) => count >= 5)
+        .map(([idx]) => parseInt(idx, 10))
+        .sort((a, b) => a - b);
+      rankedEssays = (rankRows.results ?? []).map((r) => r.essay_index);
+    }
+
+    const payload = {
+      ok: true,
+      is_valid: valid.isValid,
+      invalid_reason: valid.reason,
+      next_unit: nextUnit ?? null,
+      progress,
+      fully_labeled_essays: fullyLabeledEssays,
+      ranked_essays: rankedEssays
+    };
+    if (body.idempotency_key) {
+      await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+    }
+    return json(payload);
+  } catch (err) {
+    // Release the claim so clients can retry with the same key without waiting 24h.
+    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+    throw err;
   }
-  return json(payload);
 });
 
 // ─── Undo last manual label ───────────────────────────────────────────────────
@@ -894,60 +904,65 @@ app.post("/api/labels/undo", async (c) => {
     }
   }
 
-  // Check that the assignment exists and is currently 'done'
-  const asgn = await c.env.DB.prepare(
-    "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
-  )
-    .bind(body.session_id, body.unit_id, body.phase)
-    .first<{ status: string }>();
-  if (!asgn) {
-    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
-    return json({ error: "assignment not found" }, 404);
-  }
-  if (asgn.status !== "done") {
-    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
-    return json({ error: "assignment is not done, nothing to undo" }, 409);
-  }
-
-  // Roll back: delete attempts/events, label, and mark assignment todo (atomic)
-  await c.env.DB.batch([
-    c.env.DB.prepare(
-      "DELETE FROM interaction_events WHERE attempt_id IN (SELECT attempt_id FROM label_attempts WHERE session_id=? AND unit_id=? AND phase=? AND task='manual')"
-    ).bind(body.session_id, body.unit_id, body.phase),
-    c.env.DB.prepare(
-      "DELETE FROM label_attempts WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
-    ).bind(body.session_id, body.unit_id, body.phase),
-    c.env.DB.prepare(
-      "DELETE FROM manual_labels WHERE session_id=? AND unit_id=? AND phase=?"
-    ).bind(body.session_id, body.unit_id, body.phase),
-    c.env.DB.prepare(
-      "UPDATE assignments SET status='todo' WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
-    ).bind(body.session_id, body.unit_id, body.phase)
-  ]);
-
-  // If we rolled back the last unit in a phase, also clear the phase done timestamp
-  const progress = await countProgress(c.env, body.session_id, body.phase, "manual");
-  if (body.phase === "normal" && progress.done < progress.total) {
-    await c.env.DB.prepare(
-      "UPDATE sessions SET normal_manual_done_at=NULL WHERE session_id=?"
+  try {
+    // Check that the assignment exists and is currently 'done'
+    const asgn = await c.env.DB.prepare(
+      "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
     )
-      .bind(body.session_id)
-      .run();
-  }
-  if (body.phase === "active" && progress.done < progress.total) {
-    await c.env.DB.prepare(
-      "UPDATE sessions SET active_manual_done_at=NULL WHERE session_id=?"
-    )
-      .bind(body.session_id)
-      .run();
-  }
+      .bind(body.session_id, body.unit_id, body.phase)
+      .first<{ status: string }>();
+    if (!asgn) {
+      if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+      return json({ error: "assignment not found" }, 404);
+    }
+    if (asgn.status !== "done") {
+      if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+      return json({ error: "assignment is not done, nothing to undo" }, 409);
+    }
 
-  await broadcastStats(c.env);
-  const payload = { ok: true };
-  if (body.idempotency_key) {
-    await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+    // Roll back: delete attempts/events, label, and mark assignment todo (atomic)
+    await c.env.DB.batch([
+      c.env.DB.prepare(
+        "DELETE FROM interaction_events WHERE attempt_id IN (SELECT attempt_id FROM label_attempts WHERE session_id=? AND unit_id=? AND phase=? AND task='manual')"
+      ).bind(body.session_id, body.unit_id, body.phase),
+      c.env.DB.prepare(
+        "DELETE FROM label_attempts WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
+      ).bind(body.session_id, body.unit_id, body.phase),
+      c.env.DB.prepare(
+        "DELETE FROM manual_labels WHERE session_id=? AND unit_id=? AND phase=?"
+      ).bind(body.session_id, body.unit_id, body.phase),
+      c.env.DB.prepare(
+        "UPDATE assignments SET status='todo' WHERE session_id=? AND unit_id=? AND phase=? AND task='manual'"
+      ).bind(body.session_id, body.unit_id, body.phase)
+    ]);
+
+    // If we rolled back the last unit in a phase, also clear the phase done timestamp
+    const progress = await countProgress(c.env, body.session_id, body.phase, "manual");
+    if (body.phase === "normal" && progress.done < progress.total) {
+      await c.env.DB.prepare(
+        "UPDATE sessions SET normal_manual_done_at=NULL WHERE session_id=?"
+      )
+        .bind(body.session_id)
+        .run();
+    }
+    if (body.phase === "active" && progress.done < progress.total) {
+      await c.env.DB.prepare(
+        "UPDATE sessions SET active_manual_done_at=NULL WHERE session_id=?"
+      )
+        .bind(body.session_id)
+        .run();
+    }
+
+    await broadcastStats(c.env);
+    const payload = { ok: true };
+    if (body.idempotency_key) {
+      await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+    }
+    return json(payload);
+  } catch (err) {
+    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+    throw err;
   }
-  return json(payload);
 });
 
 // ─── LLM run (with custom 5-attempt server gate) ─────────────────────────────
@@ -1182,67 +1197,73 @@ app.post("/api/llm/accept", async (c) => {
       });
     }
   }
-  const asgn = await c.env.DB.prepare(
-    "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase='normal' AND task='llm'"
-  ).bind(body.session_id.trim(), body.unit_id.trim()).first<{ status: string }>();
-  if (!asgn) {
-    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
-    return json({ error: "assignment_not_found" }, 404);
-  }
-  if (asgn.status === "done") {
-    const payload = { ok: true, already_done: true };
-    if (body.idempotency_key) await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+
+  try {
+    const asgn = await c.env.DB.prepare(
+      "SELECT status FROM assignments WHERE session_id=? AND unit_id=? AND phase='normal' AND task='llm'"
+    ).bind(body.session_id.trim(), body.unit_id.trim()).first<{ status: string }>();
+    if (!asgn) {
+      if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+      return json({ error: "assignment_not_found" }, 404);
+    }
+    if (asgn.status === "done") {
+      const payload = { ok: true, already_done: true };
+      if (body.idempotency_key) await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+      return json(payload);
+    }
+
+    const valid = validateAttempt(attemptPayload, c.env);
+    const sessionId = body.session_id.trim();
+    const consented = await hasConsent(c.env, sessionId);
+    if (consented) {
+      await runLlmAcceptBatch(c.env, {
+        sessionId,
+        unitId: body.unit_id.trim(),
+        phase: "normal",
+        mode,
+        acceptedLabel: body.accepted_label.trim(),
+        attemptId: crypto.randomUUID(),
+        attempt: attemptPayload,
+        isValid: valid.isValid,
+        invalidReason: valid.reason
+      });
+    } else {
+      // No-consent: only advance the assignment.
+      await c.env.DB.prepare(
+        "UPDATE assignments SET status = 'done' WHERE session_id = ? AND unit_id = ? AND phase = 'normal' AND task = 'llm'"
+      ).bind(sessionId, body.unit_id.trim()).run();
+    }
+    const progress = await countProgress(c.env, sessionId, "normal", "llm");
+    if (progress.done === progress.total) {
+      await updateSessionDoneAt(c.env, sessionId, "normal_llm_done_at");
+    }
+    broadcastStats(c.env).catch(() => {});
+
+    const nextUnit = await getNextUnit(c.env, sessionId, "normal", "llm");
+    let customCount = 0;
+    if (nextUnit) {
+      const row = await c.env.DB.prepare(
+        "SELECT run_count FROM llm_run_counts WHERE session_id=? AND unit_id=? AND phase='normal' AND mode='custom'"
+      ).bind(sessionId, nextUnit.unit_id).first<{ run_count: number }>();
+      customCount = row?.run_count ?? 0;
+    }
+
+    const payload = {
+      ok: true,
+      is_valid: valid.isValid,
+      invalid_reason: valid.reason,
+      next_unit: nextUnit ?? null,
+      progress,
+      custom_attempts_used: customCount
+    };
+    if (body.idempotency_key) {
+      await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
+    }
     return json(payload);
+  } catch (err) {
+    if (body.idempotency_key) await releaseIdempotencyClaim(c.env, body.idempotency_key);
+    throw err;
   }
-
-  const valid = validateAttempt(attemptPayload, c.env);
-  const sessionId = body.session_id.trim();
-  const consented = await hasConsent(c.env, sessionId);
-  if (consented) {
-    await runLlmAcceptBatch(c.env, {
-      sessionId,
-      unitId: body.unit_id.trim(),
-      phase: "normal",
-      mode,
-      acceptedLabel: body.accepted_label.trim(),
-      attemptId: crypto.randomUUID(),
-      attempt: attemptPayload,
-      isValid: valid.isValid,
-      invalidReason: valid.reason
-    });
-  } else {
-    // No-consent: only advance the assignment.
-    await c.env.DB.prepare(
-      "UPDATE assignments SET status = 'done' WHERE session_id = ? AND unit_id = ? AND phase = 'normal' AND task = 'llm'"
-    ).bind(sessionId, body.unit_id.trim()).run();
-  }
-  const progress = await countProgress(c.env, sessionId, "normal", "llm");
-  if (progress.done === progress.total) {
-    await updateSessionDoneAt(c.env, sessionId, "normal_llm_done_at");
-  }
-  broadcastStats(c.env).catch(() => {});
-
-  const nextUnit = await getNextUnit(c.env, sessionId, "normal", "llm");
-  let customCount = 0;
-  if (nextUnit) {
-    const row = await c.env.DB.prepare(
-      "SELECT run_count FROM llm_run_counts WHERE session_id=? AND unit_id=? AND phase='normal' AND mode='custom'"
-    ).bind(sessionId, nextUnit.unit_id).first<{ run_count: number }>();
-    customCount = row?.run_count ?? 0;
-  }
-
-  const payload = {
-    ok: true,
-    is_valid: valid.isValid,
-    invalid_reason: valid.reason,
-    next_unit: nextUnit ?? null,
-    progress,
-    custom_attempts_used: customCount
-  };
-  if (body.idempotency_key) {
-    await setIdempotency(c.env, body.idempotency_key, JSON.stringify(payload), 200);
-  }
-  return json(payload);
 });
 
 // ─── Active LLM results (for user view) ──────────────────────────────────────
