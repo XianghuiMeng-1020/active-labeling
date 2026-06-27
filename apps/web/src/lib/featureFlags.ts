@@ -5,4 +5,4 @@
  * needs the full three-phase flow; set to `false` for the simplified
  * Manual → LLM → Survey flow.
  */
-export const ENABLE_ACTIVE_LEARNING = false;
+export const ENABLE_ACTIVE_LEARNING = true;

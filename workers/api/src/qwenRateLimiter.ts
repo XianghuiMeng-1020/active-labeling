@@ -6,6 +6,7 @@
 import type { Env } from "./types";
 
 const DEFAULT_MAX_CONCURRENT = 2;
+const ABSOLUTE_MAX_CONCURRENT = 80;
 
 type Metrics = {
   calls_total: number;
@@ -29,7 +30,8 @@ export class QwenRateLimiter {
 
   constructor(_state: DurableObjectState, env: Env) {
     const n = parseInt(env.QWEN_MAX_CONCURRENT ?? "", 10);
-    this.maxConcurrent = Number.isFinite(n) && n >= 1 && n <= 20 ? n : DEFAULT_MAX_CONCURRENT;
+    this.maxConcurrent =
+      Number.isFinite(n) && n >= 1 && n <= ABSOLUTE_MAX_CONCURRENT ? n : DEFAULT_MAX_CONCURRENT;
   }
 
   async fetch(request: Request): Promise<Response> {

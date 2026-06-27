@@ -8,10 +8,10 @@ compatibility_date = "2025-01-01"
 [vars]
 IDLE_THRESHOLD_MS = "10000"
 MIN_ACTIVE_MS = "800"
-# LLM 总并发数（Qwen DO 并发上限；付费账户可适当提高）
-QWEN_MAX_CONCURRENT = "20"
+# LLM 总并发数（Qwen DO 并发上限；60 人现场要求最大并发 40 以平衡排队延迟与 DashScope 429 风险）
+QWEN_MAX_CONCURRENT = "40"
 # OpenAI GPT-4o-mini 并发上限（当前 ratio=0，仅作 fallback 备用）
-OPENAI_MAX_CONCURRENT = "15"
+OPENAI_MAX_CONCURRENT = "30"
 # 随机分配到 OpenAI 的流量比例 (0.0–1.0)；0 = 全部走 Qwen，OpenAI 仅在 Qwen 失败时 fallback
 LLM_OPENAI_RATIO = "0"
 ADMIN_SESSION_TTL_SEC = "28800"
