@@ -9,6 +9,7 @@
 \documentclass[fleqn,10pt]{JLA_article}
 
 \usepackage[english]{babel}
+\usepackage{graphicx}
 \setlength{\headheight}{38.33pt}
 \addtolength{\topmargin}{-27.33pt}
 \usepackage{hyperref}
@@ -270,6 +271,21 @@ presented for re-annotation. These are the segments where collective human uncer
 highest and content diversity is greatest. This phase directs collective attention to the
 hard cases: those where the coding taxonomy's boundaries are most contested and where
 additional expert deliberation is most valuable.
+
+Figure~\ref{fig:interface} illustrates the participant interface across Phase~1 and
+Phase~2. In Phase~1 (left panel), the current target sentence is highlighted in the
+running essay text and label buttons are displayed below; clicking a button auto-submits
+the label and advances to the next sentence, with keyboard shortcuts (1--5) available for
+speed. In Phase~2 (right panel), the LLM's predicted label is shown alongside each
+sentence; participants review each prediction and either accept it or override it using
+an alternate label.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/fig_interface.png}
+  \caption{MNotation participant interface. \textbf{Left:} Phase~1 (independent human annotation) --- the target sentence is highlighted in the essay context, and label buttons are shown below for one-tap submission. \textbf{Right:} Phase~2 (LLM-assisted review) --- after running the model with a selected prompt, each sentence is shown with the LLM's predicted label and \emph{Accept} / \emph{Override} buttons.}
+  \label{fig:interface}
+\end{figure}
 
 \subsection{The ED-AL v1 Active Learning Algorithm}
 
