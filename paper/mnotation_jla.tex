@@ -1,0 +1,684 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MNotation — JLA Tool Report
+% Journal of Learning Analytics
+% Template: JLA_article.cls (v1.0, 15/11/17)
+%
+% Compile with: pdflatex → bibtex → pdflatex × 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[fleqn,10pt]{JLA_article}
+
+\usepackage[english]{babel}
+\setlength{\headheight}{38.33pt}
+\addtolength{\topmargin}{-27.33pt}
+\usepackage{hyperref}
+\hypersetup{
+  hidelinks, colorlinks, breaklinks=true,
+  urlcolor=color2, citecolor=color1, linkcolor=color1,
+  bookmarksopen=false,
+  pdftitle={MNotation: A Learning Analytics Tool for Human-AI Collaborative Qualitative Coding},
+  pdfauthor={[Authors]}
+}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE INFORMATION
+%----------------------------------------------------------------------------------------
+
+\PaperTitle{MNotation: A Learning Analytics Tool for Human--AI Collaborative Qualitative Coding in Educational Research}
+
+\Authors{[Author 1]\textsuperscript{1}*, [Author 2]\textsuperscript{1}, [Author 3]\textsuperscript{2}}
+
+\affiliation{\textsuperscript{1}\textit{[Department, University, City, Country. email: author@university.edu}}
+\affiliation{\textsuperscript{2}\textit{[Department, University, City, Country. email: author2@university.edu}}
+
+\Keywords{learning analytics, qualitative coding, human--AI collaboration, active learning, thematic analysis, LLM-assisted annotation, trace data}
+
+\Submitted{DD/MM/YYYY}
+\Accepted{DD/MM/YYYY}
+\Published{DD/MM/YYYY}
+
+\Volume{XX}
+\Number{X}
+\Pages{1--20}
+\Doi{10.18608/jla.YYYY.XXXX}
+
+%----------------------------------------------------------------------------------------
+%	NOTES FOR PRACTICE
+%----------------------------------------------------------------------------------------
+
+\Notesname{Notes for Practice}
+
+\note{MNotation can be deployed by any research team conducting qualitative coding at scale.
+      It requires no local installation, runs in any web browser, and supports dozens of
+      simultaneous participants via QR code or URL — making it accessible for both in-person
+      workshops and remote or hybrid settings.}
+
+\note{The three-phase design separates independent human judgement from AI-assisted review,
+      enabling researchers to reflect on their own coding decisions as a deliberate epistemic
+      activity. Annotation times, accept/override choices, and interaction events are all
+      captured automatically, producing a process-level dataset alongside the final coded corpus.}
+
+\note{Instructors can use MNotation in research methods courses to make qualitative coding
+      tangible and measurable: students' annotation patterns, decision latencies, and
+      AI-override behaviour become pedagogically meaningful data that instructors can
+      project and discuss in real time.}
+
+\note{The active learning module identifies the most conceptually ambiguous text segments
+      and routes them to human annotators for priority review, substantially reducing the
+      amount of material requiring expert attention — a practical efficiency gain for teams
+      working with large educational corpora.}
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\Abstract{%
+Qualitative coding is foundational to educational research but difficult to scale: it is
+time-intensive, requires expert judgement, and generates little process data about how
+interpretive decisions are made. Large language models offer speed, but their agreement
+with human researchers in nuanced educational contexts is poorly characterised.
+This paper introduces \textbf{MNotation}, an open-source learning analytics platform that
+structures human--AI collaboration in qualitative coding through a three-phase workflow:
+independent human annotation, LLM-assisted review, and active-learning-guided prioritisation
+of the most uncertain segments. MNotation captures fine-grained behavioural trace data at
+every phase — annotation latencies, AI accept/override decisions, and interaction events —
+making the human--AI meaning-negotiation process itself an object of learning analytics inquiry.
+We demonstrate MNotation through a case study in which 69 researchers and graduate students
+annotated sentences from AI literacy essays at a research seminar. A human--LLM agreement rate
+of 31.9\% and an AI-label override rate of 27.6\% reveal that LLM proposals serve as productive
+epistemic anchors that prompt, rather than replace, deliberate human judgement.
+Post-session survey data confirm that participants found the AI system helpful for seeding
+initial coding ideas ($M=4.00/5$) while noting uncertainty about which segments the system
+prioritised ($M=3.50/5$) — a transparency gap the tool makes measurable and actionable.
+MNotation is freely available at \url{https://github.com/XianghuiMeng-1020/active-labeling}.%
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\flushbottom
+\maketitle
+\thispagestyle{fancy}
+
+%----------------------------------------------------------------------------------------
+\section{Introduction}
+%----------------------------------------------------------------------------------------
+
+Qualitative thematic analysis — the systematic process of reading texts, identifying
+patterns, and assigning interpretive codes — remains one of the most widely used
+methods in educational research \cite{braun2006using}. It is also one of the most
+demanding: analysing hundreds of interview transcripts, student essays, or discussion
+forum posts requires expert judgement, sustained engagement with text, and careful
+negotiation among coders. As educational datasets grow in scale — driven by the
+proliferation of online learning platforms, AI-assisted tutoring systems, and
+large-scale studies — the mismatch between the richness of qualitative inquiry
+and the constraints of human labour has become a pressing methodological challenge
+\cite{papamitsiou2014learning}.
+
+Large language models (LLMs) offer an apparent solution: they can label text at
+machine speed. Recent work suggests that LLMs can approximate human inter-rater
+reliability for well-defined coding schemes \cite{bing2024llm}, but questions
+remain about whether automated coding is methodologically defensible for the
+boundary-ambiguous, theory-laden constructs that characterise educational research.
+More fundamentally, treating the LLM as an automated coder bypasses the epistemic
+value of the coding process itself: the sustained engagement with text that produces
+not just labels but interpretive insight.
+
+A more productive framing positions the LLM not as a replacement for the human coder
+but as a \emph{collaborator} — one whose proposals the human researcher can accept,
+contest, or revise. This framing, grounded in accounts of human--machine meaning
+negotiation \cite{liu2026meaning}, reconceptualises coding as a dialogue between human
+understanding and machine inference. It preserves the interpretive depth of qualitative
+work while using AI to accelerate the process and surface disagreements that warrant
+closer attention.
+
+From a learning analytics perspective, this human--AI negotiation is itself a
+data-rich process \cite{gasevic2015lets}. Every moment a researcher pauses before
+accepting an AI suggestion, or reaches for a different label, reveals something about
+the conceptual boundaries of the coding scheme. Capturing and analysing these decision
+traces can illuminate which text segments are genuinely contested, where the coding
+taxonomy may be under-specified, and how annotators' judgements evolve over the session.
+Yet few tools exist that are designed both to facilitate this negotiation and to generate
+the trace data needed to study it.
+
+This paper introduces \textbf{MNotation} (Meaning Notation), an open-source learning
+analytics platform that addresses this gap. MNotation organises qualitative coding into
+three sequential phases — independent human annotation, LLM-assisted review, and
+active-learning-guided prioritisation — and logs rich behavioural data at each phase.
+The resulting dataset makes the coding process transparent and analytically tractable,
+enabling researchers not only to produce a labelled corpus but to study the process by
+which that corpus came to be.
+
+We report a case study deployment at a research seminar where 69 participants annotated
+sentences from student essays about AI literacy. The study documents MNotation's
+architecture, its novel active learning algorithm (ED-AL v1), and the patterns of
+human--AI agreement and disagreement it revealed. Our goal is to demonstrate MNotation's
+value for the learning analytics community as both a practical research instrument and a
+new lens on human--AI collaborative sense-making in educational contexts.
+
+%----------------------------------------------------------------------------------------
+\section{Theoretical Grounding}
+%----------------------------------------------------------------------------------------
+
+\subsection{Qualitative Coding as a Learning Activity}
+
+The act of coding qualitative data is not merely a mechanical classification task.
+It requires the coder to hold a conceptual framework in mind, interpret each text
+segment in relation to that framework, and make explicit decisions about category
+boundaries. Repeated engagement with an annotation scheme constitutes a form of
+\emph{schema development} \cite{chi2021translating}: coders progressively refine
+their understanding of each category through exposure to edge cases and through
+negotiation with co-coders.
+
+This perspective motivates the collection of process-level trace data during coding.
+Just as learning analytics researchers instrument digital environments to capture
+reading behaviours, help-seeking, and self-regulation \cite{flora2025}, MNotation
+instruments the coding interface to capture annotation decisions, response latencies,
+and revisions. The resulting data support analyses of how individual and group
+understanding of a coding scheme develops over time — extending learning analytics
+methods from \emph{student} learning to \emph{researcher} learning.
+
+\subsection{Human--AI Meaning Negotiation}
+
+The concept of meaning saturation \cite{liu2026meaning} proposes that meaning in
+qualitative analysis is not fixed in a text but emerges from the encounter between
+text, reader, and interpretive community. AI-generated labels are not right or wrong
+in any absolute sense; they represent one possible reading that the human coder can
+engage with critically. The process of accepting, modifying, or rejecting an AI label
+is an act of meaning negotiation that surfaces the coder's own interpretive commitments.
+
+This framing has direct implications for tool design. Rather than presenting AI
+predictions as authoritative outputs, MNotation frames them as \emph{proposals} that
+invite human evaluation. The interface deliberately separates the human coding phase
+from the AI-assisted review, ensuring that participants form their own judgements before
+encountering the model's suggestions — mirroring established practices for avoiding
+anchoring bias in expert judgement \cite{nickerson1998confirmation}.
+
+\subsection{Active Learning in Qualitative Research}
+
+Active learning — in the machine learning sense — refers to algorithms that query human
+annotators strategically, directing attention to the examples most likely to improve
+model performance \cite{settles2012active}. In the context of qualitative educational
+research, active learning serves an additional function: it identifies the text segments
+where human--AI disagreement is highest, which are often the segments most conceptually
+interesting to the researcher.
+
+MNotation incorporates an active learning module (ED-AL v1, described in Section 3.3)
+that combines uncertainty sampling and diversity-based selection to identify a small
+subset of segments for priority annotation. This reflects the growing recognition in
+learning analytics that directing human attention to the most consequential examples is
+itself a form of pedagogical scaffolding \cite{munshi2023analysing} — applicable here to
+the scaffolding of the researcher's own analytical process.
+
+%----------------------------------------------------------------------------------------
+\section{Tool Description}
+%----------------------------------------------------------------------------------------
+
+\subsection{System Overview}
+
+MNotation is a browser-based platform designed for groups of researchers or students to
+annotate text corpora collaboratively, in real time, with AI assistance. It is hosted on
+Cloudflare's global edge network, which means it can support dozens of simultaneous users
+without local server setup and is accessible from any device with a web browser, including
+smartphones. This design reflects a commitment to accessibility: annotation workshops can
+be run in seminar rooms, online, or in hybrid settings without requiring participants to
+install software or create accounts. Participants join via a shared URL or QR code.
+
+The platform has two interfaces: a \emph{participant interface} guiding users through the
+three annotation phases, and an \emph{administrator dashboard} providing real-time
+monitoring, data management, and active learning control.
+
+\subsection{Three-Phase Annotation Workflow}
+
+\subsubsection{Phase 1: Independent Human Annotation}
+
+Each participant reads text segments presented one at a time and assigns a label from
+the predefined taxonomy by tapping or clicking. No AI information is shown during this
+phase, ensuring that initial judgements are uncontaminated by machine suggestions.
+The interface records three engagement metrics for each annotation decision:
+
+\begin{itemize}[noitemsep]
+  \item \texttt{active\_ms} — time the interface was in active browser focus
+  \item \texttt{idle\_ms} — time the interface was visible but the tab was unfocused
+  \item \texttt{blur\_count} — number of tab-switch events during the annotation
+\end{itemize}
+
+A configurable minimum engagement threshold (default: 800 ms) filters accidental or
+inattentive clicks before a label is accepted as valid.
+
+\subsubsection{Phase 2: LLM-Assisted Review}
+
+After completing Phase 1, participants enter a review mode in which each segment is
+displayed alongside the LLM's predicted label. They can accept the prediction (one tap),
+override it using a slide-up selector, or switch between two pre-configured prompt
+conditions — a zero-shot prompt (Prompt 1) and a few-shot exemplar prompt (Prompt 2) —
+or enter a custom prompt (rate-limited to five queries per session). The tool logs the
+final submitted label, whether it differs from the AI's prediction, and the decision
+latency. This phase enables participants to critically evaluate a second perspective on
+each text — a process analogous to structured peer review in collaborative learning.
+
+\subsubsection{Phase 3: Active Learning Prioritisation}
+
+A subset of text segments — selected by the ED-AL v1 algorithm (Section 3.3) — is
+presented for re-annotation. These are the segments where collective human uncertainty is
+highest and content diversity is greatest. This phase directs collective attention to the
+hard cases: those where the coding taxonomy's boundaries are most contested and where
+additional expert deliberation is most valuable.
+
+\subsection{The ED-AL v1 Active Learning Algorithm}
+
+The active learning module uses two sequential steps to identify which segments to
+surface in Phase 3.
+
+\textbf{Step 1 — Uncertainty scoring.} For each candidate segment, the LLM is queried
+$n$ times with temperature $\tau > 0$ to sample a label distribution. Shannon entropy
+is computed over the resulting label frequencies and normalised to $[0, 1]$:
+
+\begin{equation}
+  H_{\text{norm}}(x) = \frac{-\sum_{i} p(l_i \mid x)\log_2 p(l_i \mid x)}{\log_2 |L|}
+\end{equation}
+
+\noindent where $|L|$ is the number of labels in the taxonomy. High entropy indicates
+genuine ambiguity relative to the taxonomy.
+
+\textbf{Step 2 — Diversity selection.} From the top-$H$ highest-entropy candidates,
+TF-IDF vectors are computed and a greedy $k$-centre algorithm selects $M$ segments
+maximally spread in the feature space. This ensures that the segments sent to human
+annotators cover different conceptual regions rather than clustering around a single
+ambiguous sentence type.
+
+All algorithm parameters — pool size, entropy threshold, number of LLM samples,
+temperature, and final selection count — are adjustable through the administrator
+dashboard without code changes.
+
+\subsection{Administrator Dashboard and Data Export}
+
+The administrator interface provides live visualisations of annotation progress: bar charts
+showing label distribution per phase update in real time as participants submit decisions.
+A participant progress table displays each user's phase completion status. A \emph{freeze}
+function pauses the live display, enabling facilitators to discuss emerging patterns with
+participants — turning the annotation activity into a collective learning moment in its
+own right.
+
+Data export is available in CSV and JSON formats and includes the fields shown in Table~\ref{tab:schema}.
+
+\begin{table}[hbt]
+\caption{Key fields in MNotation's per-annotation export.}
+\label{tab:schema}
+\centering
+\small
+\begin{tabular}{lp{5.5cm}}
+\toprule
+\textbf{Field} & \textbf{Description} \\
+\midrule
+\texttt{session\_id}           & Anonymised participant session identifier \\
+\texttt{unit\_id}              & Text segment identifier \\
+\texttt{manual\_label}         & Phase~1 human-assigned label \\
+\texttt{llm\_predicted}        & LLM-generated label \\
+\texttt{user\_accepted\_label} & Final label after Phase~2 review \\
+\texttt{active\_ms}            & Active engagement time (ms) \\
+\texttt{idle\_ms}              & Idle/background time (ms) \\
+\texttt{blur\_count}           & Tab-switch events during annotation \\
+\texttt{is\_valid}             & Whether \texttt{active\_ms} $\ge$ threshold \\
+\texttt{llm\_mode}             & Prompt condition (zero-shot / few-shot / custom) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Technical Architecture}
+
+MNotation's backend is implemented in TypeScript on Cloudflare Workers with Hono 4.x as
+the routing framework. Data is stored in Cloudflare D1 (serverless SQLite; 12 tables).
+Real-time push notifications are delivered via Cloudflare Durable Objects with
+server-sent events (SSE). The frontend is built with React 19 and TypeScript, compiled
+with Vite 7. The LLM integration defaults to Qwen-Plus via the DashScope API (OpenAI-compatible),
+with configurable fallback to any other OpenAI-compatible provider. The complete codebase,
+database schema, and deployment documentation are available at
+\url{https://github.com/XianghuiMeng-1020/active-labeling}.
+
+%----------------------------------------------------------------------------------------
+\section{Case Study: AI Literacy Annotation Workshop}
+%----------------------------------------------------------------------------------------
+
+\subsection{Learning Context and Setting}
+
+To demonstrate MNotation's capabilities, we report its deployment at a research seminar
+held at a university in Hong Kong in March 2026. The seminar brought together graduate
+students and faculty from education, linguistics, and computer science — many of whom were
+new to systematic qualitative coding but interested in understanding how AI might support
+analytical work in their own research. The activity was framed as a participatory demonstration:
+participants were positioned as co-investigators exploring a question about human--AI
+collaboration in qualitative research, rather than as subjects being assessed.
+
+The coding task used 15 sentences drawn from three student-written essays on the topic of
+AI literacy. Sentences were selected to represent a range of thematic categories and to
+include cases with genuine category ambiguity. The coding taxonomy comprised six codes:
+\textbf{CODE} (definitional content), \textbf{EXPLANATION} (explanations of AI concepts
+or processes), \textbf{EVALUATION} (assessments of AI reliability, risk, or limitation),
+\textbf{RESPONSIBILITY} (ethics, fairness, or accountability), \textbf{APPLICATION}
+(practical uses of AI literacy), and \textbf{IMPLICATION} (broader consequences or future
+significance). The taxonomy and two worked examples were introduced in a 10-minute briefing
+before annotation began.
+
+\subsection{Participants and Data Collection}
+
+The session operated over approximately 25 minutes of active annotation time. Participants
+accessed MNotation by scanning a QR code displayed on the seminar screen. A total of 103
+unique users provided informed consent and registered within the session window; of these,
+\textbf{69 participants} (67\%) actively engaged with the annotation interface by submitting
+at least one label. Among active participants, 53 (77\%) completed the full 15-item manual
+annotation phase and 27 (39\%) completed the LLM-assisted review phase.
+
+Two temporal clusters were observed in participant registration. A \emph{primary cohort}
+of 45 participants registered within the first 10 minutes of the QR code being shared, of
+whom 31 (69\%) completed Phase 1. A \emph{secondary cohort} of 58 registered approximately
+20 minutes later during a second activity round, of whom 22 (38\%) completed Phase 1. The
+lower completion rate in the secondary cohort is consistent with reduced structured guidance
+during the second round. All analyses reported below pool active participants across both
+cohorts; each participant's earliest session is used as their canonical record.
+
+The LLM condition used for AI-assisted labelling was Qwen-Plus, queried with a zero-shot
+prompt (Prompt 1) and a five-shot exemplar prompt (Prompt 2). A post-session survey
+collected Likert ratings (1 = strongly disagree, 5 = strongly agree) and open-ended
+responses from 18 participants.
+
+\subsection{Participation and Annotation Patterns}
+
+The 69 active participants submitted 865 annotation decisions during Phase 1, of which
+\textbf{702 (81.1\%)} met the minimum engagement criterion (\texttt{active\_ms} $\ge$ 800 ms).
+Across valid annotations, the mean active annotation time per sentence was
+\textbf{8.3 seconds} (median 7.0 s; total including idle periods: $M = 12.2$ s).
+Browser focus-loss events occurred in only 1.1\% of annotation records, indicating
+high task engagement throughout the session.
+
+The label distribution across the 15 sentences is summarised in Table~\ref{tab:labels}.
+\textbf{EXPLANATION} was the most frequent human label (28.1\%), followed by
+\textbf{EVALUATION} (22.3\%), \textbf{APPLICATION} (19.5\%), \textbf{RESPONSIBILITY}
+(15.8\%), and \textbf{IMPLICATION} (14.2\%). Notably, the \textbf{CODE} label was not
+used by any participant despite its inclusion in the taxonomy. Participants consistently
+interpreted definitional sentences as \emph{explanatory} rather than strictly terminological,
+suggesting a boundary ambiguity in the taxonomy that the distribution data make visible
+and actionable for future coding scheme refinement.
+
+\begin{table}[hbt]
+\caption{Label distribution across 702 valid Phase~1 annotations (active participants only).}
+\label{tab:labels}
+\centering
+\begin{tabular}{lrr}
+\toprule
+\textbf{Label} & \textbf{Count} & \textbf{Percentage} \\
+\midrule
+EXPLANATION    & 243 & 28.1\% \\
+EVALUATION     & 193 & 22.3\% \\
+APPLICATION    & 169 & 19.5\% \\
+RESPONSIBILITY & 137 & 15.8\% \\
+IMPLICATION    & 123 & 14.2\% \\
+CODE           &   0 &  0.0\% \\
+\midrule
+\textbf{Total} & \textbf{865} & \textbf{100\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Human--LLM Agreement and Override Behaviour}
+
+Among the 555 sentence-level comparisons for which both a Phase~1 human label and an LLM
+prediction were available, human and LLM labels agreed in \textbf{177 cases (31.9\%)}.
+This rate is notably lower than agreement figures reported for simpler text classification
+tasks, but it is consistent with the multi-class structure of the taxonomy and the genuine
+conceptual overlap between adjacent categories such as EVALUATION and RESPONSIBILITY.
+
+Agreement varied substantially across the 15 sentences (Table~\ref{tab:unit_agree}).
+The sentence ``\emph{Machine learning algorithms work by identifying patterns in data}''
+achieved 76\% human--LLM agreement — both humans and the LLM consistently labelled it
+EXPLANATION. In contrast, ``\emph{Companies must ensure transparency in how they use AI
+systems}'' achieved only 21\% agreement: participants predominantly labelled it RESPONSIBILITY
+while the LLM frequently chose APPLICATION. These sentence-level divergences are not merely
+measurement artefacts; they reveal where the coding taxonomy draws boundaries that are
+intuitive to the model but contested by human researchers, or vice versa — information
+directly actionable for coding scheme revision.
+
+\begin{table}[hbt]
+\caption{Human--LLM agreement rates for each of the 15 annotated sentences.
+  The most common human label and the LLM's most frequent prediction are shown
+  for the five most and five least agreed-upon sentences.}
+\label{tab:unit_agree}
+\centering
+\small
+\begin{tabular}{p{6cm}rll}
+\toprule
+\textbf{Sentence (truncated)} & \textbf{Agreement} & \textbf{Human} & \textbf{LLM} \\
+\midrule
+Machine learning algorithms work by identifying patterns\ldots & 76\% & EXPLANATION & EXPLANATION \\
+Citizens can use fact-checking AI tools to verify\ldots         & 64\% & APPLICATION & APPLICATION \\
+Without proper governance frameworks\ldots                      & 58\% & IMPLICATION & IMPLICATION \\
+As AI continues to advance, the gap\ldots                       & 50\% & IMPLICATION & IMPLICATION \\
+AI literacy refers to the set of competencies\ldots             & 32\% & EXPLANATION & EXPLANATION \\
+\midrule
+Bias in AI systems occurs when training data\ldots              & 24\% & RESPONSIBILITY & APPLICATION \\
+Companies must ensure transparency in how\ldots                 & 21\% & RESPONSIBILITY & APPLICATION \\
+Developers have an ethical obligation\ldots                     & 12\% & RESPONSIBILITY & EVALUATION \\
+Healthcare professionals are using AI-assisted\ldots            & 12\% & APPLICATION   & EXPLANATION \\
+Research shows that people with higher AI literacy\ldots        &  9\% & EVALUATION    & EXPLANATION \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The most common human-to-LLM disagreement patterns were:
+\textsc{Explanation}$\to$\textsc{Evaluation} (41 cases),
+\textsc{Application}$\to$\textsc{Responsibility} (36 cases), and
+\textsc{Evaluation}$\to$\textsc{Application} (33 cases). These confusions cluster
+around conceptually adjacent category pairs, suggesting that the task's inherent
+difficulty lies in distinguishing the \emph{rhetorical function} of a sentence
+(explaining vs.\ evaluating) rather than its topic — a distinction that the data make
+precise enough to address in future coding scheme revision.
+
+Of the 555 LLM labels reviewed by participants in Phase 2, \textbf{153 were modified
+(27.6\% override rate)}. This rate indicates that participants engaged with AI proposals as
+genuine inputs to deliberation — neither uncritically accepting them nor dismissing them.
+The three-way comparison available in MNotation's export (Phase~1 human label, LLM
+prediction, Phase~2 final label) provides a rich structure for studying how AI exposure
+shifts human judgement, which label-pairs trigger override behaviour, and whether
+disagreement with the AI correlates with longer decision times.
+
+\subsection{Participant Perceptions}
+
+Eighteen participants completed the post-session survey. Likert ratings ($1$--$5$) addressed
+comprehension of the workshop's framing and experience of the AI system.
+
+Participants reported strong understanding of the session's conceptual aims.
+\emph{``I understood that this workshop examined how generative AI can support qualitative
+analysis from raw text to codes, patterns, and themes''} received $M = 4.61$.
+\emph{``I understood what the workshop was trying to teach me about qualitative analysis''}
+received $M = 4.39$. The item \emph{``I understood that the AI-supported system was designed
+to support, not replace, human interpretation''} received the highest rating ($M = 4.67$),
+suggesting that participants internalised the collaborative framing — a conceptual
+prerequisite for responsible AI-assisted research.
+
+Regarding the AI system's usefulness as a cognitive prompt: \emph{``The AI-supported system
+helped me generate initial ideas for coding or theme development''} received $M = 4.00$.
+However, \emph{``I was sometimes unsure why certain excerpts were selected by the system''}
+also received notable agreement ($M = 3.50$), revealing a \emph{transparency gap} in the
+active learning selection rationale. Participants understood that the system was surfacing
+hard cases but were not always certain of the selection logic — a finding that motivates
+a clear design priority for future versions (Section 5.2).
+
+Open-ended responses reinforced these themes. Participants described the AI as useful for
+``identify[ing] themes'' and for transforming a generative decision into a critical one:
+``give a code so that humans can do judgement [tasks] rather than selection tasks.''
+One participant characterised the experience as having ``a peer to support me in evaluating
+and rethinking my initial coding.'' Constructive feedback called for greater transparency
+about the system's underlying prompt engineering and longer task time.
+
+%----------------------------------------------------------------------------------------
+\section{Discussion}
+%----------------------------------------------------------------------------------------
+
+\subsection{What MNotation Makes Visible}
+
+The case study illustrates MNotation's central contribution: it makes the human--AI coding
+process \emph{measurable} at a granularity unavailable through conventional qualitative
+software. By capturing annotation decisions in sequence — first human, then AI-assisted,
+then active-learning-prioritised — the tool produces a longitudinal trace of how each
+participant's interpretation intersects with, diverges from, and ultimately converges with
+or departs from LLM proposals. This trace is the unit of analysis for a new genre of
+learning analytics research: studies of human--AI deliberation in educational inquiry.
+
+The 31.9\% human--LLM agreement rate is not, by itself, a measure of LLM quality. It is a
+measure of the interpretive space between human researchers and current language models for
+this particular task and taxonomy. That space is where the interesting research questions
+live. Why do participants consistently prefer EXPLANATION over EVALUATION for sentences
+about AI knowledge? What does the 76\% agreement on the machine learning sentence tell us
+about the clarity of that sentence's rhetorical function, compared with the 9\% agreement
+on the AI literacy research sentence? These questions are answerable only at the level of
+specificity that MNotation provides.
+
+\subsection{The Active Learning Transparency Gap}
+
+A key finding from the case study is participants' moderate uncertainty about why the
+active learning algorithm selected certain text segments ($M = 3.50$ on the relevant
+survey item). This transparency gap is well-documented in human--AI interaction research
+\cite{amershi2019software}: users engage more productively with algorithmic recommendations
+when they can see the rationale. In MNotation's current implementation, uncertainty scores
+and diversity ranks are computed but not surfaced to participants.
+
+Future versions should expose these scores in the Phase~3 interface — showing, for example,
+that a particular sentence was flagged because annotators assigned five different labels
+across 33 responses, and the system therefore treats it as a priority boundary case. This
+transparency would transform Phase~3 from a directed task into a collective learning
+opportunity, where participants can reflect on aggregate disagreement as evidence about
+the shared intelligibility of the coding scheme.
+
+\subsection{Contributions to Learning Analytics}
+
+MNotation contributes to the learning analytics community in three complementary ways.
+
+\textbf{First, it enables the study of human--AI calibration as a learning process.}
+When a researcher sees an AI label that differs from their own, they face a decision
+that is simultaneously methodological (which label is correct?) and epistemic (how
+confident am I in my reading?). The override rate, annotation latency on revised
+decisions, and patterns of multi-phase label change are all indicators of this
+calibration process. Analysing these indicators across researchers, tasks, and coding
+schemes can produce evidence-based recommendations for AI-assisted qualitative research
+practice \cite{jarvela2023human}.
+
+\textbf{Second, it produces datasets that are both analytic outputs and learning
+analytics artefacts.} The annotated corpus that emerges from a MNotation session is
+useful for downstream analysis; but the session trace data — timing, agreement patterns,
+active learning priorities — constitute a learning analytics dataset in their own right,
+capturing how a community of researchers collectively negotiated meaning around a shared
+corpus. This dual nature positions MNotation at the intersection of tool and instrument
+in the learning analytics ecosystem \cite{gasevic2023empowering}.
+
+\textbf{Third, it enables principled scaling of qualitative analysis.} The case study
+data illustrate this directly. Among the 15 sentences, human--LLM agreement ranged from
+9\% to 76\%. For high-agreement sentences, automated coding may be methodologically
+defensible if the researcher documents and reports the agreement evidence. For low-agreement
+sentences, human deliberation is clearly warranted. MNotation makes this triage automatic
+and evidence-based, enabling research teams to concentrate expert effort where it has the
+greatest methodological impact.
+
+%----------------------------------------------------------------------------------------
+\section{Limitations}
+%----------------------------------------------------------------------------------------
+
+Several limitations should be considered when interpreting the case study findings.
+
+\textbf{Sample characteristics.} Participants were graduate students and faculty at a
+research-intensive university in Hong Kong; their familiarity with qualitative methods and
+AI tools likely exceeds that of the broader educational research community. Results may
+not generalise to populations with less prior exposure to either methodology.
+
+\textbf{Single-session design.} The data reflect a single 25-minute session, which limits
+conclusions about longitudinal learning effects or the development of inter-rater reliability
+over repeated annotation cycles. Future deployments should incorporate multiple sessions
+with the same participants to examine how human--AI calibration evolves.
+
+\textbf{LLM specificity.} AI suggestions were generated by Qwen-Plus. Agreement rates and
+override patterns may differ with other models (e.g., GPT-4o, Claude, or open-source
+alternatives). Researchers deploying MNotation should document and report the model used,
+as this is a methodological decision analogous to the choice of inter-rater reliability metric.
+
+\textbf{Survey response rate.} The 18 survey responses represent 26\% of active participants,
+limiting the generalisability of perception data. Future work should investigate ways to
+increase survey completion within the tool's workflow.
+
+\textbf{Participant verification.} Because MNotation is web-based and accessed via a shared
+QR code, some registered sessions reflected researcher testing or participants who rejoined
+the session. The analyses reported here use each participant's earliest session and exclude
+sessions created before or after the main workshop window. Researchers deploying MNotation
+in controlled studies should implement session filtering appropriate to their context.
+
+%----------------------------------------------------------------------------------------
+\section{Conclusion and Future Work}
+%----------------------------------------------------------------------------------------
+
+MNotation addresses a methodological gap in learning analytics and educational research:
+the absence of open, purpose-built platforms for studying how human researchers negotiate
+meaning with AI systems during qualitative coding. By separating independent human annotation
+from AI-assisted review and active-learning-guided prioritisation, and by logging behavioural
+trace data at each phase, the tool creates datasets that are simultaneously useful for research
+purposes and informative about the annotation process itself.
+
+The case study reported here demonstrates that the human--AI coding process produces rich,
+structured data: the 31.9\% human--LLM agreement rate, the 27.6\% AI override rate,
+per-sentence agreement patterns, and annotation timing data each offer a distinct window on
+how researchers interpret educational text alongside AI proposals. Together, these data
+constitute a new category of learning analytics evidence — not about students learning
+subject matter, but about researchers learning to interpret data, with and alongside AI.
+
+Planned developments include: (1) surfacing uncertainty and diversity scores to participants
+in Phase~3 to address the transparency gap identified in the case study; (2) support for
+open coding (participant-defined categories) in addition to closed taxonomies; (3)
+longitudinal session tracking to support inter-session reliability analysis; and (4) a
+multi-coder comparison dashboard visualising human--human and human--LLM disagreements
+side by side. The tool's modular serverless architecture supports all these extensions
+without changes to its core infrastructure.
+
+%----------------------------------------------------------------------------------------
+\phantomsection
+\section*{Acknowledgments}
+\addcontentsline{toc}{section}{Acknowledgments}
+%----------------------------------------------------------------------------------------
+
+[Acknowledgments to be added.]
+
+%----------------------------------------------------------------------------------------
+\section*{Declaration of Conflicting Interest}
+\addcontentsline{toc}{section}{Declaration of Conflicting Interest}
+%----------------------------------------------------------------------------------------
+
+The author(s) declared no potential conflicts of interest with respect to the research,
+authorship, and/or publication of this article.
+
+%----------------------------------------------------------------------------------------
+\section*{Funding}
+\addcontentsline{toc}{section}{Funding}
+%----------------------------------------------------------------------------------------
+
+[Funding information to be added.]
+
+%----------------------------------------------------------------------------------------
+\section*{Tool and Data Availability}
+\addcontentsline{toc}{section}{Tool and Data Availability}
+%----------------------------------------------------------------------------------------
+
+\textbf{Tool:} \url{https://github.com/XianghuiMeng-1020/active-labeling} (MIT License).
+Full deployment documentation, database schema, and API reference are included in the
+repository.
+
+\textbf{Dataset:} The anonymised March 2026 workshop dataset (69 active participants;
+702 valid annotations; 4,253 interaction events; 18 survey responses) will be deposited
+on OSF upon paper acceptance. Access procedures will be documented in the repository README.
+
+%----------------------------------------------------------------------------------------
+\phantomsection
+\bibliography{mnotation_jla}
+%----------------------------------------------------------------------------------------
+
+\end{document}

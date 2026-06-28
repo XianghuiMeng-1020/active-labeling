@@ -1,233 +1,328 @@
-# Active Labeling System
+<div align="center">
 
-研讨会场景下的交互式文本标注系统，基于 Cloudflare Pages + Workers + D1，使用 **ED-AL v1**（Entropy + Diversity 主动学习算法），LLM 仅用 **Qwen（阿里云 DashScope）**。
+# MNotation
+
+**A Learning Analytics Platform for Human–AI Collaborative Qualitative Coding**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Cloudflare Workers](https://img.shields.io/badge/Backend-Cloudflare%20Workers-orange)](https://workers.cloudflare.com)
+[![React](https://img.shields.io/badge/Frontend-React%2019-61DAFB?logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?logo=typescript)](https://www.typescriptlang.org)
+
+[**Live Demo**](https://mnotation.pages.dev) · [**Paper**](paper/) · [**Dataset**](#dataset) · [**API Reference**](docs/API.md)
+
+</div>
 
 ---
 
-## 技术栈
+MNotation is an open-source, browser-based annotation platform that structures qualitative coding as a three-phase human–AI collaboration. It is designed for learning analytics researchers who need to annotate educational text corpora at scale while maintaining methodological rigour and generating fine-grained process data.
 
-| 层 | 技术 |
+The platform supports any number of simultaneous users, requires no installation, and deploys in minutes on Cloudflare's global edge network. It integrates any OpenAI-compatible LLM and records rich behavioural traces—annotation latencies, AI accept/override decisions, and interaction events—that make the meaning-negotiation process itself an object of learning analytics inquiry.
+
+> **Reference.** If you use MNotation in your research, please cite:
+> ```
+> [Citation to be added upon paper acceptance]
+> ```
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Three-Phase Workflow](#three-phase-workflow)
+- [Active Learning Algorithm (ED-AL v1)](#active-learning-algorithm-ed-al-v1)
+- [Data Schema](#data-schema)
+- [Quick Start](#quick-start)
+- [Deployment](#deployment)
+- [Dataset](#dataset)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Overview
+
+Qualitative thematic coding is central to educational research but difficult to scale. MNotation addresses this by embedding LLM assistance within a structured workflow that preserves human interpretive authority and logs every decision for downstream analysis.
+
+| Feature | Description |
 |---|---|
-| **后端 API** | Cloudflare Worker + Hono 4.x（TypeScript） |
-| **数据库** | Cloudflare D1（SQLite，托管） |
-| **实时推送** | Cloudflare Durable Objects（SSE 广播） |
-| **LLM** | Qwen（qwen-plus，OpenAI 兼容 API，**仅在 Worker env**） |
-| **前端** | React 19 + TypeScript + Vite 7（移动端优先 UI） |
-| **主动学习** | ED-AL v1（Shannon 熵 + TF-IDF k-center greedy） |
+| **Three-phase workflow** | Independent human annotation → LLM-assisted review → Active learning prioritisation |
+| **Real-time dashboard** | Live label distribution charts and participant progress tracking |
+| **Active learning** | ED-AL v1 algorithm selects the most uncertain and diverse segments for priority review |
+| **Trace data** | Per-annotation timing (active, idle, blur), accept/override flags, interaction events |
+| **Multi-LLM** | Configurable primary + fallback LLM providers (any OpenAI-compatible endpoint) |
+| **Zero-install** | Browser-based; participants join via QR code or URL |
+| **Configurable taxonomy** | Admin-defined label sets and prompt templates; no code changes required |
 
 ---
 
-## 快速开始
+## Architecture
 
-### 1. 安装依赖
-
-```bash
-# Worker 后端
-cd workers/api && npm install
-
-# 前端
-cd apps/web && npm install
+```
+┌─────────────────────────────────────────────────────┐
+│                  Participant Browser                 │
+│     React 19 + TypeScript (Cloudflare Pages)        │
+└────────────────────────┬────────────────────────────┘
+                         │ HTTPS / SSE
+┌────────────────────────▼────────────────────────────┐
+│              Cloudflare Worker (Hono 4.x)           │
+│   REST API · Rate limiting · LLM proxy · Auth       │
+├──────────────┬──────────────────┬───────────────────┤
+│  Cloudflare  │ Cloudflare       │  LLM Provider     │
+│  D1 (SQLite) │ Durable Objects  │  (Qwen / GPT-4o   │
+│  12 tables   │ (SSE broadcast)  │   / any OAI API)  │
+└──────────────┴──────────────────┴───────────────────┘
 ```
 
-### 2. 配置环境变量
+**Stack summary**
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Vite 7 (mobile-first) |
+| Backend | Cloudflare Workers, Hono 4.x |
+| Database | Cloudflare D1 (serverless SQLite) |
+| Real-time | Cloudflare Durable Objects (SSE push) |
+| LLM | Any OpenAI-compatible API (default: Qwen-Plus) |
+| Active learning | ED-AL v1 (Shannon entropy + k-centre greedy) |
+
+---
+
+## Three-Phase Workflow
+
+### Phase 1 — Independent Human Annotation
+
+Each participant reads text segments one at a time and assigns a label from the taxonomy by tapping or clicking. No AI information is shown. The interface records:
+
+- `active_ms` — time the interface was in active focus
+- `idle_ms` — time the interface was visible but unfocused
+- `blur_count` — number of tab-switch events during annotation
+
+A configurable minimum engagement threshold (default 800 ms) filters accidental clicks before a label is accepted.
+
+### Phase 2 — LLM-Assisted Review
+
+After completing Phase 1, participants see each text segment alongside the LLM's predicted label. They can:
+
+- **Accept** the AI prediction (one tap)
+- **Override** using a slide-up label selector
+- **Switch prompts** between zero-shot (Prompt 1), few-shot (Prompt 2), or a custom prompt (rate-limited to 5 queries per session)
+
+The tool logs the final accepted label, whether it differs from the AI prediction, and the decision latency.
+
+### Phase 3 — Active Learning Prioritisation
+
+A small subset of segments selected by the ED-AL v1 algorithm (see below) is presented for re-annotation. These are the segments where collective human uncertainty is highest and content diversity is greatest—the cases most in need of expert deliberation.
+
+---
+
+## Active Learning Algorithm (ED-AL v1)
+
+ED-AL v1 selects which text segments to surface in Phase 3 using two sequential steps.
+
+**Step 1 — Uncertainty scoring (entropy)**
+
+For each candidate segment, the LLM is queried *N* times with temperature > 0 to sample a label distribution. [Shannon entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)) is computed over the resulting label frequencies and normalised to [0, 1]. High entropy indicates a segment where the model is uncertain—a proxy for genuine conceptual ambiguity.
+
+```
+H(x) = −∑ p(lᵢ|x) · log₂ p(lᵢ|x)
+H_norm = H(x) / log₂(|L|)        where |L| = number of labels
+```
+
+**Step 2 — Diversity selection (k-centre greedy)**
+
+From the top-*H* highest-entropy candidates, TF-IDF vectors are computed and a greedy k-centre algorithm selects *M* segments that are maximally spread in the feature space. This ensures the final selection covers different topical regions rather than clustering around a single ambiguous sentence type.
+
+**Configurable parameters**
+
+| Parameter | Default | Description |
+|---|---|---|
+| `candidate_k` | 80 | Size of the candidate pool |
+| `top_h` | 40 | Number of high-entropy candidates to consider for diversity selection |
+| `sample_n` | 3 | LLM samples per segment for entropy estimation |
+| `active_m` | 20 | Final number of segments selected |
+| `temperature` | 0.7 | LLM sampling temperature |
+
+All parameters are adjustable through the Admin Dashboard without code changes.
+
+---
+
+## Data Schema
+
+MNotation exports the following tables in CSV and JSON format.
+
+**Core annotation tables**
+
+| Table | Key fields | Description |
+|---|---|---|
+| `sessions` | `session_id`, `user_id`, `created_at`, `normal_manual_done_at`, `normal_llm_done_at` | One row per participant session |
+| `manual_labels` | `session_id`, `unit_id`, `label`, `phase` | Phase 1 human annotations |
+| `llm_labels` | `session_id`, `unit_id`, `llm_label`, `user_accepted_label`, `llm_mode` | Phase 2 LLM predictions and user decisions |
+| `label_attempts` | `session_id`, `unit_id`, `active_ms`, `idle_ms`, `blur_count`, `is_valid` | Per-annotation behavioural traces |
+| `interaction_events` | `session_id`, `event_type`, `unit_id`, `created_at` | Fine-grained UI interaction log |
+
+**Enriched analysis views**
+
+| View | Description |
+|---|---|
+| `human_vs_llm` | Per-item comparison: human label, LLM prediction, agreement flags |
+| `timing_analysis` | Valid annotation attempts with full timing breakdown |
+| `per_user_summary` | Per-participant aggregates: label counts, average times, completion status |
+| `label_distribution_per_unit` | Per-segment label distribution across all annotators |
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org) ≥ 18
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/) ≥ 3
+- A Cloudflare account (free tier is sufficient)
+- An API key for an OpenAI-compatible LLM (e.g., [Qwen via DashScope](https://dashscope.aliyuncs.com))
+
+### 1. Clone and install
 
 ```bash
-# 本地开发（workers/api/.dev.vars）
+git clone https://github.com/XianghuiMeng-1020/active-labeling.git
+cd active-labeling
+
+# Install Worker dependencies
+cd workers/api && npm install && cd ../..
+
+# Install frontend dependencies
+cd apps/web && npm install && cd ../..
+```
+
+### 2. Configure environment variables
+
+Create `workers/api/.dev.vars`:
+
+```ini
 QWEN_API_KEY=your_dashscope_api_key
 QWEN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-ADMIN_TOKEN=dev-admin-token
+ADMIN_TOKEN=choose-a-secure-token
 MIN_ACTIVE_MS=800
 ```
 
-### 3. 本地开发
+### 3. Run locally
 
 ```bash
-# 启动 Worker（端口 8787）
+# Terminal 1 — Worker backend (port 8787)
 cd workers/api && wrangler dev
 
-# 启动前端（端口 5173）
+# Terminal 2 — React frontend (port 5173)
 cd apps/web && npm run dev
 ```
 
-前端访问：http://localhost:5173  
-API：http://localhost:8787
+Open http://localhost:5173. Admin panel: http://localhost:5173/admin (use your `ADMIN_TOKEN`).
 
-### 4. 运行冒烟测试
+### 4. Seed example data
 
 ```bash
-# 完整 e2e 测试（需要 Qwen key）
-BASE=http://localhost:8787 ADMIN_TOKEN=dev-admin-token bash scripts/e2e_smoke.sh
+node scripts/seed-units.mjs data/seed_units.jsonl http://localhost:8787 your-admin-token
+```
 
-# SSE 实时同步验证
-BASE=http://localhost:8787 ADMIN_TOKEN=dev-admin-token bash scripts/sse_check.sh
+The `data/seed_units.jsonl` file contains 20 example text units in the required format:
+
+```jsonl
+{"unit_id": "essay01_s01", "text": "AI literacy refers to..."}
+{"unit_id": "essay01_s02", "text": "Machine learning algorithms..."}
 ```
 
 ---
 
-## 部署
+## Deployment
 
-### Worker
+### Deploy the Worker
 
 ```bash
 cd workers/api
 
-# 设置 secrets（只需一次）
+# Set production secrets (one-time)
 wrangler secret put QWEN_API_KEY
 wrangler secret put QWEN_BASE_URL
 wrangler secret put ADMIN_TOKEN
 
-# 部署
-wrangler deploy
-
-# 数据库迁移（在项目根目录执行，wrangler 会读取根目录 wrangler.toml）
+# Apply database migrations
 wrangler d1 migrations apply labeling_db --remote
+
+# Deploy
+wrangler deploy
 ```
 
-**注意**：`wrangler.toml` 中的 D1 `database_id` 必须为你在 Cloudflare 创建的**真实 UUID**（不能是 `00000000-...` 占位符）。若今后使用 `[env.production]` 等环境段并在此段下配置了 D1，迁移时需加 `--env production`，例如：`wrangler d1 migrations apply labeling_db --remote --env production`。
+### Deploy the frontend (Cloudflare Pages)
 
-### 前端（Cloudflare Pages）
+1. In the Cloudflare Pages dashboard, connect your repository.
+2. Set the build command to `npm run build` and the output directory to `dist`.
+3. Add the environment variable `VITE_API_BASE` pointing to your deployed Worker URL.
 
-1. **构建前设置环境变量**（Vite 在构建时注入，必须与 Pages 一致）  
-   在 Cloudflare Pages 项目 **Settings → Environment variables** 中添加：
-   - **变量名**：`VITE_API_BASE`  
-   - **值**：`https://sentence-labeling-api.xmeng19.workers.dev`  
-   - 作用环境：Production（及 Preview 如需要）
-
-2. **构建并部署**：
-   ```bash
-   cd apps/web
-   npm run build
-   # 将 dist/ 部署到 Pages（或连接 Git 自动构建）
-   ```
-
-3. **现场验证**：  
-   - 用户端：访问 `/user/start`，完成 1 条标注。  
-   - 管理端：访问 `/admin`，确认图表与统计实时更新。
+For a full walkthrough, see [docs/API.md](docs/API.md).
 
 ---
 
-## 用户流程（3 页）
+## Dataset
 
-```
-扫码 → /user/start（填昵称）
-  ↓
-Page 1: 普通人工标注（/user/normal/manual）
-  - 逐条标注，单击标签即提交
-  - 顶部进度环，提交后 Toast
-  - 底部 Undo 按钮（可撤回，Admin 统计实时回滚）
-  ↓ [Gate: 全部完成后解锁]
-Page 2: 普通 LLM 辅助（/user/normal/llm）
-  - Segmented control: Prompt1 / Prompt2 / Custom
-  - 运行 Qwen → 显示预测 → Accept 或 底部面板改选
-  - Custom 最多 5 次（后端强约束，第 6 次 429）
-  ↓ [Gate: 全部完成后解锁]
-Page 3: 主动学习人工（/user/active/manual）
-  - 标注 ED-AL v1 选出的高信息量多样化样本
-  - 显示不确定性原因（entropy、diversity_rank）
-```
+The dataset collected during the March 2026 AI Literacy Annotation Workshop (69 active participants, 15 text segments, 865 annotation decisions) will be deposited on OSF upon paper acceptance.
+
+**Data contents**
+
+- 702 valid manual annotations with per-annotation timing
+- 555 human–LLM label comparisons (Phase 2)
+- 4,253 fine-grained interaction events
+- 18 post-session survey responses
+- Participant summary and label distribution tables
+
+For data field definitions, see [docs/DATA.md](docs/DATA.md).
 
 ---
 
-## Admin 功能
+## Admin Dashboard
 
-访问 `/admin/login` → 输入 ADMIN_TOKEN
+Navigate to `/admin/login` and enter your `ADMIN_TOKEN`.
 
-### Dashboard（/admin/dashboard）
+| Page | Function |
+|---|---|
+| `/admin/dashboard` | Live annotation progress charts, participant table, freeze display for discussion |
+| `/admin/config` | Edit label taxonomy and LLM prompt templates |
+| `/admin/units` | Import text units via JSONL paste |
+| `/admin/al` | Trigger ED-AL v1, monitor active learning job status |
 
-- **Stage 1 Tab**：普通人工 + 普通 LLM 两张实时 bar chart
-- **Stage 2 Tab**：主动人工 + 主动 LLM 两张图 + ED-AL v1 触发面板
-- **冻结展示**按钮：暂停前端更新，便于讲解
-- **实时指标**：在线会话数、近 30 秒新增标注数、Live 指示灯
-- **参与者进度表**：每人 P1/P2/P3 完成情况
-
-### 配置（/admin/config）
-
-- 配置 Taxonomy（标签体系）
-- 配置 Prompt1（zero-shot）和 Prompt2（few-shot）
-
-### 单元导入（/admin/units）
-
-- 粘贴 JSONL（每行含 `unit_id` 和 `text`）
-
----
-
-## ED-AL v1 主动学习算法
-
-```
-输入：candidate_k 个候选单元
-算法：
-  1. 不确定性（Entropy）：
-     对每个候选，用 Qwen + Prompt2 采样 sample_n 次（temperature=0.7）
-     计算 Shannon 熵 H（归一化到 [0,1]）
-     
-  2. 多样性（Diversity）：
-     取熵最高的 top_h 个候选
-     构建 TF-IDF 向量
-     k-center greedy 选出 active_m 个最分散的单元
-     
-  3. Active LLM 批处理：
-     对选中单元分别用 Prompt1 + Prompt2 预跑
-     结果存入 llm_labels（session_id='system_active'）
-
-API 参数（/api/admin/al/run）：
-  candidate_k  候选池大小（默认 80）
-  top_h        熵排序取 Top H（默认 40）
-  sample_n     每单元采样次数（默认 3）
-  active_m     最终选出数量（默认 20）
-  temperature  采样温度（默认 0.7）
-  seed         k-center 种子（默认随机）
-```
-
----
-
-## 安全
-
-- 所有 `/api/admin/*` 需要 `Authorization: Bearer ADMIN_TOKEN`
-- SSE 流 `/api/stream/stats` 需要 `?token=ADMIN_TOKEN`
-- Qwen API Key **仅存在于 Worker 环境变量**，前端零接触
-- 用户路由（`/user/*`）无任何 admin 入口
-
----
-
-## 数据导出
+**Data export**
 
 ```bash
-# CSV（含所有标注 + 行为数据）
-curl "https://your-worker/api/admin/export?format=csv&token=TOKEN" -o export.csv
-
-# JSONL
-curl "https://your-worker/api/admin/export?format=jsonl&token=TOKEN" -o export.jsonl
+# CSV export (all tables)
+curl "https://your-worker.workers.dev/api/admin/export?format=csv" \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
+  -o export.zip
 ```
-
-字段包含：`session_id, user_id, unit_id, text, manual_label, llm_p1_accepted, llm_p2_accepted, active_ms, hidden_ms, idle_ms, had_background, is_valid`
 
 ---
 
-## 文档
+## Security
 
-- [ACCEPTANCE_TEST.md](./ACCEPTANCE_TEST.md) — 研讨会完整操作手册（Runbook）
-- [SELF_CHECK_REPORT.md](./SELF_CHECK_REPORT.md) — 需求对齐验证报告（12 点）
-- [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) — 常见问题（401/429/SSE/统计回滚）
-- [docs/API.md](./docs/API.md) — 完整 API 文档
+- All `/api/admin/*` endpoints require `Authorization: Bearer ADMIN_TOKEN`.
+- The LLM API key is stored only in the Worker environment; the frontend has zero access to it.
+- Participant routes (`/user/*`) have no administrative entry points.
+- Custom prompts are rate-limited to 5 requests per session server-side.
+
+See [docs/SECURITY.md](docs/SECURITY.md) for the full security model.
 
 ---
 
-## 研讨会操作流程（最简版）
+## Contributing
 
-```
-会前（30分钟以上）：
-  1. wrangler deploy
-  2. wrangler d1 migrations apply --remote
-  3. /admin/units  → 导入标注数据
-  4. /admin/config → 配置 taxonomy + prompts
-  5. /api/admin/al/run → 触发 ED-AL v1（等待完成）
+Contributions are welcome. Please open an issue before submitting a pull request for significant changes.
 
-会中：
-  1. 发布 /user/start 二维码（或短链接）
-  2. Admin Dashboard Stage 1 Tab 投屏
-  3. 待所有人完成 P1+P2 → 切换到 Stage 2 Tab
-  4. 观察 Active Manual 实时增长
+**Planned features**
 
-会后：
-  /api/admin/export?format=csv&token=TOKEN → 下载数据集
-```
+- [ ] Expose ED-AL uncertainty scores in the Phase 3 UI for annotator transparency
+- [ ] Open coding mode (participant-defined categories)
+- [ ] Multi-session longitudinal tracking and inter-session reliability reports
+- [ ] Multi-coder agreement dashboard (human–human vs. human–LLM comparison)
+
+---
+
+## License
+
+[MIT](LICENSE) © 2026 The MNotation Authors

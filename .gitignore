@@ -1,4 +1,4 @@
-# Secrets and environment
+# Secrets and environment variables
 .dev.vars
 .env
 .env.production
@@ -9,10 +9,51 @@
 dist/
 node_modules/
 
-# OS
+# Python virtual environments and cache
+.venv*/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Data files (use OSF/Zenodo for data sharing)
+data_export/
+3.24 collected data/
+
+# Test artifacts
+test-results/
+playwright-report/
+
+# Internal project management documents
+ACCEPTANCE_TEST.md
+DELIVERY_CHECKLIST.md
+LAUNCH_REPORT.md
+NEXT_STEPS.md
+SELF_CHECK_REPORT.md
+SUMMARY.md
+TROUBLESHOOTING.md
+
+# OS / IDE
 .DS_Store
 *.log
-
-# IDE
 .vscode/
 .idea/
+
+# Binary and generated files
+*.docx
+*.pptx
+*.pdf
+seminar_qr*.png
+# LaTeX build artifacts (keep .tex and .bib sources)
+*.aux
+*.bbl
+*.blg
+*.out
+*.synctex.gz
+paper/*.log
+paper/*.pdf
+
+# Internal proxy scripts
+scripts/setup_hk_proxy.sh
+scripts/verify_hk_proxy.sh
