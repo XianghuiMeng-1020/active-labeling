@@ -20,6 +20,7 @@ venv/
 # Data files (use OSF/Zenodo for data sharing)
 data_export/
 3.24 collected data/
+5.26 collected data/
 
 # Test artifacts
 test-results/

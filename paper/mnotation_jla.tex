@@ -87,13 +87,14 @@ independent human annotation, LLM-assisted review, and active-learning-guided pr
 of the most uncertain segments. MNotation captures fine-grained behavioural trace data at
 every phase — annotation latencies, AI accept/override decisions, and interaction events —
 making the human--AI meaning-negotiation process itself an object of learning analytics inquiry.
-We demonstrate MNotation through a case study in which 69 researchers and graduate students
-annotated sentences from AI literacy essays at a research seminar. A human--LLM agreement rate
-of 31.9\% and an AI-label override rate of 27.6\% reveal that LLM proposals serve as productive
-epistemic anchors that prompt, rather than replace, deliberate human judgement.
-Post-session survey data confirm that participants found the AI system helpful for seeding
-initial coding ideas ($M=4.00/5$) while noting uncertainty about which segments the system
-prioritised ($M=3.50/5$) — a transparency gap the tool makes measurable and actionable.
+We demonstrate MNotation through two live deployments: a Hong Kong research seminar (March 2026,
+$n=69$ active participants) and a Beijing workshop (May 2026, $n=82$). Human--LLM agreement
+rates of 31.9\% and 16.7\% respectively, and strikingly divergent AI-label override rates
+(27.6\% vs.\ 0.2\%), reveal how context shapes human--AI meaning negotiation in qualitative
+coding. The contrasting patterns — Hong Kong participants challenged AI suggestions more
+frequently while Beijing participants accepted them at a much higher rate — provide
+cross-contextual evidence that MNotation's process data captures interpretive dynamics
+unavailable through conventional coding software.
 MNotation is freely available at \url{https://github.com/XianghuiMeng-1020/active-labeling}.%
 }
 
@@ -342,178 +343,180 @@ database schema, and deployment documentation are available at
 \url{https://github.com/XianghuiMeng-1020/active-labeling}.
 
 %----------------------------------------------------------------------------------------
-\section{Case Study: AI Literacy Annotation Workshop}
+\section{Case Studies: Two AI Literacy Annotation Deployments}
 %----------------------------------------------------------------------------------------
 
-\subsection{Learning Context and Setting}
+MNotation was deployed in two live research-seminar settings: a university in Hong Kong
+in March 2026, and a university in Beijing in May 2026. Both sessions used an identical
+coding task and taxonomy, enabling systematic cross-contextual comparison of human--AI
+collaboration dynamics.
 
-To demonstrate MNotation's capabilities, we report its deployment at a research seminar
-held at a university in Hong Kong in March 2026. The seminar brought together graduate
-students and faculty from education, linguistics, and computer science — many of whom were
-new to systematic qualitative coding but interested in understanding how AI might support
-analytical work in their own research. The activity was framed as a participatory demonstration:
-participants were positioned as co-investigators exploring a question about human--AI
-collaboration in qualitative research, rather than as subjects being assessed.
+\subsection{Shared Coding Task and Taxonomy}
 
-The coding task used 15 sentences drawn from three student-written essays on the topic of
-AI literacy. Sentences were selected to represent a range of thematic categories and to
-include cases with genuine category ambiguity. The coding taxonomy comprised six codes:
-\textbf{CODE} (definitional content), \textbf{EXPLANATION} (explanations of AI concepts
-or processes), \textbf{EVALUATION} (assessments of AI reliability, risk, or limitation),
-\textbf{RESPONSIBILITY} (ethics, fairness, or accountability), \textbf{APPLICATION}
-(practical uses of AI literacy), and \textbf{IMPLICATION} (broader consequences or future
-significance). The taxonomy and two worked examples were introduced in a 10-minute briefing
-before annotation began.
+The annotation corpus comprised 15 sentences drawn from student-written essays on the topic
+of AI literacy, selected to span a range of thematic categories and to include cases with
+genuine category ambiguity. The coding taxonomy comprised six codes:
+\textbf{CODE} (definitional content), \textbf{EXPLANATION} (explanations of AI concepts),
+\textbf{EVALUATION} (assessments of AI reliability or risk), \textbf{RESPONSIBILITY}
+(ethics and accountability), \textbf{APPLICATION} (practical uses of AI literacy), and
+\textbf{IMPLICATION} (broader consequences or future significance).
+A 10-minute briefing with two worked examples preceded annotation in both deployments.
 
-\subsection{Participants and Data Collection}
+\subsection{Deployment 1 — Hong Kong (March 24, 2026)}
 
-The session operated over approximately 25 minutes of active annotation time. Participants
-accessed MNotation by scanning a QR code displayed on the seminar screen. A total of 103
-unique users provided informed consent and registered within the session window; of these,
-\textbf{69 participants} (67\%) actively engaged with the annotation interface by submitting
-at least one label. Among active participants, 53 (77\%) completed the full 15-item manual
-annotation phase and 27 (39\%) completed the LLM-assisted review phase.
+The Hong Kong session was held at a research seminar attended by graduate students and
+faculty from education, linguistics, and computer science. The activity was framed as a
+participatory demonstration: participants were positioned as co-investigators rather than
+assessed subjects. Participants accessed MNotation by scanning a QR code on the seminar
+screen. A total of 103 unique users provided consent; \textbf{69 (67\%)} submitted at
+least one label (active participants). Among active participants, 53 (77\%) completed the
+15-item manual annotation phase and 27 (39\%) completed the LLM-assisted review.
+Qwen-Plus was used as the LLM backend. A post-session survey was administered, yielding
+18 complete responses.
 
-Two temporal clusters were observed in participant registration. A \emph{primary cohort}
-of 45 participants registered within the first 10 minutes of the QR code being shared, of
-whom 31 (69\%) completed Phase 1. A \emph{secondary cohort} of 58 registered approximately
-20 minutes later during a second activity round, of whom 22 (38\%) completed Phase 1. The
-lower completion rate in the secondary cohort is consistent with reduced structured guidance
-during the second round. All analyses reported below pool active participants across both
-cohorts; each participant's earliest session is used as their canonical record.
+\subsection{Deployment 2 — Beijing (May 26, 2026)}
 
-The LLM condition used for AI-assisted labelling was Qwen-Plus, queried with a zero-shot
-prompt (Prompt 1) and a five-shot exemplar prompt (Prompt 2). A post-session survey
-collected Likert ratings (1 = strongly disagree, 5 = strongly agree) and open-ended
-responses from 18 participants.
+The Beijing session was conducted in the evening (19:04--20:08 Beijing Time) with students
+from an education and AI literacy programme. Eighty-six unique users provided consent;
+\textbf{82 (95\%)} submitted at least one label. Among active participants, 74 (90\%)
+completed Phase~1 and 60 (73\%) completed Phase~2 — substantially higher completion rates
+than in Hong Kong. No post-session survey was administered for this cohort.
 
 \subsection{Participation and Annotation Patterns}
 
-The 69 active participants submitted 865 annotation decisions during Phase 1, of which
-\textbf{702 (81.1\%)} met the minimum engagement criterion (\texttt{active\_ms} $\ge$ 800 ms).
-Across valid annotations, the mean active annotation time per sentence was
-\textbf{8.3 seconds} (median 7.0 s; total including idle periods: $M = 12.2$ s).
-Browser focus-loss events occurred in only 1.1\% of annotation records, indicating
-high task engagement throughout the session.
+Table~\ref{tab:cohorts} summarises participation and annotation metrics across both
+deployments. The higher completion rates in Beijing may reflect a more structured
+workshop environment in which participants remained engaged for the full session duration.
+The dramatic difference in annotation speed — mean active time of 8.3 s per sentence in
+Hong Kong versus 4.5 s in Beijing — suggests different deliberation strategies: Hong Kong
+participants spent more time per item before committing to a label, while Beijing
+participants made decisions more quickly. This speed gap is present across all phases
+and persists when controlling for session length.
 
-The label distribution across the 15 sentences is summarised in Table~\ref{tab:labels}.
-\textbf{EXPLANATION} was the most frequent human label (28.1\%), followed by
-\textbf{EVALUATION} (22.3\%), \textbf{APPLICATION} (19.5\%), \textbf{RESPONSIBILITY}
-(15.8\%), and \textbf{IMPLICATION} (14.2\%). Notably, the \textbf{CODE} label was not
-used by any participant despite its inclusion in the taxonomy. Participants consistently
-interpreted definitional sentences as \emph{explanatory} rather than strictly terminological,
-suggesting a boundary ambiguity in the taxonomy that the distribution data make visible
-and actionable for future coding scheme refinement.
+Both cohorts chose \textbf{EXPLANATION} as the most common label, but the Hong Kong
+distribution was markedly skewed toward EXPLANATION (28.1\%) while Beijing showed a
+substantially more even spread across all five active categories (18--23\%).
+The \textbf{CODE} label was unused by participants in both cohorts despite its inclusion
+in the taxonomy, suggesting a shared tendency to interpret definitional sentences as
+\emph{explanatory} — a cross-contextual signal of boundary ambiguity that warrants
+coding scheme revision.
 
 \begin{table}[hbt]
-\caption{Label distribution across 702 valid Phase~1 annotations (active participants only).}
-\label{tab:labels}
+\caption{Participation and annotation metrics for both deployments.}
+\label{tab:cohorts}
 \centering
+\small
 \begin{tabular}{lrr}
 \toprule
-\textbf{Label} & \textbf{Count} & \textbf{Percentage} \\
+\textbf{Metric} & \textbf{Hong Kong (Mar 24)} & \textbf{Beijing (May 26)} \\
 \midrule
-EXPLANATION    & 243 & 28.1\% \\
-EVALUATION     & 193 & 22.3\% \\
-APPLICATION    & 169 & 19.5\% \\
-RESPONSIBILITY & 137 & 15.8\% \\
-IMPLICATION    & 123 & 14.2\% \\
-CODE           &   0 &  0.0\% \\
+Unique users (consent, window)   & 103    & 86    \\
+Active participants ($\ge$1 label) & 69   & 82    \\
+Completed Phase~1 (manual)       & 53 (77\%)  & 74 (90\%) \\
+Completed Phase~2 (LLM review)   & 27 (39\%)  & 60 (73\%) \\
+Valid annotation records         & 702   & 2,011 \\
+Mean active annotation time      & 8.3 s & 4.5 s \\
+Human--LLM agreement             & 31.9\% & 16.7\% \\
+AI label override rate           & 27.6\% & 0.2\% \\
+Post-session survey responses    & 18    & --    \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[hbt]
+\caption{Phase~1 human label distribution (valid annotations only) for both deployments.}
+\label{tab:labels}
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+& \multicolumn{2}{c}{\textbf{Hong Kong}} & \multicolumn{2}{c}{\textbf{Beijing}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textbf{Label} & \textbf{Count} & \textbf{\%} & \textbf{Count} & \textbf{\%} \\
 \midrule
-\textbf{Total} & \textbf{865} & \textbf{100\%} \\
+EXPLANATION    & 243 & 28.1\% & 259 & 22.6\% \\
+EVALUATION     & 193 & 22.3\% & 238 & 20.7\% \\
+APPLICATION    & 169 & 19.5\% & 209 & 18.2\% \\
+RESPONSIBILITY & 137 & 15.8\% & 226 & 19.7\% \\
+IMPLICATION    & 123 & 14.2\% & 215 & 18.7\% \\
+CODE           &   0 &  0.0\% &   0 &  0.0\% \\
+\midrule
+\textbf{Total} & \textbf{865} & & \textbf{1,147} & \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Human--LLM Agreement and Override Behaviour}
 
-Among the 555 sentence-level comparisons for which both a Phase~1 human label and an LLM
-prediction were available, human and LLM labels agreed in \textbf{177 cases (31.9\%)}.
-This rate is notably lower than agreement figures reported for simpler text classification
-tasks, but it is consistent with the multi-class structure of the taxonomy and the genuine
-conceptual overlap between adjacent categories such as EVALUATION and RESPONSIBILITY.
+Among sentence-level comparisons for which both a Phase~1 human label and an LLM
+prediction were available, agreement was \textbf{31.9\%} in Hong Kong (177 of 555
+comparisons) and \textbf{16.7\%} in Beijing (153 of 915 comparisons). Although both
+rates are notably lower than those reported for simpler binary classification tasks,
+the difference between cohorts is itself a substantive finding: Hong Kong participants'
+Phase~1 labels aligned more closely with LLM predictions, while Beijing participants
+coded more independently of the LLM baseline.
 
-Agreement varied substantially across the 15 sentences (Table~\ref{tab:unit_agree}).
-The sentence ``\emph{Machine learning algorithms work by identifying patterns in data}''
-achieved 76\% human--LLM agreement — both humans and the LLM consistently labelled it
-EXPLANATION. In contrast, ``\emph{Companies must ensure transparency in how they use AI
-systems}'' achieved only 21\% agreement: participants predominantly labelled it RESPONSIBILITY
-while the LLM frequently chose APPLICATION. These sentence-level divergences are not merely
-measurement artefacts; they reveal where the coding taxonomy draws boundaries that are
-intuitive to the model but contested by human researchers, or vice versa — information
-directly actionable for coding scheme revision.
+The override pattern reveals a striking reversal. In Hong Kong, \textbf{153 of the 555
+LLM labels reviewed in Phase~2 were modified (27.6\% override rate)}, indicating that
+participants actively deliberated over AI proposals. In Beijing, only \textbf{2 of 905
+accepted labels were overridden (0.2\%)}. Together, these patterns suggest two distinct
+human--AI collaboration modes: one characterised by critical engagement (Hong Kong) and
+one by rapid acceptance (Beijing). Whether this reflects differences in AI literacy,
+workshop framing, or time pressure cannot be determined from the current data alone,
+but the contrast is precisely the type of cross-contextual signal that motivates
+continued deployment and study.
+
+Agreement varied substantially across the 15 sentences in the Hong Kong cohort
+(Table~\ref{tab:unit_agree}). The sentence ``\emph{Machine learning algorithms work by
+identifying patterns in data}'' achieved 76\% human--LLM agreement, while
+``\emph{Companies must ensure transparency in how they use AI systems}'' achieved only 21\%.
+The most common disagreement patterns were:
+\textsc{Explanation}$\to$\textsc{Evaluation} (41 cases),
+\textsc{Application}$\to$\textsc{Responsibility} (36 cases), and
+\textsc{Evaluation}$\to$\textsc{Application} (33 cases) — all clustering around
+conceptually adjacent category pairs where the \emph{rhetorical function} of a sentence
+is ambiguous.
 
 \begin{table}[hbt]
-\caption{Human--LLM agreement rates for each of the 15 annotated sentences.
-  The most common human label and the LLM's most frequent prediction are shown
-  for the five most and five least agreed-upon sentences.}
+\caption{Human--LLM agreement rates (Hong Kong cohort) for the five most and five
+  least agreed-upon sentences.}
 \label{tab:unit_agree}
 \centering
 \small
-\begin{tabular}{p{6cm}rll}
+\begin{tabular}{p{5.5cm}rll}
 \toprule
-\textbf{Sentence (truncated)} & \textbf{Agreement} & \textbf{Human} & \textbf{LLM} \\
+\textbf{Sentence (truncated)} & \textbf{Agr.} & \textbf{Human} & \textbf{LLM} \\
 \midrule
-Machine learning algorithms work by identifying patterns\ldots & 76\% & EXPLANATION & EXPLANATION \\
-Citizens can use fact-checking AI tools to verify\ldots         & 64\% & APPLICATION & APPLICATION \\
-Without proper governance frameworks\ldots                      & 58\% & IMPLICATION & IMPLICATION \\
-As AI continues to advance, the gap\ldots                       & 50\% & IMPLICATION & IMPLICATION \\
-AI literacy refers to the set of competencies\ldots             & 32\% & EXPLANATION & EXPLANATION \\
+Machine learning algorithms\ldots & 76\% & EXPLANATION & EXPLANATION \\
+Citizens can use fact-checking\ldots & 64\% & APPLICATION & APPLICATION \\
+Without proper governance\ldots & 58\% & IMPLICATION & IMPLICATION \\
+As AI continues to advance\ldots & 50\% & IMPLICATION & IMPLICATION \\
+AI literacy refers to\ldots & 32\% & EXPLANATION & EXPLANATION \\
 \midrule
-Bias in AI systems occurs when training data\ldots              & 24\% & RESPONSIBILITY & APPLICATION \\
-Companies must ensure transparency in how\ldots                 & 21\% & RESPONSIBILITY & APPLICATION \\
-Developers have an ethical obligation\ldots                     & 12\% & RESPONSIBILITY & EVALUATION \\
-Healthcare professionals are using AI-assisted\ldots            & 12\% & APPLICATION   & EXPLANATION \\
-Research shows that people with higher AI literacy\ldots        &  9\% & EVALUATION    & EXPLANATION \\
+Bias in AI systems\ldots & 24\% & RESPONSIBILITY & APPLICATION \\
+Companies must ensure transparency\ldots & 21\% & RESPONSIBILITY & APPLICATION \\
+Developers have an ethical obligation\ldots & 12\% & RESPONSIBILITY & EVALUATION \\
+Healthcare professionals are using\ldots & 12\% & APPLICATION & EXPLANATION \\
+Research shows that people with higher\ldots &  9\% & EVALUATION & EXPLANATION \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The most common human-to-LLM disagreement patterns were:
-\textsc{Explanation}$\to$\textsc{Evaluation} (41 cases),
-\textsc{Application}$\to$\textsc{Responsibility} (36 cases), and
-\textsc{Evaluation}$\to$\textsc{Application} (33 cases). These confusions cluster
-around conceptually adjacent category pairs, suggesting that the task's inherent
-difficulty lies in distinguishing the \emph{rhetorical function} of a sentence
-(explaining vs.\ evaluating) rather than its topic — a distinction that the data make
-precise enough to address in future coding scheme revision.
+\subsection{Participant Perceptions (Hong Kong Cohort)}
 
-Of the 555 LLM labels reviewed by participants in Phase 2, \textbf{153 were modified
-(27.6\% override rate)}. This rate indicates that participants engaged with AI proposals as
-genuine inputs to deliberation — neither uncritically accepting them nor dismissing them.
-The three-way comparison available in MNotation's export (Phase~1 human label, LLM
-prediction, Phase~2 final label) provides a rich structure for studying how AI exposure
-shifts human judgement, which label-pairs trigger override behaviour, and whether
-disagreement with the AI correlates with longer decision times.
+Eighteen participants completed the post-session survey. Participants reported strong
+understanding of the session's conceptual framing: \emph{``I understood that the
+AI-supported system was designed to support, not replace, human interpretation''} received
+the highest Likert rating ($M = 4.67/5$). The item \emph{``The AI-supported system helped me
+generate initial ideas for coding''} received $M = 4.00$. However, \emph{``I was sometimes
+unsure why certain excerpts were selected by the system''} also received notable agreement
+($M = 3.50$), revealing a \emph{transparency gap} in the active learning selection rationale.
 
-\subsection{Participant Perceptions}
-
-Eighteen participants completed the post-session survey. Likert ratings ($1$--$5$) addressed
-comprehension of the workshop's framing and experience of the AI system.
-
-Participants reported strong understanding of the session's conceptual aims.
-\emph{``I understood that this workshop examined how generative AI can support qualitative
-analysis from raw text to codes, patterns, and themes''} received $M = 4.61$.
-\emph{``I understood what the workshop was trying to teach me about qualitative analysis''}
-received $M = 4.39$. The item \emph{``I understood that the AI-supported system was designed
-to support, not replace, human interpretation''} received the highest rating ($M = 4.67$),
-suggesting that participants internalised the collaborative framing — a conceptual
-prerequisite for responsible AI-assisted research.
-
-Regarding the AI system's usefulness as a cognitive prompt: \emph{``The AI-supported system
-helped me generate initial ideas for coding or theme development''} received $M = 4.00$.
-However, \emph{``I was sometimes unsure why certain excerpts were selected by the system''}
-also received notable agreement ($M = 3.50$), revealing a \emph{transparency gap} in the
-active learning selection rationale. Participants understood that the system was surfacing
-hard cases but were not always certain of the selection logic — a finding that motivates
-a clear design priority for future versions (Section 5.2).
-
-Open-ended responses reinforced these themes. Participants described the AI as useful for
-``identify[ing] themes'' and for transforming a generative decision into a critical one:
-``give a code so that humans can do judgement [tasks] rather than selection tasks.''
-One participant characterised the experience as having ``a peer to support me in evaluating
-and rethinking my initial coding.'' Constructive feedback called for greater transparency
-about the system's underlying prompt engineering and longer task time.
+Open-ended responses further characterised the collaborative dynamic. Participants described
+the AI as useful for transforming a generative decision into a critical one: ``give a code so
+that humans can do judgement [tasks] rather than selection tasks.'' One participant
+characterised the experience as having ``a peer to support me in evaluating and rethinking
+my initial coding.'' Constructive feedback called for greater transparency about the
+system's selection logic and additional task time.
 
 %----------------------------------------------------------------------------------------
 \section{Discussion}
@@ -521,38 +524,48 @@ about the system's underlying prompt engineering and longer task time.
 
 \subsection{What MNotation Makes Visible}
 
-The case study illustrates MNotation's central contribution: it makes the human--AI coding
-process \emph{measurable} at a granularity unavailable through conventional qualitative
-software. By capturing annotation decisions in sequence — first human, then AI-assisted,
-then active-learning-prioritised — the tool produces a longitudinal trace of how each
-participant's interpretation intersects with, diverges from, and ultimately converges with
-or departs from LLM proposals. This trace is the unit of analysis for a new genre of
-learning analytics research: studies of human--AI deliberation in educational inquiry.
+The two deployments illustrate MNotation's central contribution: it makes the human--AI
+coding process \emph{measurable} at a granularity unavailable through conventional
+qualitative software. By capturing annotation decisions in sequence — first human, then
+AI-assisted, then active-learning-prioritised — the tool produces a longitudinal trace of
+how each participant's interpretation intersects with, diverges from, and ultimately
+converges with or departs from LLM proposals. This trace is the unit of analysis for a
+new genre of learning analytics research: studies of human--AI deliberation in educational
+inquiry.
 
-The 31.9\% human--LLM agreement rate is not, by itself, a measure of LLM quality. It is a
-measure of the interpretive space between human researchers and current language models for
-this particular task and taxonomy. That space is where the interesting research questions
-live. Why do participants consistently prefer EXPLANATION over EVALUATION for sentences
-about AI knowledge? What does the 76\% agreement on the machine learning sentence tell us
-about the clarity of that sentence's rhetorical function, compared with the 9\% agreement
-on the AI literacy research sentence? These questions are answerable only at the level of
-specificity that MNotation provides.
+Critically, the comparison across two independent deployments elevates the tool's
+evidential value beyond what any single session can provide. The divergence in human--LLM
+agreement (31.9\% vs.\ 16.7\%) and override rate (27.6\% vs.\ 0.2\%) between Hong Kong
+and Beijing participants, annotating the \emph{same} text with the \emph{same} taxonomy
+and \emph{same} LLM backend, demonstrates that these metrics are sensitive to contextual
+factors such as workshop structure, participant familiarity with AI systems, and the
+temporal dynamics of the session. These rates are not measures of LLM quality; they are
+measures of the interpretive space between human researchers and language models in a
+given context. That space — and how it shifts — is where the interesting research
+questions live.
 
 \subsection{The Active Learning Transparency Gap}
 
-A key finding from the case study is participants' moderate uncertainty about why the
-active learning algorithm selected certain text segments ($M = 3.50$ on the relevant
+A key finding from the Hong Kong deployment is participants' moderate uncertainty about why
+the active learning algorithm selected certain text segments ($M = 3.50$ on the relevant
 survey item). This transparency gap is well-documented in human--AI interaction research
 \cite{amershi2019software}: users engage more productively with algorithmic recommendations
 when they can see the rationale. In MNotation's current implementation, uncertainty scores
 and diversity ranks are computed but not surfaced to participants.
 
-Future versions should expose these scores in the Phase~3 interface — showing, for example,
-that a particular sentence was flagged because annotators assigned five different labels
-across 33 responses, and the system therefore treats it as a priority boundary case. This
-transparency would transform Phase~3 from a directed task into a collective learning
-opportunity, where participants can reflect on aggregate disagreement as evidence about
-the shared intelligibility of the coding scheme.
+The override pattern from Beijing raises a related concern from a different direction.
+A 0.2\% override rate — essentially universal acceptance of LLM suggestions in Phase~2 —
+could reflect genuine agreement with the AI, rapid task completion under time pressure, or
+insufficient critical engagement with the AI's proposals. These possibilities are empirically
+distinguishable using the annotation timing data MNotation captures: if override decisions
+co-occur with longer active annotation times, they reflect deliberation; if they are absent
+even when annotation latency is high, they may indicate a different dynamic. Future studies
+should use MNotation's process data to disentangle these patterns.
+
+Future versions should expose uncertainty scores in the Phase~3 interface — showing that a
+sentence was flagged because annotators assigned five different labels across responses —
+transforming Phase~3 into a collective learning opportunity where participants can reflect
+on aggregate disagreement as evidence about the shared intelligibility of the coding scheme.
 
 \subsection{Contributions to Learning Analytics}
 
@@ -587,17 +600,24 @@ greatest methodological impact.
 \section{Limitations}
 %----------------------------------------------------------------------------------------
 
-Several limitations should be considered when interpreting the case study findings.
+Several limitations should be considered when interpreting findings from both deployments.
 
-\textbf{Sample characteristics.} Participants were graduate students and faculty at a
-research-intensive university in Hong Kong; their familiarity with qualitative methods and
-AI tools likely exceeds that of the broader educational research community. Results may
-not generalise to populations with less prior exposure to either methodology.
+\textbf{Sample characteristics.} Participants in both cohorts were graduate students and
+faculty at research-intensive universities; their familiarity with qualitative methods and
+AI tools likely exceeds that of the broader educational research population. The two
+deployments represent different geographic and institutional contexts (Hong Kong and Beijing),
+which partially addresses generalisability concerns, but neither cohort was randomly sampled.
 
-\textbf{Single-session design.} The data reflect a single 25-minute session, which limits
-conclusions about longitudinal learning effects or the development of inter-rater reliability
-over repeated annotation cycles. Future deployments should incorporate multiple sessions
-with the same participants to examine how human--AI calibration evolves.
+\textbf{Single-session design.} Each cohort's data reflect a single session (25--60 minutes),
+limiting conclusions about longitudinal learning effects or inter-rater reliability development
+over repeated cycles. Future deployments should incorporate multiple sessions with the same
+participants to examine how human--AI calibration evolves.
+
+\textbf{Cross-cohort confounds.} The Hong Kong and Beijing sessions differed in time of
+day, workshop duration, and degree of facilitator scaffolding, in addition to participant
+background. The observed differences in override rate and annotation speed should therefore
+be interpreted as hypothesis-generating rather than conclusive evidence of geographic or
+cultural differences in human--AI collaboration.
 
 \textbf{LLM specificity.} AI suggestions were generated by Qwen-Plus. Agreement rates and
 override patterns may differ with other models (e.g., GPT-4o, Claude, or open-source
@@ -672,9 +692,13 @@ authorship, and/or publication of this article.
 Full deployment documentation, database schema, and API reference are included in the
 repository.
 
-\textbf{Dataset:} The anonymised March 2026 workshop dataset (69 active participants;
-702 valid annotations; 4,253 interaction events; 18 survey responses) will be deposited
-on OSF upon paper acceptance. Access procedures will be documented in the repository README.
+\textbf{Datasets:} Two anonymised workshop datasets will be deposited on OSF upon paper
+acceptance: (1) the Hong Kong cohort (March 24, 2026: 69 active participants; 702 valid
+Phase~1 annotations; 555 human--LLM comparison pairs; 18 survey responses) and (2) the
+Beijing cohort (May 26, 2026: 82 active participants; 2,011 valid annotations; 915
+human--LLM comparison pairs). Both datasets include session-level participation records,
+sentence-level annotation decisions, and fine-grained timing and interaction logs.
+Access procedures are documented in the repository README.
 
 %----------------------------------------------------------------------------------------
 \phantomsection
